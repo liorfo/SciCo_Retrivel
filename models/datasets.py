@@ -4,10 +4,10 @@ import collections
 from itertools import product, combinations
 import numpy as np
 import jsonlines
+import re
+import pickle
 
-
-
-
+from SciCo_Retrivel.definition_extractor import get_definition_retrieval_model, get_definition
 
 
 class CrossEncoderDataset(data.Dataset):
@@ -16,15 +16,21 @@ class CrossEncoderDataset(data.Dataset):
                  multiclass='multiclass',
                  sep_token='</s>',
                  is_training=True,
-                 cdlm=False):
+                 cdlm=False,
+                 definition_extraction_model=None,
+                 data_label='train',
+                 should_extract_definition=False):
         super(CrossEncoderDataset, self).__init__()
+
+        self.should_extract_definition = should_extract_definition
+        self.definition_extraction_model = definition_extraction_model
 
         with jsonlines.open(data_path, 'r') as f:
             self.data = [topic for topic in f]
 
         for i, topic in enumerate(self.data):
             self.data[i]['mention_text'] = np.array([' '.join(topic['flatten_tokens'][start:end + 1])
-                                                   for start, end, _ in topic['flatten_mentions']])
+                                                     for start, end, _ in topic['flatten_mentions']])
 
         self.sep = sep_token
         self.cdlm = cdlm
@@ -37,37 +43,44 @@ class CrossEncoderDataset(data.Dataset):
         self.pairs, self.labels = [], []
         self.first, self.second = [], []
         self.info_pairs = []
+        # with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/data/{data_label}_definitions', "rb") as fp:
+        #     x = pickle.load(fp)
+        all_definitions = {}
         for i, topic in enumerate(self.data):
             if self.multiclass == 'multiclass':
-                inputs, labels, info_pairs = self.get_topic_pairs(topic)
+                if should_extract_definition:
+                    print(f'Processing topic {i}')
+                inputs, labels, info_pairs, definitions = self.get_topic_pairs(topic)
+                if should_extract_definition:
+                    all_definitions.update(definitions)
             elif self.multiclass == 'hypernym':
                 inputs, labels, info_pairs = self.get_topic_pair_for_hypernym(topic)
             else:
                 inputs, labels, info_pairs = self.get_topic_pairs_for_binary_classification(topic)
 
-
             self.pairs.extend(inputs)
             self.labels.extend(labels)
             pair_nums = len(info_pairs)
             info_pairs = np.concatenate((np.array([i] * pair_nums).reshape(pair_nums, 1),
-                                        info_pairs), axis=1)
+                                         info_pairs), axis=1)
             self.info_pairs.extend(info_pairs)
+        if should_extract_definition:
+            print(f'saving all definitions for {data_label}...')
+            with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/data/{data_label}_definitions', 'wb') as f:
+                pickle.dump(all_definitions, f)
 
         if self.multiclass == 'multiclass' or self.multiclass == 'hypernym':
+            print('counting pairs len...')
+            total_length = sum(len(pair) for pair in self.pairs)
             self.labels = torch.tensor(self.labels, dtype=torch.long)
         else:
             self.labels = torch.tensor(self.labels, dtype=torch.float)
 
-
     def __len__(self):
         return len(self.labels)
 
-
     def __getitem__(self, idx):
         return self.pairs[idx], self.labels[idx]
-
-
-
 
     def get_topic_pairs_for_binary_classification(self, topic):
         mentions = []
@@ -85,20 +98,13 @@ class CrossEncoderDataset(data.Dataset):
 
         first, second = np.array(first), np.array(second)
 
-
         seps = np.array([self.sep] * len(first))
         inputs = np.char.add(np.char.add(mentions[first], seps), mentions[second]).tolist()
-
-
-
 
         labels = [topic['mentions'][x][-1] == topic['mentions'][y][-1]
                   for x, y in zip(first, second)]
 
         return inputs, labels, list(zip(first, second))
-
-
-
 
     def get_topic_pair_for_hypernym(self, topic):
         '''
@@ -132,9 +138,13 @@ class CrossEncoderDataset(data.Dataset):
 
         return inputs, labels, list(zip(first, second))
 
-
-
-
+    def get_mentions_definitions(self, mentions):
+        definitions = {}
+        for mention_sentence in mentions:
+            mention = re.search(r'<m>(.*?)</m>', mention_sentence).group(1).strip()
+            definition = get_definition(self.definition_extraction_model, mention, mention_sentence)
+            definitions[mention_sentence] = definition
+        return definitions
 
     def get_topic_pairs(self, topic):
         '''
@@ -143,12 +153,16 @@ class CrossEncoderDataset(data.Dataset):
         '''
         relations = [(x, y) for x, y in topic['relations']]
         mentions = []
+        definitions = {}
         for mention in topic['mentions']:
             if self.full_doc:
                 mentions.append(self.get_full_doc_mention(mention, topic['tokens']))
             else:
                 mentions.append(self.get_sentence_context(mention, topic['tokens'], topic['sentences']))
         mentions = np.array(mentions)
+        if self.should_extract_definition:
+            print('getting definitions...')
+            definitions = self.get_mentions_definitions(mentions)
 
         first, second = zip(*[(x, y) for x, y in product(range(len(mentions)), repeat=2) if x != y])
         first, second = np.array(first), np.array(second)
@@ -168,13 +182,10 @@ class CrossEncoderDataset(data.Dataset):
             else:
                 labels.append(0)
 
-        return inputs, labels, list(zip(first, second))
-
-
+        return inputs, labels, list(zip(first, second)), definitions
 
     def get_full_doc_mention(self, mention, tokens):
         doc_id, start, end, _ = mention
-
 
         mention_rep = tokens[doc_id][:start] + ['<m>']
         mention_rep += tokens[doc_id][start:end + 1] + ['</m>']
@@ -184,9 +195,6 @@ class CrossEncoderDataset(data.Dataset):
             mention_rep = ['<doc-s>'] + mention_rep + ['</doc-s>']
 
         return ' '.join(mention_rep)
-
-
-
 
     def get_sentence_context(self, mention, tokens, sentences):
         doc_id, start, end, _ = mention
@@ -208,11 +216,6 @@ class CrossEncoderDataset(data.Dataset):
         return ' '.join(mention_rep)
 
 
-
-
-
-
-
 class BiEncoderDataset(data.Dataset):
     def __init__(self, data_path, full_doc=True, multiclass='multiclass', sep_token='</s>', is_training=True):
         super(BiEncoderDataset, self).__init__()
@@ -221,7 +224,7 @@ class BiEncoderDataset(data.Dataset):
 
         for i, topic in enumerate(self.data):
             self.data[i]['mention_text'] = np.array([' '.join(topic['flatten_tokens'][start:end + 1])
-                                                   for start, end, _ in topic['flatten_mentions']])
+                                                     for start, end, _ in topic['flatten_mentions']])
 
         self.sep = sep_token
         self.full_doc = full_doc
@@ -248,7 +251,7 @@ class BiEncoderDataset(data.Dataset):
             self.labels.extend(labels)
             pair_nums = len(info_pairs)
             info_pairs = np.concatenate((np.array([i] * pair_nums).reshape(pair_nums, 1),
-                                        info_pairs), axis=1)
+                                         info_pairs), axis=1)
             self.info_pairs.extend(info_pairs)
 
         if self.multiclass == 'multiclass' or self.multiclass == 'hypernym':
@@ -256,16 +259,11 @@ class BiEncoderDataset(data.Dataset):
         else:
             self.labels = torch.tensor(self.labels, dtype=torch.float)
 
-
     def __len__(self):
         return len(self.labels)
 
-
     def __getitem__(self, idx):
         return self.first[idx], self.second[idx], self.labels[idx]
-
-
-
 
     def get_topic_pairs_for_binary_classification(self, topic):
         mentions = []
@@ -289,16 +287,10 @@ class BiEncoderDataset(data.Dataset):
         # seps = np.array([self.sep] * len(first))
         # inputs = np.char.add(np.char.add(mentions[first], seps), mentions[second]).tolist()
 
-
-
-
         labels = [topic['mentions'][x][-1] == topic['mentions'][y][-1]
                   for x, y in zip(first, second)]
 
         return m1, m2, labels, list(zip(first, second))
-
-
-
 
     def get_topic_pair_for_hypernym(self, topic):
         '''
@@ -334,7 +326,6 @@ class BiEncoderDataset(data.Dataset):
 
         return m1, m2, labels, list(zip(first, second))
 
-
     def get_topic_pairs(self, topic):
         '''
         :param topic:
@@ -351,7 +342,6 @@ class BiEncoderDataset(data.Dataset):
 
         first, second = zip(*[(x, y) for x, y in product(range(len(mentions)), repeat=2) if x != y])
         first, second = np.array(first), np.array(second)
-
 
         m1 = mentions[first]
         m2 = mentions[second]
@@ -372,17 +362,12 @@ class BiEncoderDataset(data.Dataset):
 
         return m1, m2, labels, list(zip(first, second))
 
-
-
     def get_full_doc_mention(self, mention, tokens):
         doc_id, start, end, _ = mention
         mention_rep = tokens[doc_id][:start] + ['<m>']
         mention_rep += tokens[doc_id][start:end + 1] + ['</m>']
         mention_rep += tokens[doc_id][end + 1:]
         return ' '.join(mention_rep)
-
-
-
 
     def get_sentence_context(self, mention, tokens, sentences):
         doc_id, start, end, _ = mention
@@ -401,9 +386,6 @@ class BiEncoderDataset(data.Dataset):
         return ' '.join(mention_rep)
 
 
-
-
-
 class ClusterForHypernymDataset(data.Dataset):
     '''
     generate all pairs of clusters (product)
@@ -414,6 +396,7 @@ class ClusterForHypernymDataset(data.Dataset):
     1: neutral == hypernym
     2: entailment == hyponym
     '''
+
     def __init__(self, data_path, with_context=False):
         super(ClusterForHypernymDataset, self).__init__()
         with jsonlines.open(data_path, 'r') as f:
@@ -433,16 +416,11 @@ class ClusterForHypernymDataset(data.Dataset):
             self.hypothesis.extend(hypothesis)
             self.labels.extend(labels)
 
-
-
     def __len__(self):
         return len(self.labels)
 
-
     def __getitem__(self, idx):
         return self.premise[idx], self.hypothesis[idx], self.labels[idx]
-
-
 
     def get_topic_candidates(self, topic):
         clusters = collections.defaultdict(list)
@@ -457,7 +435,6 @@ class ClusterForHypernymDataset(data.Dataset):
             candidates.append(', '.join(sampled))
             cluster_ids.append(c_id)
 
-
         permutations = [(x, y) for x, y in product(range(len(candidates)), repeat=2) if x != y]
         labels = []
         for x, y in permutations:
@@ -470,10 +447,8 @@ class ClusterForHypernymDataset(data.Dataset):
         first, second = zip(*permutations)
         first, second = torch.tensor(first), torch.tensor(second)
 
-
         candidates = np.array(candidates)
         premise = candidates[first]
         hypothesis = candidates[second]
-
 
         return premise, hypothesis, labels

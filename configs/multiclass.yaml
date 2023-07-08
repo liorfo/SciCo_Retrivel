@@ -1,4 +1,4 @@
-gpu_num: [0, 1, 2, 3, 4, 5, 6, 7]
+gpu_num: [0]
 random_seed: 0
 
 #model
@@ -14,20 +14,23 @@ model:
 
 # data and model path
 data:
-  training_set: data/v3/train.jsonl
-  dev_set: data/v3/dev.jsonl
-  test_set: data/v3/test.jsonl
+  training_set: data/train.jsonl
+  dev_set: data/dev.jsonl
+  test_set: data/test.jsonl
 
 
 full_doc: true
-model_path: /net/nfs.cs/s2-research/ariec/scico/models
-log: logs
+model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/test_models
+log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
+
+# definition extraction
+definition_extraction: true
 
 
 # inference
-checkpoint_multiclass: path-to-multiclass-ckpt
+checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/net/nfs.cs/s2-research/ariec/scico/models/multiclass/version_4/checkpoints/epoch=0-step=8887.ckpt
 checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
 hypernym_threshold: 0.4 # for hypernym scores
-save_path: path-to-save-dir
+save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/multiclass_results

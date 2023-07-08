@@ -1,12 +1,15 @@
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
-from transformers import *
+# from transformers import *
 import numpy as np
 import pytorch_lightning as pl
 import torchmetrics
+from transformers import AutoModel, AutoTokenizer
 
 from typing import Any, List, Optional
+
+from SciCo_Retrivel.definition_extractor import get_definition_retrieval_model
 
 
 def get_global_attention(input_ids, start_token, end_token):
@@ -63,10 +66,15 @@ class MulticlassCrossEncoder(pl.LightningModule):
         self.doc_start = self.tokenizer.convert_tokens_to_ids('<doc-s>') if self.cdlm else None
         self.doc_end = self.tokenizer.convert_tokens_to_ids('</doc-s>') if self.cdlm else None
 
-        self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False)
+        self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False, cache_dir='/cs/labs/tomhope/forer11/cache')
         self.model.resize_token_embeddings(len(self.tokenizer))
         self.linear = nn.Linear(self.model.config.hidden_size, num_classes)
         self.criterion = torch.nn.CrossEntropyLoss()
+
+        # # add definition extraction
+        # self.def_extraction_model = None
+        # if config["definition_extraction"]:
+        #     self.def_extraction_model = get_definition_retrieval_model()
 
 
         self.acc = pl.metrics.Accuracy(top_k=1)

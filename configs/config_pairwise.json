@@ -20,7 +20,7 @@
   "neg_samp": true,
 
   "log_path": "logs/pairwise_scorer/",
-  "training_set": "data/v3/train.jsonl",
-  "dev_set": "data/v3/dev.jsonl",
+  "training_set": "data/train.jsonl",
+  "dev_set": "data/dev.jsonl",
   "model_path": "checkpoints/sci_model/scibert/model"
 }

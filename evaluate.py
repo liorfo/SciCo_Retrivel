@@ -2,14 +2,12 @@ import jsonlines
 import sys
 import os
 
-
 from eval.hypernym import HypernymScore
 from eval.hypernym_50 import HypernymScore50
 from eval.shortest_path import ShortestPath
 from utils.conll import write_output_file
 from coval.coval.conll import reader
 from coval.coval.eval import evaluator
-
 
 
 def eval_coref(gold, system):
@@ -38,7 +36,6 @@ def eval_coref(gold, system):
     return scores
 
 
-
 def get_coref_scores(gold, system):
     output_path = 'tmp'
     if not os.path.exists(output_path):
@@ -51,11 +48,9 @@ def get_coref_scores(gold, system):
     return coref_scores
 
 
-
-
 if __name__ == '__main__':
-    gold_path = sys.argv[1]
-    sys_path = sys.argv[2]
+    gold_path = sys.argv[1] or '/cs/labs/tomhope/forer11/SciCo_Retrivel/data/test.jsonl'
+    sys_path = sys.argv[2] or '/cs/labs/tomhope/forer11/SciCo_Retrivel/multiclass_results/system_0.6_0.4.jsonl'
     hard = sys.argv[3] if len(sys.argv) > 3 else None
 
     with jsonlines.open(gold_path, 'r') as f:
@@ -86,11 +81,10 @@ if __name__ == '__main__':
           ' Precision: %.2f' % (hypernyms.micro_precision * 100),
           ' F1: %.2f' % (hypernyms.micro_f1 * 100))
 
-
     hypernym_50 = HypernymScore50(gold, system)
     print('Hierarchy 50%'.ljust(15), 'Recall: %.2f' % (hypernym_50.micro_recall * 100),
-         ' Precision: %.2f' % (hypernym_50.micro_precision * 100),
-         ' F1: %.2f' % (hypernym_50.micro_f1 * 100))
+          ' Precision: %.2f' % (hypernym_50.micro_precision * 100),
+          ' F1: %.2f' % (hypernym_50.micro_f1 * 100))
 
     path_ratio = ShortestPath(gold, system, directed=True, with_tn=False)
     print('Path Ratio'.ljust(15),

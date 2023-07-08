@@ -300,7 +300,7 @@ def predict_multiclass(config, trainer):
     # results = torch.load(os.path.join(config['save_path'], 'test_muticlass_results.pt'))
     inference = MulticlassInference(test, results, config['agg_threshold'], config['hypernym_threshold'])
     inference.predict_cluster_relations()
-    inference.save_predicted_file(config['save_path'])
+    # inference.save_predicted_file(config['save_path'])
 
 
 
@@ -360,7 +360,7 @@ def predict_pipeline(config, trainer):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default='configs/multiclass.yaml')
-    parser.add_argument('--multiclass', type=str, default='pipeline')
+    parser.add_argument('--multiclass', type=str, default='multiclass')
     parser.add_argument('--full_doc', type=str, default='0')
     parser.add_argument('--model_path', type=str, default='')
     parser.add_argument('--bert_model', type=str, default='')
