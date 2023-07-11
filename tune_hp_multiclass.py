@@ -15,11 +15,11 @@ from models.muticlass import MulticlassCrossEncoder
 from predict import MulticlassInference
 
 from eval.shortest_path import ShortestPath
-
-
-
+import gc
 
 if __name__ == '__main__':
+    torch.cuda.empty_cache()
+    gc.collect()
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default='configs/multiclass.yaml')
     parser.add_argument('--full_doc', type=str, default='1')
@@ -43,20 +43,19 @@ if __name__ == '__main__':
     logger.info("pid: {}".format(os.getpid()))
     logger.info('Server name: {}'.format(socket.gethostname()))
 
-
     if not os.path.exists(config['save_path']):
         os.makedirs(config['save_path'])
 
-
     logger.info('loading models')
     model = MulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
-    dev = CrossEncoderDataset(config["data"]["dev_set"], full_doc=config['full_doc'], multiclass='multiclass')
+    dev = CrossEncoderDataset(config["data"]["dev_set"], full_doc=config['full_doc'], multiclass='multiclass',
+                              should_load_definition=True, data_label='dev')
     dev_loader = data.DataLoader(dev,
-                                  batch_size=config["model"]["batch_size"] * 64 * 4,
-                                  shuffle=False,
-                                  collate_fn=model.tokenize_batch,
-                                  num_workers=16,
-                                  pin_memory=True)
+                                 batch_size=config["model"]["batch_size"] * 4,
+                                 shuffle=False,
+                                 collate_fn=model.tokenize_batch,
+                                 num_workers=16,
+                                 pin_memory=True)
 
     pl_logger = CSVLogger(save_dir='logs', name='multiclass_inference')
     trainer = pl.Trainer(gpus=config['gpu_num'], accelerator='dp')
@@ -66,7 +65,6 @@ if __name__ == '__main__':
     # results = torch.load('checkpoints/multiclass/dev_results.pt')
     coref_threshold = np.arange(0.4, 0.61, 0.1)
     hypernym_threshold = np.arange(0.4, 0.61, 0.1)
-
 
     ## run predict for all thresholds
     scores = []
@@ -78,7 +76,6 @@ if __name__ == '__main__':
 
         path_based = ShortestPath(dev.data, inference.predicted_data, directed=True, with_tn=False)
         scores.append(path_based.micro_average)
-
 
     best = np.argmax(scores)
     logger.info(f'Highest score: {scores[best]}')

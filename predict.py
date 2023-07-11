@@ -29,13 +29,10 @@ class MulticlassInference:
         self.coref_threshold = coref_threshold
         self.hypernym_threshold = hypernym_threshold
 
-
         self.clustering = AgglomerativeClustering(n_clusters=None,
                                                   affinity='precomputed',
                                                   linkage='average',
                                                   distance_threshold=self.coref_threshold)
-
-
 
     def get_coref_adjacency_matrix(self, info_pairs, pairwise_scores):
         '''
@@ -54,7 +51,6 @@ class MulticlassInference:
 
         return adjacency.numpy()
 
-
     def undirect_adjacency_matrix(self, matrix):
         undirected = matrix.copy()
         n = len(matrix)
@@ -70,7 +66,6 @@ class MulticlassInference:
         cluster_pairs = [[x, y] for x in cluster_a for y in cluster_b]
         indices = [i for i, x in enumerate(pairs) if x in cluster_pairs]
         return scores[indices].mean()
-
 
     def hypernym_relations(self, predicted_mentions, pairs, scores):
         '''
@@ -90,8 +85,9 @@ class MulticlassInference:
         permutations = [(x, y) for x, y in permutations if x != y]
         first, second = zip(*permutations)
         info_pairs = pairs[:, 1:].tolist()
-        avg_scores = torch.stack([self.get_mention_pairs(clusters[cluster_ids[x]], clusters[cluster_ids[y]], info_pairs, scores[:, 3])
-                                  for x, y in zip(first, second)])
+        avg_scores = torch.stack(
+            [self.get_mention_pairs(clusters[cluster_ids[x]], clusters[cluster_ids[y]], info_pairs, scores[:, 3])
+             for x, y in zip(first, second)])
 
         inds = torch.nonzero(avg_scores >= self.hypernym_threshold).squeeze(-1)
         avg_scores = avg_scores[inds]
@@ -101,9 +97,6 @@ class MulticlassInference:
 
         return relations
 
-
-
-
     def get_topic_prediction(self, topic_num, topic_pairs, topic_scores):
         # coref clusters
         coref_adjacency_matrix = self.get_coref_adjacency_matrix(topic_pairs, topic_scores)
@@ -111,22 +104,19 @@ class MulticlassInference:
         distance_matrix = 1 - undirected_matrix
         predicted = self.clustering.fit(distance_matrix)
 
-
         mentions = self.dataset.data[topic_num]['mentions']
         mentions = np.array(mentions)
         predicted_clusters = predicted.labels_.reshape(len(mentions), 1)
         predicted_mentions = np.concatenate((mentions[:, :-1], predicted_clusters), axis=1)
 
-
         relations = self.hypernym_relations(predicted_mentions, topic_pairs, topic_scores)
 
         return {
             "id": self.dataset.data[topic_num]['id'],
-            "tokens":self.dataset.data[topic_num]['tokens'],
+            "tokens": self.dataset.data[topic_num]['tokens'],
             "mentions": predicted_mentions.tolist(),
             "relations": relations
         }
-
 
     def predict_cluster_relations(self):
         idx, vals = torch.unique(self.info_pairs[:, 0], return_counts=True)
@@ -140,12 +130,11 @@ class MulticlassInference:
 
         self.predicted_data = predicted_data
 
-
     def save_predicted_file(self, output_dir):
-        jsonl_path = os.path.join(output_dir, 'system_{}_{}.jsonl'.format(self.coref_threshold, self.hypernym_threshold))
+        jsonl_path = os.path.join(output_dir,
+                                  'system_{}_{}.jsonl'.format(self.coref_threshold, self.hypernym_threshold))
         with jsonlines.open(jsonl_path, 'w') as f:
             f.write_all(self.predicted_data)
-
 
 
 class BinaryCoreferenceInference:
@@ -159,9 +148,6 @@ class BinaryCoreferenceInference:
                                                   affinity='precomputed',
                                                   linkage='average',
                                                   distance_threshold=self.threshold)
-
-
-
 
     def get_topic_prediction(self, topic_num, topic_scores):
         mentions = self.dataset.data[topic_num]['mentions']
@@ -180,8 +166,6 @@ class BinaryCoreferenceInference:
             "relations": []
         }
 
-
-
     def fit(self):
         idx, vals = torch.unique(self.info_pairs[:, 0], return_counts=True)
         all_pairs = torch.split_with_sizes(self.info_pairs, tuple(vals))
@@ -193,7 +177,6 @@ class BinaryCoreferenceInference:
             predicted_data.append(data)
 
         self.predicted_data = predicted_data
-
 
 
 class EntailmentInference:
@@ -211,8 +194,6 @@ class EntailmentInference:
             topic_data['relations'] = relations
             self.predicted_data.append(topic_data)
 
-
-
     def get_topic_relations(self, topic, data):
         clusters = collections.defaultdict(list)
         for i, (_, _, _, c_id) in enumerate(data):
@@ -223,7 +204,6 @@ class EntailmentInference:
         return relations
 
 
-
 class HypernymInference:
     def __init__(self, dataset, predicted_data, pairwise_scores, threshold):
         self.dataset = dataset
@@ -232,12 +212,10 @@ class HypernymInference:
         self.predicted_data = predicted_data
         self.hypernym_threshold = threshold
 
-
     def get_mention_pairs(self, cluster_a, cluster_b, pairs, scores):
         cluster_pairs = [[x, y] for x in cluster_a for y in cluster_b]
         indices = [i for i, x in enumerate(pairs) if x in cluster_pairs]
         return scores[indices].mean()
-
 
     def get_topic_relations(self, pairs, scores, predicted_data):
         predicted_mentions = predicted_data['mentions']
@@ -251,8 +229,9 @@ class HypernymInference:
         first, second = zip(*permutations)
         info_pairs = pairs[:, 1:].tolist()
 
-        avg_scores = torch.stack([self.get_mention_pairs(clusters[cluster_ids[x]], clusters[cluster_ids[y]], info_pairs, scores[:, 2])
-                                  for x, y in zip(first, second)])
+        avg_scores = torch.stack(
+            [self.get_mention_pairs(clusters[cluster_ids[x]], clusters[cluster_ids[y]], info_pairs, scores[:, 2])
+             for x, y in zip(first, second)])
 
         inds = torch.nonzero(avg_scores >= self.hypernym_threshold).squeeze(-1)
         avg_scores = avg_scores[inds]
@@ -262,15 +241,15 @@ class HypernymInference:
 
         return relations
 
-
     def fit(self):
         idx, vals = torch.unique(self.info_pairs[:, 0], return_counts=True)
         all_pairs = torch.split_with_sizes(self.info_pairs, tuple(vals))
         all_scores = torch.split_with_sizes(self.pairwise_scores, tuple(vals))
 
         all_predicted_data = []
-        for topic, (topic_pair, topic_score, predicted_data) in enumerate(tqdm(zip(all_pairs, all_scores, self.predicted_data),
-                                                                            total=len(all_pairs))):
+        for topic, (topic_pair, topic_score, predicted_data) in enumerate(
+                tqdm(zip(all_pairs, all_scores, self.predicted_data),
+                     total=len(all_pairs))):
             relations = self.get_topic_relations(topic_pair, topic_score, predicted_data)
             data_with_rel = predicted_data.copy()
             data_with_rel['relations'] = relations
@@ -279,15 +258,14 @@ class HypernymInference:
         self.predicted_data = all_predicted_data
 
 
-
-
 def predict_multiclass(config, trainer):
     logger.info('Predicting multiclass scores')
     model = MulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
     test = CrossEncoderDataset(config["data"]["test_set"],
                                full_doc=config['full_doc'],
                                multiclass=model_name,
-                               is_training=False)
+                               is_training=False,
+                               should_load_definition=True, data_label='test')
     test_loader = data.DataLoader(test,
                                   batch_size=config["model"]["batch_size"] * 64,
                                   shuffle=False,
@@ -300,14 +278,12 @@ def predict_multiclass(config, trainer):
     # results = torch.load(os.path.join(config['save_path'], 'test_muticlass_results.pt'))
     inference = MulticlassInference(test, results, config['agg_threshold'], config['hypernym_threshold'])
     inference.predict_cluster_relations()
-    # inference.save_predicted_file(config['save_path'])
-
+    inference.save_predicted_file(config['save_path'])
 
 
 def predict_pipeline(config, trainer):
     coref_model = BinaryCorefCrossEncoder.load_from_checkpoint(config['checkpoint_coref'], config=config)
     hypernym_model = HypernymCrossEncoder.load_from_checkpoint(config['checkpoint_hypernym'], config=config)
-
 
     test_coref = CrossEncoderDataset(config["data"]["test_set"],
                                      full_doc=config['full_doc'],
@@ -355,8 +331,6 @@ def predict_pipeline(config, trainer):
         f.write_all(predicted_data)
 
 
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default='configs/multiclass.yaml')
@@ -365,7 +339,6 @@ if __name__ == '__main__':
     parser.add_argument('--model_path', type=str, default='')
     parser.add_argument('--bert_model', type=str, default='')
     parser.add_argument('--save_path', type=str, default='')
-
 
     args = parser.parse_args()
     with open(args.config, 'r') as f:
@@ -379,7 +352,6 @@ if __name__ == '__main__':
 
     if model_name not in {'pipeline', 'multiclass'}:
         raise ValueError(f"The multiclass value needs to be in (multiclass, pipeline), got {model_name}.")
-
 
     root_logger = logging.getLogger()
     logger = root_logger.getChild(__name__)
@@ -412,5 +384,3 @@ if __name__ == '__main__':
 
     else:
         predict_pipeline(config, trainer)
-
-

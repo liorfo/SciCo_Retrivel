@@ -26,6 +26,7 @@ Path Ratio      Micro Average: 35.05 Macro: 33.68
 
 hard_20:
 
+Coref metrics
 mentions   Recall: 87.87  Precision: 91.73  F1: 89.76
 muc        Recall: 80.26  Precision: 85.57  F1: 82.83
 bcub       Recall: 61.98  Precision: 74.41  F1: 67.63

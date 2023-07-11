@@ -22,7 +22,8 @@ class CrossEncoderDataset(data.Dataset):
                  should_save_definition=False,
                  should_load_definition=False):
         super(CrossEncoderDataset, self).__init__()
-
+        if should_load_definition:
+            print(f'Loading definitions from {data_label}')
         self.should_load_definition = should_load_definition
         self.should_extract_definition = should_save_definition
         self.definition_extraction_model = definition_extraction_model
