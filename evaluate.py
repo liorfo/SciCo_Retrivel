@@ -49,8 +49,8 @@ def get_coref_scores(gold, system):
 
 
 if __name__ == '__main__':
-    gold_path = sys.argv[1] or '/cs/labs/tomhope/forer11/SciCo_Retrivel/data/test.jsonl'
-    sys_path = sys.argv[2] or '/cs/labs/tomhope/forer11/SciCo_Retrivel/multiclass_results/system_0.6_0.4.jsonl'
+    gold_path = sys.argv[1]
+    sys_path = sys.argv[2]
     hard = sys.argv[3] if len(sys.argv) > 3 else None
 
     with jsonlines.open(gold_path, 'r') as f:

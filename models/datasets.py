@@ -19,10 +19,12 @@ class CrossEncoderDataset(data.Dataset):
                  cdlm=False,
                  definition_extraction_model=None,
                  data_label='train',
-                 should_extract_definition=False):
+                 should_save_definition=False,
+                 should_load_definition=False):
         super(CrossEncoderDataset, self).__init__()
 
-        self.should_extract_definition = should_extract_definition
+        self.should_load_definition = should_load_definition
+        self.should_extract_definition = should_save_definition
         self.definition_extraction_model = definition_extraction_model
 
         with jsonlines.open(data_path, 'r') as f:
@@ -43,15 +45,17 @@ class CrossEncoderDataset(data.Dataset):
         self.pairs, self.labels = [], []
         self.first, self.second = [], []
         self.info_pairs = []
-        # with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/data/{data_label}_definitions', "rb") as fp:
-        #     x = pickle.load(fp)
+        self.definitions = {}
+        if should_load_definition:
+            with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/data/{data_label}_definitions', "rb") as fp:
+                self.definitions = pickle.load(fp)
         all_definitions = {}
         for i, topic in enumerate(self.data):
             if self.multiclass == 'multiclass':
-                if should_extract_definition:
+                if should_save_definition:
                     print(f'Processing topic {i}')
                 inputs, labels, info_pairs, definitions = self.get_topic_pairs(topic)
-                if should_extract_definition:
+                if should_save_definition:
                     all_definitions.update(definitions)
             elif self.multiclass == 'hypernym':
                 inputs, labels, info_pairs = self.get_topic_pair_for_hypernym(topic)
@@ -64,7 +68,7 @@ class CrossEncoderDataset(data.Dataset):
             info_pairs = np.concatenate((np.array([i] * pair_nums).reshape(pair_nums, 1),
                                          info_pairs), axis=1)
             self.info_pairs.extend(info_pairs)
-        if should_extract_definition:
+        if should_save_definition:
             print(f'saving all definitions for {data_label}...')
             with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/data/{data_label}_definitions', 'wb') as f:
                 pickle.dump(all_definitions, f)
@@ -208,12 +212,18 @@ class CrossEncoderDataset(data.Dataset):
 
         mention_rep = tokens[doc_id][sent_start:start] + ['<m>']
         mention_rep += tokens[doc_id][start:end + 1] + ['</m>']
-        mention_rep += tokens[doc_id][end + 1:sent_end] + [self.sep]
+        mention_rep_with_sep = mention_rep + tokens[doc_id][end + 1:sent_end] + [self.sep]
+
+        if self.should_load_definition:
+            mention_definition = self.definitions[' '.join(mention_rep_with_sep)]
+            return ' '.join(mention_rep) + '<def>' + mention_definition['result'] + '</def>' + self.sep
+
+
 
         if self.cdlm:
-            mention_rep = ['<doc-s>'] + mention_rep + ['</doc-s>']
+            mention_rep = ['<doc-s>'] + mention_rep_with_sep + ['</doc-s>']
 
-        return ' '.join(mention_rep)
+        return ' '.join(mention_rep_with_sep)
 
 
 class BiEncoderDataset(data.Dataset):

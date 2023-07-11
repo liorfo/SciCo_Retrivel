@@ -47,12 +47,12 @@ def get_train_dev_loader(config):
     cdlm = 'cdlm' in config['model']['bert_model'].lower()
     # add definition extraction
     def_extraction_model = None
-    if config["definition_extraction"]:
-        def_extraction_model = get_definition_retrieval_model()
+    # if config["definition_extraction"]:
+    #     def_extraction_model = get_definition_retrieval_model()
 
     train = CrossEncoderDataset(config["data"]["training_set"], full_doc=config['full_doc'], multiclass=model_name,
                                 cdlm=cdlm, sep_token=sep_token, definition_extraction_model=def_extraction_model,
-                                should_extract_definition=True)
+                                should_save_definition=False, should_load_definition=True)
     train_loader = data.DataLoader(train,
                                    batch_size=config["model"]["batch_size"],
                                    shuffle=True,
@@ -62,7 +62,8 @@ def get_train_dev_loader(config):
     logger.info(f'training size: {len(train)}')
 
     dev = CrossEncoderDataset(config["data"]["dev_set"], full_doc=config['full_doc'], multiclass=model_name, cdlm=cdlm,
-                              sep_token=sep_token, definition_extraction_model=def_extraction_model)
+                              sep_token=sep_token, definition_extraction_model=def_extraction_model,
+                              should_save_definition=False, should_load_definition=True, data_label='dev')
     dev_loader = data.DataLoader(dev,
                                  batch_size=config["model"]["batch_size"],
                                  shuffle=False,
@@ -101,18 +102,18 @@ if __name__ == '__main__':
     logger.info('loading models')
     model = MulticlassModel.get_model(model_name, config)
     train_loader, dev_loader = get_train_dev_loader(config)
-    # pl_logger = CSVLogger(save_dir=config['model_path'], name=model_name)
-    # pl_logger.log_hyperparams(config)
-    # checkpoint_callback = ModelCheckpoint(save_top_k=-1)
-    # trainer = pl.Trainer(gpus=config['gpu_num'],
-    #                      default_root_dir=config['model_path'],
-    #                      accelerator='ddp',
-    #                      plugins=DDPPlugin(find_unused_parameters=False),
-    #                      max_epochs=config['model']['epochs'],
-    #                      callbacks=[checkpoint_callback],
-    #                      logger=pl_logger,
-    #                      gradient_clip_val=config['model']['gradient_clip'],
-    #                      accumulate_grad_batches=config['model']['gradient_accumulation'],
-    #                      val_check_interval=1.0)
-    # # set_start_method('spawn', force=True)
-    # trainer.fit(model, train_dataloader=train_loader, val_dataloaders=dev_loader)
+    pl_logger = CSVLogger(save_dir=config['model_path'], name=model_name)
+    pl_logger.log_hyperparams(config)
+    checkpoint_callback = ModelCheckpoint(save_top_k=-1)
+    trainer = pl.Trainer(gpus=config['gpu_num'],
+                         default_root_dir=config['model_path'],
+                         accelerator='ddp',
+                         plugins=DDPPlugin(find_unused_parameters=False),
+                         max_epochs=config['model']['epochs'],
+                         callbacks=[checkpoint_callback],
+                         logger=pl_logger,
+                         gradient_clip_val=config['model']['gradient_clip'],
+                         accumulate_grad_batches=config['model']['gradient_accumulation'],
+                         val_check_interval=1.0)
+    # set_start_method('spawn', force=True)
+    trainer.fit(model, train_dataloader=train_loader, val_dataloaders=dev_loader)

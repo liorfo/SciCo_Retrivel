@@ -1,0 +1,37 @@
+Normal:
+
+Coref metrics
+mentions   Recall: 91.40  Precision: 91.74  F1: 91.57
+muc        Recall: 85.19  Precision: 85.84  F1: 85.52
+bcub       Recall: 74.26  Precision: 75.77  F1: 75.01
+ceafe      Recall: 69.37  Precision: 68.36  F1: 68.86
+lea        Recall: 71.75  Precision: 73.19  F1: 72.46
+CoNLL score: 76.46
+Hierarchy       Recall: 43.81  Precision: 50.01  F1: 46.71
+Hierarchy 50%   Recall: 32.87  Precision: 43.84  F1: 37.57
+Path Ratio      Micro Average: 45.00 Macro: 46.64
+
+hard_10:
+
+Coref metrics
+mentions   Recall: 84.61  Precision: 92.06  F1: 88.18
+muc        Recall: 76.37  Precision: 85.15  F1: 80.52
+bcub       Recall: 53.85  Precision: 71.84  F1: 61.55
+ceafe      Recall: 52.79  Precision: 49.24  F1: 50.96
+lea        Recall: 50.85  Precision: 68.91  F1: 58.52
+CoNLL score: 64.34
+Hierarchy       Recall: 43.81  Precision: 51.56  F1: 47.37
+Hierarchy 50%   Recall: 24.95  Precision: 47.40  F1: 32.69
+Path Ratio      Micro Average: 35.05 Macro: 33.68
+
+hard_20:
+
+mentions   Recall: 87.87  Precision: 91.73  F1: 89.76
+muc        Recall: 80.26  Precision: 85.57  F1: 82.83
+bcub       Recall: 61.98  Precision: 74.41  F1: 67.63
+ceafe      Recall: 60.86  Precision: 55.63  F1: 58.13
+lea        Recall: 59.08  Precision: 71.72  F1: 64.79
+CoNLL score: 69.53
+Hierarchy       Recall: 42.71  Precision: 50.88  F1: 46.44
+Hierarchy 50%   Recall: 25.67  Precision: 47.13  F1: 33.24
+Path Ratio      Micro Average: 39.96 Macro: 39.17
