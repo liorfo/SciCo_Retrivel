@@ -23,12 +23,9 @@ def get_global_attention(input_ids, start_token, end_token):
     return global_attention_mask
 
 
-
-
 class MulticlassModel:
     def __init__(self):
         super(MulticlassModel, self).__init__()
-
 
     @classmethod
     def get_model(cls, name, config):
@@ -38,8 +35,6 @@ class MulticlassModel:
             return BinaryCorefCrossEncoder(config)
         elif name == 'hypernym':
             return HypernymCrossEncoder(config)
-
-
 
 
 class MulticlassCrossEncoder(pl.LightningModule):
@@ -70,7 +65,8 @@ class MulticlassCrossEncoder(pl.LightningModule):
         self.doc_start = self.tokenizer.convert_tokens_to_ids('<doc-s>') if self.cdlm else None
         self.doc_end = self.tokenizer.convert_tokens_to_ids('</doc-s>') if self.cdlm else None
 
-        self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False, cache_dir='/cs/labs/tomhope/forer11/cache')
+        self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False,
+                                               cache_dir='/cs/labs/tomhope/forer11/cache', attention_window=1012)
         self.model.resize_token_embeddings(len(self.tokenizer))
         self.linear = nn.Linear(self.model.config.hidden_size, num_classes)
         self.criterion = torch.nn.CrossEntropyLoss()
@@ -80,13 +76,10 @@ class MulticlassCrossEncoder(pl.LightningModule):
         # if config["definition_extraction"]:
         #     self.def_extraction_model = get_definition_retrieval_model()
 
-
         self.acc = pl.metrics.Accuracy(top_k=1)
         self.f1 = pl.metrics.F1(num_classes=num_classes, average='none')
         self.recall = pl.metrics.Recall(num_classes=num_classes, average='none')
         self.val_precision = pl.metrics.Precision(num_classes=num_classes, average='none')
-
-
 
     def forward(self, input_ids, attention_mask, global_attention_mask):
         output = self.model(input_ids, attention_mask=attention_mask,
@@ -95,16 +88,12 @@ class MulticlassCrossEncoder(pl.LightningModule):
         scores = self.linear(cls_vector)
         return scores
 
-
-
     def training_step(self, batch, batch_idx):
         x, y = batch
         input_ids, attention_mask, global_attention_mask = x
         y_hat = self(input_ids, attention_mask, global_attention_mask)
         loss = self.criterion(y_hat, y)
         return loss
-
-
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
@@ -117,10 +106,8 @@ class MulticlassCrossEncoder(pl.LightningModule):
 
         return loss
 
-
     def validation_epoch_end(self, outputs):
         self.log_metrics()
-
 
     def test_step(self, batch, batch_idx):
         x, y = batch
@@ -135,19 +122,14 @@ class MulticlassCrossEncoder(pl.LightningModule):
             'label': y
         }
 
-
     def test_step_end(self, outputs):
         y_hat, y = outputs['preds'], outputs['label']
         self.compute_metrics(y_hat, y)
         return outputs
 
-
     def test_epoch_end(self, outputs):
         self.log_metrics()
         self.results = outputs
-
-
-
 
     def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: Optional[int] = None):
         x, y = batch
@@ -156,17 +138,11 @@ class MulticlassCrossEncoder(pl.LightningModule):
         y_hat = torch.softmax(y_hat, dim=1)
         return y_hat
 
-
-
-
     def compute_metrics(self, y_hat, y):
         self.acc(y_hat, y)
         self.f1(y_hat, y)
         self.recall(y_hat, y)
         self.val_precision(y_hat, y)
-
-
-
 
     def log_metrics(self):
         self.log('acc', self.acc.compute())
@@ -182,10 +158,6 @@ class MulticlassCrossEncoder(pl.LightningModule):
         self.log('f1_hyponym', f1_hyponym)
         self.log('recall_hyponym', recall_hyponym)
         self.log('precision_hyponym', precision_hyponym)
-
-
-
-
 
     def configure_optimizers(self):
         return torch.optim.AdamW(self.parameters(), lr=self.config['model']['lr'])
@@ -208,7 +180,6 @@ class MulticlassCrossEncoder(pl.LightningModule):
         global_attention_mask.index_put_(tuple(globs.t()), value)
         return global_attention_mask
 
-
     def tokenize_batch(self, batch):
         inputs, labels = zip(*batch)
         tokens = self.tokenizer(list(inputs), padding=True)
@@ -218,7 +189,6 @@ class MulticlassCrossEncoder(pl.LightningModule):
         labels = torch.stack(labels)
 
         return (input_ids, attention_mask, global_attention_mask), labels
-
 
 
 class BinaryCorefCrossEncoder(pl.LightningModule):
@@ -233,7 +203,6 @@ class BinaryCorefCrossEncoder(pl.LightningModule):
         self.long = True if 'longformer' in config["model"]["bert_model"] else False
         self.config = config
 
-
         self.tokenizer = AutoTokenizer.from_pretrained(config["model"]["bert_model"])
         self.tokenizer.add_tokens('<m>', special_tokens=True)
         self.tokenizer.add_tokens('</m>', special_tokens=True)
@@ -245,13 +214,10 @@ class BinaryCorefCrossEncoder(pl.LightningModule):
         self.linear = nn.Linear(self.model.config.hidden_size, 1)
         self.criterion = torch.nn.BCEWithLogitsLoss()
 
-
         self.acc = pl.metrics.Accuracy()
         self.f1 = pl.metrics.F1(num_classes=1)
         self.recall = pl.metrics.Recall(num_classes=1)
         self.val_precision = pl.metrics.Precision(num_classes=1)
-
-
 
     def forward(self, input_ids, attention_mask, global_attention_mask):
         output = self.model(input_ids, attention_mask=attention_mask,
@@ -260,16 +226,12 @@ class BinaryCorefCrossEncoder(pl.LightningModule):
         scores = self.linear(cls_vector)
         return scores.squeeze(1)
 
-
-
     def training_step(self, batch, batch_idx):
         x, y = batch
         input_ids, attention_mask, global_attention_mask = x
         y_hat = self(input_ids, attention_mask, global_attention_mask)
         loss = self.criterion(y_hat, y)
         return loss
-
-
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
@@ -282,10 +244,8 @@ class BinaryCorefCrossEncoder(pl.LightningModule):
 
         return loss
 
-
     def validation_epoch_end(self, outputs):
         self.log_metrics()
-
 
     def test_step(self, batch, batch_idx):
         x, y = batch
@@ -299,18 +259,14 @@ class BinaryCorefCrossEncoder(pl.LightningModule):
             'label': y
         }
 
-
     def test_step_end(self, outputs):
         y_hat, y = outputs['preds'], outputs['label']
         self.compute_metrics(y_hat, y)
         return outputs
 
-
     def test_epoch_end(self, outputs):
         self.log_metrics()
         self.results = outputs
-
-
 
     def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: Optional[int] = None):
         x, y = batch
@@ -319,17 +275,11 @@ class BinaryCorefCrossEncoder(pl.LightningModule):
         y_hat = torch.sigmoid(y_hat)
         return y_hat
 
-
-
-
     def compute_metrics(self, y_hat, y):
         self.acc(y_hat, y)
         self.f1(y_hat, y)
         self.recall(y_hat, y)
         self.val_precision(y_hat, y)
-
-
-
 
     def log_metrics(self):
         self.log('acc', self.acc.compute())
@@ -337,14 +287,8 @@ class BinaryCorefCrossEncoder(pl.LightningModule):
         self.log('recall', self.recall.compute())
         self.log('precision', self.val_precision.compute())
 
-
-
-
-
     def configure_optimizers(self):
         return torch.optim.AdamW(self.parameters(), lr=self.config['model']['lr'])
-
-
 
     def tokenize_batch(self, batch):
         inputs, labels = zip(*batch)
@@ -355,7 +299,6 @@ class BinaryCorefCrossEncoder(pl.LightningModule):
         labels = torch.stack(labels)
 
         return (input_ids, attention_mask, global_attention_mask), labels
-
 
 
 class HypernymCrossEncoder(pl.LightningModule):
@@ -387,7 +330,6 @@ class HypernymCrossEncoder(pl.LightningModule):
         self.recall = pl.metrics.Recall(num_classes=num_classes, average='none')
         self.val_precision = pl.metrics.Precision(num_classes=num_classes, average='none')
 
-
     def forward(self, input_ids, attention_mask, global_attention_mask):
         output = self.model(input_ids, attention_mask=attention_mask,
                             global_attention_mask=global_attention_mask)
@@ -395,14 +337,12 @@ class HypernymCrossEncoder(pl.LightningModule):
         scores = self.linear(cls_vector)
         return scores
 
-
     def training_step(self, batch, batch_idx):
         x, y = batch
         input_ids, attention_mask, global_attention_mask = x
         y_hat = self(input_ids, attention_mask, global_attention_mask)
         loss = self.criterion(y_hat, y)
         return loss
-
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
@@ -415,10 +355,8 @@ class HypernymCrossEncoder(pl.LightningModule):
 
         return loss
 
-
     def validation_epoch_end(self, outputs):
         self.log_metrics()
-
 
     def test_step(self, batch, batch_idx):
         x, y = batch
@@ -442,7 +380,6 @@ class HypernymCrossEncoder(pl.LightningModule):
         self.log_metrics()
         self.results = outputs
 
-
     def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: Optional[int] = None):
         x, y = batch
         input_ids, attention_mask, global_attention_mask = x
@@ -450,13 +387,11 @@ class HypernymCrossEncoder(pl.LightningModule):
         y_hat = torch.softmax(y_hat, dim=1)
         return y_hat
 
-
     def compute_metrics(self, y_hat, y):
         self.acc(y_hat, y)
         self.f1(y_hat, y)
         self.recall(y_hat, y)
         self.val_precision(y_hat, y)
-
 
     def log_metrics(self):
         self.log('acc', self.acc.compute())
@@ -470,10 +405,8 @@ class HypernymCrossEncoder(pl.LightningModule):
         self.log('recall_hyponym', recall_hyponym)
         self.log('precision_hyponym', precision_hyponym)
 
-
     def configure_optimizers(self):
         return torch.optim.AdamW(self.parameters(), lr=self.config['model']['lr'])
-
 
     def tokenize_batch(self, batch):
         inputs, labels = zip(*batch)
@@ -484,7 +417,6 @@ class HypernymCrossEncoder(pl.LightningModule):
         labels = torch.stack(labels)
 
         return (input_ids, attention_mask, global_attention_mask), labels
-
 
 
 class MulticlassBiEncoder(pl.LightningModule):
@@ -511,7 +443,6 @@ class MulticlassBiEncoder(pl.LightningModule):
         self.recall = pl.metrics.Recall(num_classes=num_classes, average='none')
         self.val_precision = pl.metrics.Precision(num_classes=num_classes, average='none')
 
-
     def get_cls_token(self, mention):
         input_ids, attention_mask, global_attention_mask = mention
         if self.long:
@@ -521,7 +452,6 @@ class MulticlassBiEncoder(pl.LightningModule):
 
         return output.last_hidden_state[:, 0, :]
 
-
     def forward(self, first, second):
         cls_1 = self.get_cls_token(first)
         cls_2 = self.get_cls_token(second)
@@ -530,13 +460,11 @@ class MulticlassBiEncoder(pl.LightningModule):
         scores = self.linear(input_vec)
         return scores
 
-
     def training_step(self, batch, batch_idx):
         m1, m2, y = batch
         y_hat = self(m1, m2)
         loss = self.criterion(y_hat, y)
         return loss
-
 
     def validation_step(self, batch, batch_idx):
         m1, m2, y = batch
@@ -547,7 +475,6 @@ class MulticlassBiEncoder(pl.LightningModule):
 
         return loss
 
-
     def validation_epoch_end(self, outputs):
         self.log_metrics()
 
@@ -557,14 +484,11 @@ class MulticlassBiEncoder(pl.LightningModule):
         y_hat = torch.softmax(y_hat, dim=1)
         return y_hat
 
-
-
     def compute_metrics(self, y_hat, y):
         self.acc(y_hat, y)
         self.f1(y_hat, y)
         self.recall(y_hat, y)
         self.val_precision(y_hat, y)
-
 
     def log_metrics(self):
         self.log('acc', self.acc.compute())
@@ -581,10 +505,8 @@ class MulticlassBiEncoder(pl.LightningModule):
         self.log('recall_hyponym', recall_hyponym)
         self.log('precision_hyponym', precision_hyponym)
 
-
     def configure_optimizers(self):
         return torch.optim.AdamW(self.parameters(), lr=self.config['model']['lr'])
-
 
     def tokenize_mention(self, mentions):
         tokens = self.tokenizer(list(mentions), padding=True)
@@ -598,7 +520,6 @@ class MulticlassBiEncoder(pl.LightningModule):
 
         return input_ids, attention_mask, global_attention_mask
 
-
     def tokenize_batch(self, batch):
         first, second, labels = zip(*batch)
         m1 = self.tokenize_mention(first)
@@ -606,4 +527,3 @@ class MulticlassBiEncoder(pl.LightningModule):
         labels = torch.stack(labels)
 
         return m1, m2, labels
-

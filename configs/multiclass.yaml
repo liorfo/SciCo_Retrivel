@@ -28,9 +28,9 @@ definition_extraction: true
 
 
 # inference
-checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/test_models/multiclass/version_0/checkpoints/epoch=0-step=11849.ckpt
+checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/model_with_attention/multiclass/version_0/checkpoints/epoch=0-step=11849.ckpt
 checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
 hypernym_threshold: 0.4 # for hypernym scores
-save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/multiclass_results_def_basic
+save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/multiclass_results_def_attention
