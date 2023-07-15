@@ -1,0 +1,342 @@
+Processing term: unsupervised automatic facial point detection from normal terms
+
+
+Unsupervised automatic facial point detection refers to the process of identifying and locating specific
+points on a person's face without the need for manual labeling or prior knowledge of where these points should
+be located. It involves using computer vision algorithms to analyze images of faces and identify patterns that
+correspond to certain facial features, such as eyes, nose, and mouth.
+
+
+From:
+1. Facial emotion expressions in human-robot interaction: A survey
+2. CoNFies: Controllable Neural Face Avatars
+3. Facial Keypoints Detection
+
+
+Processing term: ASR from normal terms
+
+
+ASR stands for Automatic Speech Recognition. It is a technology that allows computers to recognize and
+understand human speech. It involves converting spoken words into text or commands that can be used by
+machines.
+
+
+From:
+1. Extension spectrale d'un signal de parole de la bande t\'el\'ephonique
+  \`a la bande AM
+2. Investigating data partitioning strategies for crosslinguistic
+  low-resource ASR evaluation
+3. Data Augmentation with Locally-time Reversed Speech for Automatic Speech
+  Recognition
+
+
+Processing term: Feature Pyramid Network from normal terms
+
+
+ A Feature Pyramid Network (FPN) is a type of neural network architecture used for image classification and
+object detection tasks. It consists of multiple levels of feature extraction, where each level represents a
+different scale of the input image. At each level, the network applies a set of convolutional filters to
+generate feature maps, which are then upsampled using transposed convolutions to match the input image size.
+By combining the features from all scales, the FPN can achieve higher accuracy than traditional architectures
+that only use a single scale of feature extraction.
+
+
+From:
+1. SFPN: Synthetic FPN for Object Detection
+2. PINs: Progressive Implicit Networks for Multi-Scale Neural
+  Representations
+3. DSIC: Dynamic Sample-Individualized Connector for Multi-Scale Object
+  Detection
+
+
+Processing term: spatial attention mechanisms from normal terms
+
+
+Spatial attention mechanisms refer to a technique used in computer vision and natural language processing to
+focus on specific regions of an image or sequence of images. It involves using a neural network to assign
+different weights to different parts of an image based on their relevance to the task at hand. In the case of
+object tracking, spatial attention mechanisms can be used to identify and prioritize the location of the
+target object within the scene. By focusing on the relevant areas of the image, the algorithm can improve its
+accuracy and reduce the likelihood of false positives.
+
+
+From:
+1. Towards Robust Visual Tracking for Unmanned Aerial Vehicle with
+  Tri-Attentional Correlation Filters
+2. MixFormer: End-to-End Tracking with Iterative Mixed Attention
+3. SRRT: Search Region Regulation Tracking
+
+
+Processing term: JPEG method from normal terms
+
+
+The term "JPEG method" is not defined in the given context. However, based on the context provided, it seems
+that the term refers to a specific technique used for compressing images using the Joint Photographic Experts
+Group (JPEG) algorithm.
+
+
+From:
+1. Image Splicing Detection, Localization and Attribution via JPEG Primary
+  Quantization Matrix Estimation and Clustering
+2. Image compression overview
+3. Image compression overview
+
+
+Processing term: video data generation from normal terms
+
+
+Video data generation refers to the process of creating or collecting digital video data. It can be done
+manually or automatically through various techniques such as capturing footage from cameras, downloading
+online videos, or generating synthetic videos using computer graphics. The generated videos may have different
+purposes such as entertainment, education, advertising, or scientific research.
+
+
+From:
+1. Clarification of Video Retrieval Query Results by the Automated
+  Insertion of Supporting Shots
+2. CREATE: A Benchmark for Chinese Short Video Retrieval and Title
+  Generation
+3. MSVD-Turkish: A Comprehensive Multimodal Dataset for Integrated Vision
+  and Language Research in Turkish
+
+
+Processing term: weight update from hard 20 terms
+
+
+ A weight update is a process in which the weights of a neural network are adjusted during the training
+process to improve its performance on a particular task. This is done by calculating the gradient of the loss
+function with respect to the weights and then applying an optimization algorithm to update them.
+
+
+From:
+1. Investigating the locality of neural network training dynamics
+2. The activity-weight duality in feed forward neural networks: The
+  geometric determinants of generalization
+3. Fixed Points of Cone Mapping with the Application to Neural Networks
+
+
+Processing term: Understanding Behaviors of Neurons from hard 20 terms
+
+
+Understanding Behaviors of Neurons refers to the ability to understand how neurons in the brain respond to
+different stimuli and how they interact with each other to produce cognitive processes such as memory,
+perception, and decision-making. It involves studying the electrical and chemical signals that neurons
+transmit and receiving, as well as the structures and functions of the neurons themselves.
+
+
+From:
+1. A brain basis of dynamical intelligence for AI and computational
+  neuroscience
+2. Modelling Neuronal Behaviour with Time Series Regression: Recurrent
+  Neural Networks on C. Elegans Data
+3. Excitable Networks for Finite State Computation with Continuous Time
+  Recurrent Neural Networks
+
+
+Processing term: policy gradient methods from hard 20 terms
+
+
+Policy gradient methods refer to a family of reinforcement learning algorithms that aim to optimize a policy
+by iteratively updating the policy parameters based on the gradient of some performance metric with respect to
+the policy. In the context of Q-learning, policy gradient methods can be used to improve the convergence speed
+of Q-learning by taking advantage of the fact that the Q-value function is typically smoother than the action-
+value function. However, policy gradient methods often suffer from high variance in the gradient estimates,
+which can lead to slow convergence or instability. Variance reduction techniques such as actor-critic methods
+can be used to address this issue by combining value and advantage functions to train both the policy and the
+value function more efficiently.
+
+
+From:
+1. On Policy Gradients
+2. Policy Gradient and Actor-Critic Learning in Continuous Time and Space:
+  Theory and Algorithms
+3. q-Learning in Continuous Time
+
+
+Processing term: satellite navigation module from hard 20 terms
+
+
+ A satellite navigation module is a component or subsystem of a satellite that is responsible for providing
+navigation and timing information to other devices on Earth. It typically uses Global Navigation Satellite
+System (GNSS) signals, such as those provided by the US Department of Defense's Global Positioning System
+(GPS), Russia's GLONASS, China's BeiDou, or Europe's Galileo, to determine its position and velocity, and then
+provides this information to other devices via a communication link.
+
+
+From:
+1. Performance Bounds for Cooperative Localisation in the Starlink Network
+2. Topology Design for GNSSs Considering Both Inter-satellite Links and
+  Ground-satellite Links
+3. Heterogeneous Federated CubeSat System: problems, constraints and
+  capabilities
+/cs/labs/tomhope/forer11/vnev_2/lib/python3.9/site-packages/transformers/pipelines/base.py:1081: UserWarning: You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+  warnings.warn(
+
+
+Processing term: GRU from hard 20 terms
+
+
+GRU stands for Gated Recurrent Unit. It is a type of recurrent neural network (RNN) cell that is commonly used
+in the context of natural language processing (NLP). The GRU cell is designed to handle sequential data, such
+as text or speech, by maintaining a memory of previous inputs while still allowing for flexibility in the
+output. The "gated" aspect of the GRU refers to the fact that there is a gate mechanism that controls the flow
+of information into and out of the memory cell. The GRU cell has been found to be particularly effective in
+tasks such as machine translation, where the input sequence needs to be predicted based on previously seen
+inputs.
+
+
+From:
+1. Reward Optimization for Neural Machine Translation with Learned Metrics
+2. English-Japanese Neural Machine Translation with
+  Encoder-Decoder-Reconstructor
+3. Gating Dropout: Communication-efficient Regularization for Sparsely
+  Activated Transformers
+
+
+Processing term: ReLU from hard 20 terms
+
+
+ReLU stands for Rectified Linear Unit, which is a type of activation function commonly used in neural
+networks. It is defined as f(x) = max(0,x), which means that it returns 0 for any input below 0 and the input
+itself for any input greater than or equal to 0.
+
+
+From:
+1. Neural Network Approximation of Refinable Functions
+2. Static analysis of ReLU neural networks with tropical polyhedra
+3. Neural Network Approximation of Refinable Functions
+
+
+Processing term: L2 from hard 20 terms
+
+
+L2 refers to the second power of the magnitude of a vector or matrix. It is commonly used in control theory to
+measure the distance between two signals or states. In the context of linear, parameter-varying (LPV) systems,
+the L2 norm of a signal is used to estimate the performance of the system.
+
+
+From:
+1. Computation of lower bounds for the induced L2 norm of LPV systems
+2. Computation of lower bounds for the induced L2 norm of LPV systems
+3. Event-Triggered l2-Optimal Formation Control with State-Estimation for
+  Agents Modeled as LPV Systems
+
+
+Processing term: robust speech or speaker recognition from hard 20 terms
+
+
+Robust speech or speaker recognition refers to speech technology that can accurately recognize speech even in
+challenging conditions such as background noise, accents, and variations in speaking rate. It involves using
+advanced algorithms and machine learning techniques to extract relevant features from speech signals and then
+using these features to distinguish between different speakers or types of speech events.
+
+
+From:
+1. Unsupervised Voice Activity Detection by Modeling Source and System
+  Information using Zero Frequency Filtering
+2. Improvement of Noise-Robust Single-Channel Voice Activity Detection with
+  Spatial Pre-processing
+3. SG-VAD: Stochastic Gates Based Speech Activity Detection
+
+
+Processing term: end-to-end deep neural network from hard 10 terms
+
+
+An end-to-end deep neural network refers to a type of artificial intelligence algorithm that combines multiple
+layers of artificial neurons into a single network, allowing it to learn and perform complex tasks without
+needing to be trained separately for each individual task. In the context of autonomous driving, end-to-end
+deep neural networks are used for perception, prediction, and planning tasks related to navigation and
+control.
+
+
+From:
+1. Autonomous Vehicle Control: End-to-end Learning in Simulated Urban
+  Environments
+2. Container: Context Aggregation Network
+3. Scalable Primitives for Generalized Sensor Fusion in Autonomous Vehicles
+
+
+Processing term: Conv ( ) filter from hard 10 terms
+
+
+ A "Conv" or "Convolution" filter is a type of layer in a neural network used for feature extraction. It
+applies a set of filters to the input data to identify patterns and extract features. The output of a Conv
+filter is a matrix of feature maps that represent the extracted features. The size of the filter depends on
+the desired level of abstraction and the size of the input data. In the given context, it means that before
+applying the DU-Net, a Conv filter with a stride of 2 and a max pooling layer was applied to reduce the number
+of features from 128 to 64.
+
+
+From:
+1. NTIRE 2022 Challenge on Efficient Super-Resolution: Methods and Results
+2. IMDeception: Grouped Information Distilling Super-Resolution Network
+3. Neural Architecture Search for Image Super-Resolution Using Densely
+  Constructed Search Space: DeCoNAS
+
+
+Processing term: Time Series Analysis from hard 10 terms
+
+
+Time series analysis is the process of analyzing data over time to identify patterns, trends, and seasonal
+variations. It involves using statistical techniques to model and forecast future values based on past
+observations. There are various types of time series analysis techniques, including regression analysis,
+forecasting, and hypothesis testing. Bootstrap is a resampling method used in time series analysis to estimate
+confidence intervals and test hypotheses about the mean of a time series. The choice of resampling method
+depends on the nature of the data and the research question being addressed.
+
+
+From:
+1. Skip-sampling: subsampling in the frequency domain
+2. Sampling rate-corrected analysis of irregularly sampled time series
+3. A Frequency Domain Bootstrap for General Multivariate Stationary
+  Processes
+
+
+Processing term: LSTM from hard 10 terms
+
+
+LSTM stands for Long Short-Term Memory, which is a type of Recurrent Neural Network (RNN) commonly used in
+Natural Language Processing (NLP). It can be used for various tasks such as language modeling, sentiment
+analysis, and machine translation. In the context of search engines, LSTM could potentially be used to improve
+the ranking of search results by taking into account the user's previous interactions with the search results
+and adjusting the ranking accordingly.
+
+
+From:
+1. RLIRank: Learning to Rank with Reinforcement Learning for Dynamic Search
+2. Pre-trained Language Model based Ranking in Baidu Search
+3. UNIMIB at TREC 2021 Clinical Trials Track
+
+
+Processing term: MLP from hard 10 terms
+
+
+ MLP stands for Multilayer Perceptron, which is a type of neural network architecture commonly used in
+supervised learning tasks.
+
+
+From:
+1. Teaching a Machine to Diagnose a Heart Disease; Beginning from
+  digitizing scanned ECGs to detecting the Brugada Syndrome (BrS)
+2. Identifying the Mislabeled Training Samples of ECG Signals using Machine
+  Learning
+3. Investigating myocardial infarction and its effects in patients with
+  urgent medical problems using advanced data mining tools
+
+
+Processing term: categorical data analysis technique from hard 10 terms
+
+
+Categorical data analysis techniques refer to statistical methods used to analyze and interpret categorical
+data. Categorical data is data that can be grouped into categories or classes, such as gender, race,
+occupation, or education level. Categorical data analysis techniques include chi-square tests, contingency
+tables, logistic regression, and decision trees.
+
+
+From:
+1. Modified Bivariate Weibull Distribution Allowing Instantaneous and Early
+  Failures
+2. Unobserved classes and extra variables in high-dimensional discriminant
+  analysis
+3. Improved Customer Transaction Classification using Semi-Supervised
+  Knowledge Distillation

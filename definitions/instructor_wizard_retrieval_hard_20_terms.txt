@@ -1,0 +1,134 @@
+Processing term: weight update from hard 20 terms
+
+
+Weight update refers to the process of adjusting the values of the weights in a neural network in order to
+improve its performance on a specific task. This is done by minimizing the difference between the predicted
+output and the actual output using backpropagation. The weight update formula is typically expressed as Δw =
+L(w,x,ε), where w is the weight vector, x is the input data, ε is the error signal, and L is the learning
+algorithm being used. In the case of a multilayer perceptron, the weight update formula would involve
+calculating the gradients of the loss function with respect to each weight parameter, and then applying an
+optimization algorithm to adjust the weights accordingly.
+
+
+From:
+0. Meta-Weight-Net: Learning an Explicit Mapping For Sample Weighting
+1. The activity-weight duality in feed forward neural networks: The
+  geometric determinants of generalization
+2. A Modern Self-Referential Weight Matrix That Learns to Modify Itself
+
+
+Processing term: Understanding Behaviors of Neurons from hard 20 terms
+
+
+I apologize, but without additional context or information, it is difficult to provide a specific answer to
+your query. Could you please provide me with more details or clarify your question?
+
+
+From:
+0. Account for Neuronal Representations from the Perspective of Neurons
+1. Global Concept-Based Interpretability for Graph Neural Networks via
+  Neuron Analysis
+2. Neuron-level Interpretation of Deep NLP Models: A Survey
+
+
+Processing term: policy gradient methods from hard 20 terms
+
+
+Policy gradient methods are a type of reinforcement learning algorithm that uses the gradient descent
+technique to optimize a policy parameter. The idea behind policy gradient methods is to find the policy that
+maximizes the expected reward by iteratively updating the policy parameters using the gradient of the expected
+reward with respect to those parameters. Policy gradient methods have been shown to be effective in solving
+complex reinforcement learning problems, such as playing Atari games and controlling humanoid robots. However,
+they often suffer from high variance in the gradient estimates, which can lead to slow convergence and poor
+performance. To address this issue, various techniques have been developed to reduce the variance of policy
+gradient estimates, including actor-critic methods that use both value and advantage functions to train a
+policy actor.
+
+
+From:
+0. Semi-On-Policy Training for Sample Efficient Multi-Agent Policy
+  Gradients
+1. Policy Learning and Evaluation with Randomized Quasi-Monte Carlo
+2. On Policy Gradients
+
+
+Processing term: satellite navigation module from hard 20 terms
+
+
+Satellite navigation module refers to a component of an unmanned aerial vehicle (UAV) that uses signals from
+satellites in orbit to determine its position and orientation in space. It relies on global navigation
+satellite systems (GNSS) such as GPS, GLONASS, Galileo, and BeiDou to calculate its coordinates and adjust its
+flight path accordingly.
+
+
+From:
+0. Customizable Stochastic High Fidelity Model of the Sensors and Camera
+  onboard a Low SWaP Fixed Wing Autonomous Aircraft
+1. Stochastic High Fidelity Simulation and Scenarios for Testing of Fixed
+  Wing Autonomous GNSS-Denied Navigation Algorithms
+2. Integrated guidance and control framework for the waypoint navigation of
+  a miniature aircraft with highly coupled longitudinal and lateral dynamics
+
+
+Processing term: GRU from hard 20 terms
+
+
+GRU stands for Gated Recurrent Unit, which is a type of recurrent neural network (RNN) cell that is commonly
+used in sequence-to-sequence models like NMT. It is designed to handle variable-length input sequences and has
+been shown to be effective in various natural language processing tasks including machine translation.
+
+
+From:
+0. Neural Machine Translation: A Review of Methods, Resources, and Tools
+1. A Survey of Domain Adaptation for Neural Machine Translation
+2. IITP at WAT 2021: System description for English-Hindi Multimodal
+  Translation Task
+
+
+Processing term: ReLU from hard 20 terms
+
+
+ReLU stands for Rectified Linear Unit, which is a commonly used activation function in neural networks. It is
+defined as f(x) = max(0, x), which means that it returns zero if the input is negative and the input itself if
+the input is positive.
+
+
+From:
+0. Deep Nonparametric Regression on Approximately Low-dimensional Manifolds
+1. SAU: Smooth activation function using convolution with approximate
+  identities
+2. SMU: smooth activation function for deep networks using smoothing
+  maximum technique
+
+
+Processing term: L2 from hard 20 terms
+
+
+L2 refers to the second power of the Euclidean norm in vector calculus, commonly used in signal processing and
+control engineering. It is also known as the Hilbert space L2.
+
+
+From:
+0. On Linear Time-Invariant Systems Analysis via A Single Trajectory: A
+  Linear Programming Approach
+1. SOS Methods for Multi-Delay Systems: A Dual Form of Lyapanov-Krasovskii
+  Functional
+2. Representation and Stability Analysis of PDE-ODE Coupled Systems
+
+
+Processing term: robust speech or speaker recognition from hard 20 terms
+
+
+Robust speech or speaker recognition refers to the ability of a machine learning model to accurately recognize
+speech or speakers even in the presence of background noise, accents, dialects, and variations in speaking
+style. It involves various techniques such as noise reduction, speaker diarization, and automatic speech
+recognition. Voice activity detection (VAD) is a crucial component of robust speech or speaker recognition as
+it helps to distinguish between speech and non-speech segments, which is essential for accurate speech or
+speaker recognition.
+
+
+From:
+0. Unsupervised Voice Activity Detection by Modeling Source and System
+  Information using Zero Frequency Filtering
+1. SG-VAD: Stochastic Gates Based Speech Activity Detection
+2. BC-VAD: A Robust Bone Conduction Voice Activity Detection

@@ -1,0 +1,60 @@
+term: {'role': 'user', 'content': 'weight update'}
+ context: {'role': 'system', 'content': 'this is the context of the term: A typical learning algorithm is driven by error signals ε(n ) which are the differences between the actual network output , y(n ) , and the desire ( or target ) output for a given input . For a pattern learning , we can express the weight update in the following general form ∆w(n ) = L(w(n ) , x(n ) , ε(n ) ) where L represents a learning algorithm . If we say that a neural network can describe a model of data , then a multilayer perceptron describes the data in a form of a hypersurface which approximates a functional relationship between x(n ) , and d(n ) .'}
+
+
+term definition: A weight update refers to the adjustment made to the weights in a neural network during the learning process. It is driven by error signals that quantify the difference between the network's output and the desired output for a given input. The update is determined by a learning algorithm such as backpropagation, and is used to iteratively improve the model's accuracy in approximating the functional relationship between the inputs and outputs.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'Understanding Behaviors of Neurons'}
+ context: {'role': 'system', 'content': 'this is the context of the term: [ 17th neuron ] subsubsection : Understanding Behaviors of Neurons in C - LSTMs To get an intuitive understanding of how the C - LSTMs work on this problem , we examined the neuron activations in the last aggregation layer while evaluating the test set using TC - LSTMs .'}
+
+
+term definition: Understanding behaviors of neurons refers to studying the activation patterns and responses of individual neurons or groups of neurons in the brain to better understand how they support different cognitive and sensory processes.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'policy gradient methods'}
+ context: {'role': 'system', 'content': 'this is the context of the term: Reinforcement learning algorithms that use policy gradient methods approach an optimal policy faster than Q-learning but at the cost of incurring high variances in gradients . Among variance reduction techniques are actor-critic methods that use value and advantage functions to train a policy actor .'}
+
+
+term definition: Reinforcement learning algorithms that optimize a policy through gradient descent on a performance metric. They work well when there is not a clear explicit optimal value function and can handle continuous action spaces.
+----------------------------------------
+
+term: {'role': 'user', 'content': 'satellite navigation module'}
+ context: {'role': 'system', 'content': 'this is the context of the term: Each wing plane formation control device comprises a wing plane formation controller , a wing plane autopilot and a wing plane formation communication radio . Each wing plane formation controller comprises a satellite navigation module , a formation communication radio interface , an SBUS interface , a GNSS interface , a GCS ( Ground ControlStation ) interface and a set of wing plane formation controller software . The ground device comprises a ground control station and a ground differential base station .'}
+
+
+term definition: A satellite navigation module is a hardware device that receives signals from navigation satellites and uses the received data to determine its own location, velocity, and time. These modules are commonly used in systems such as GPS, GLONASS, Galileo, and BeiDou to provide accurate location data to other devices or systems.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'GRU'}
+ context: {'role': 'system', 'content': 'this is the context of the term: Neural machine translation ( NMT ) is a popular topic in Natural Language Processing which uses deep neural networks ( DNNs ) for translation from source to targeted languages . With the emerging technologies , such as bidirectional Gated Recurrent Units ( GRU ) , attention mechanisms , and beam-search algorithms , NMT can deliver improved translation quality compared to the conventional statistics-based methods , especially for translating long sentences . However , higher translation quality means more complicated models , higher computation/memory demands , and longer translation time , which causes difficulties for practical use .'}
+
+
+term definition: Gated Recurrent Unit (GRU) is a type of recurrent neural network (RNN) used in natural language processing (NLP) and other sequential data tasks. It was proposed to address the vanishing gradient problem in traditional RNNs. GRU has gating mechanisms that allow it to selectively update and reset the hidden state, making it more efficient at capturing long-term dependencies in sequential data.
+----------------------------------------
+
+term: {'role': 'user', 'content': 'ReLU'}
+ context: {'role': 'system', 'content': 'this is the context of the term: We establish optimal bounds in terms of network complexity and prove that rational neural networks approximate smooth functions more efficiently than ReLU networks . The flexibility and smoothness of rational activation functions make them an attractive alternative to ReLU , as we demonstrate with numerical experiments .'}
+
+
+term definition: A rectified linear unit (ReLU) is an activation function commonly used in neural networks. It applies the function f(x) = max(0, x), which results in setting all negative values to zero and passing through all positive values.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'L2'}
+ context: {'role': 'system', 'content': 'this is the context of the term: Secondly , controller and observer design techniques for LPV systems are examined . In particular , the stability conditions in the form of parameter dependent linear matrix inequalities ( LMI ) that result from the applications of the standard Lyapunov stability theory and other advanced techniques such as L2 and H∞ to LPV systems are discussed in detail . Also discussed are the some of the techniques for solving these LMIs .'}
+
+
+term definition: L2 is a mathematical concept that is often used in signal processing and control systems to measure the energy or power of a signal or system response. It corresponds to the square root of the integral of the squared magnitude of the signal or system response over time. The L2 norm is often used to optimize system performance in various applications.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'robust speech or speaker recognition'}
+ context: {'role': 'system', 'content': 'this is the context of the term: Accurate and effective voice activity detection ( VAD ) is a fundamental step for robust speech or speaker recognition . In this study , we proposed a hierarchical framework approach for VAD and speech enhancement .'}
+
+
+term definition: Robust speech or speaker recognition refers to the ability of a system to accurately identify and distinguish speech or speakers even when there are variations in the acoustic environment, input signal quality, or speaker characteristics.
+----------------------------------------

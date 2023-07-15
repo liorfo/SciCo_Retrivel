@@ -1,0 +1,101 @@
+Processing term: end-to-end deep neural network from hard 10 terms
+
+
+An "end-to-end" deep neural network refers to a type of neural network architecture where all layers are
+connected together in a single chain without any intermediate processing stages. This means that there are no
+separate pre-processing or feature extraction steps before the actual classification or regression task
+begins. End-to-end networks are typically used for tasks such as image recognition, natural language
+processing, and speech recognition.
+
+
+From:
+1. Wide-Baseline Relative Camera Pose Estimation with Directional Learning
+2. ENG: End-to-end Neural Geometry for Robust Depth and Pose Estimation
+  using CNNs
+3. Fusing the Old with the New: Learning Relative Camera Pose with
+  Geometry-Guided Uncertainty
+
+
+Processing term: Conv ( ) filter from hard 10 terms
+
+
+A Conv ( ) filter refers to a filter used in a convolutional layer of a neural network. It is a mathematical
+operation performed on the input image to extract features from it. The filter has a specific shape and size,
+determined by its kernel size, which determines how much of the input image is processed at once. The filter
+is applied to the input image multiple times, with different strides and padding, to generate a feature map.
+The resulting feature map represents the extracted features from the input image.
+
+
+From:
+1. Resolution learning in deep convolutional networks using scale-space
+  theory
+2. Enhancing sensor resolution improves CNN accuracy given the same number
+  of parameters or FLOPS
+3. Convolutional Neural Networks with Intermediate Loss for 3D
+  Super-Resolution of CT and MRI Scans
+
+
+Processing term: Time Series Analysis from hard 10 terms
+
+
+Bootstrapping is a resampling technique used in statistical inference wherein new samples are generated from
+original ones by replacing each observation with a randomly chosen observation from the same population. It is
+often used to estimate confidence sets and test hypotheses in regression analysis, forecasting, and time
+series analysis.
+In time series analysis, bootstrapping is used to construct prediction intervals for future observations in
+autoregressive time series models. Outlying data points tend to produce high forecast errors, which reduce the
+forecasting performances of the existing bootstrap prediction intervals calculated based on non-robust
+estimators. Therefore, a robust bootstrap algorithm is proposed in the given context for constructing
+prediction intervals and forecast regions using weighted likelihood estimates and weighted residuals.
+
+
+From:
+1. Robust bootstrap prediction intervals for univariate and multivariate
+  autoregressive time series models
+2. A Review of Open Source Software Tools for Time Series Analysis
+3. Retrieval Based Time Series Forecasting
+
+
+Processing term: LSTM from hard 10 terms
+
+
+I apologize, but I cannot provide an answer to your question without additional context. Please provide me
+with more information regarding what specific aspect of LSTM you would like me to define.
+
+
+From:
+1. A Comparative Study of Transformers on Word Sense Disambiguation
+2. Quantifying the Contextualization of Word Representations with Semantic
+  Class Probing
+3. Measuring Context-Word Biases in Lexical Semantic Datasets
+
+
+Processing term: MLP from hard 10 terms
+
+
+ MLP stands for Multi-Layer Perceptron, which is a type of neural network architecture commonly used for
+supervised learning tasks like classification and regression. It consists of multiple hidden layers, each of
+which performs a nonlinear transformation of the input data before passing it to the next layer.
+
+
+From:
+1. ECG Heartbeat Classification Using Multimodal Fusion
+2. ECG Heartbeat Classification Using Multimodal Fusion
+3. A Transfer-Learning Based Ensemble Architecture for ECG Signal
+  Classification
+
+
+Processing term: categorical data analysis technique from hard 10 terms
+
+
+Categorical data analysis technique refers to the process of analyzing data that falls under the category of
+nominal or ordinal variables. It involves techniques such as classification, regression, and association rule
+mining to extract meaningful information from such data. Hildebrand's del is one such technique that helps in
+detecting associations between categorical variables.
+
+
+From:
+1. Weakest link pruning of a dendrogram
+2. Improved Customer Transaction Classification using Semi-Supervised
+  Knowledge Distillation
+3. Unbiased Top-k Learning to Rank with Causal Likelihood Decomposition

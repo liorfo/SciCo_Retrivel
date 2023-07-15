@@ -1,0 +1,44 @@
+term: {'role': 'user', 'content': 'unsupervised automatic facial point detection'}
+ context: {'role': 'system', 'content': 'this is the context of the term: Automatic perception of facial expressions with scaling differences , pose variations and occlusions would greatly enhance natural human robot interaction . This research proposes unsupervised automatic facial point detection integrated with regression-based intensity estimation for facial action units ( AUs ) and emotion clustering to deal with such challenges . The proposed facial point detector is able to detect 54 facial points in images of faces with occlusions , pose variations and scaling differences using Gabor filtering , BRISK ( Binary Robust Invariant Scalable Keypoints ) , an Iterative Closest Point ( ICP ) algorithm and fuzzy c-means ( FCM ) clustering .'}
+
+
+term definition: Unsupervised automatic facial point detection refers to a computer vision technique for detecting key points on a human face without the need for manual labeling or supervision. It is achieved through the use of algorithms that can identify and locate specific points, such as the corners of the mouth or the position of the eyes, without human intervention. This technique is commonly used in fields such as robotics, where it is essential for machines to be able to perceive and respond to human facial expressions in a natural and intuitive way.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'ASR'}
+ context: {'role': 'system', 'content': 'this is the context of the term: Any preserved information that is irrelevant to the ASR task could complicate further processing . Attributes in conventional ASR are derived by some transformation of the short‐term spectrum of speech that represents magnitude frequency components of a short segment of the signal . Origins of this representation can be traced to speech vocoding .'}
+
+
+term definition: ASR stands for Automatic Speech Recognition, a technology that allows machines to transcribe spoken language into text format.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'Feature Pyramid Network'}
+ context: {'role': 'system', 'content': 'this is the context of the term: It can learn half and reusing half of the preceding feature maps , and has fewer parameters . Semantic aggregation adopts the Feature Pyramid Network ( FPN ) into the original SSD . Adding more semantic information to each scale to detect different size objects .'}
+
+
+term definition: Feature Pyramid Network (FPN) is a deep learning architecture that builds a pyramid of multi-scale feature maps to enable object detection and segmentation with high accuracy at all scales. It does this by fusing multiple levels of feature maps generated from a convolutional neural network, while preserving high-resolution details and semantically rich features.
+----------------------------------------
+
+term: {'role': 'user', 'content': 'spatial attention mechanisms'}
+ context: {'role': 'system', 'content': 'this is the context of the term: This paper proposes a target response adaptive correlation filter tracker with spatial attention to solve the above problems . Firstly , more useful feature information can be learned by making full use of the context information of the target area , and spatial attention mechanisms can be introduced to suppress the background information and reduce the unnecessary boundary effect . Secondly , the dynamic change of the target response is captured , and the most reliable response map is selected when the interference response map appears , to reduce the probability of dispositioning and train the more recognizable filter .'}
+
+
+term definition: Spatial attention mechanisms are techniques used in computer vision and machine learning to selectively focus on certain regions or features of an image while ignoring others. By suppressing background information and reducing the unnecessary boundary effect, the useful feature information can be extracted more effectively, leading to better performance in object tracking, recognition, and other related tasks.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'JPEG method'}
+ context: {'role': 'system', 'content': 'this is the context of the term: In the receiver side , with the help of the side information , the compressed image can be decoded and reconstructed . Simulation results show that the proposed scheme is able to provide much higher compression performance compared with the JPEG method .'}
+
+
+term definition: JPEG (Joint Photographic Experts Group) is a widely used standard for compressing digital images. It uses a lossy compression technique to reduce file size by removing redundant and non-essential information from an image.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'video data generation'}
+ context: {'role': 'system', 'content': 'this is the context of the term: With the current rate of video data generation , there is an urgent need of automatic video content analysis for subsequent purposes such as summarization , retrieval and classification . And video shot boundary detection is usually the first step to segment a video clip into meaningful shots .'}
+
+
+term definition: The process of producing digital video content through recording or creating computer-generated imagery (CGI).

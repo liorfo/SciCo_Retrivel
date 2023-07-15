@@ -1,0 +1,885 @@
+Processing term: unsupervised automatic facial point detection from normal terms
+
+
+Unsupervised automatic facial point detection refers to the process of automatically detecting and tracking
+facial landmarks or points on a person's face in real-time without any prior knowledge or training data about
+the individual's facial features or expressions. This technology can be used in various applications such as
+facial recognition, emotional analysis, and virtual reality.
+
+
+From:
+1. Global-to-local Expression-aware Embeddings for Facial Action Unit
+  Detection
+Abstract: Expressions and facial action units (AUs) are two levels of facial behavior
+descriptors. Expression auxiliary information has been widely used to improve
+the AU detection performance. However, most existing expression representations
+can only describe pre-determined discrete categories (e.g., Angry, Disgust,
+Happy, Sad, etc.) and cannot capture subtle expression transformations like
+AUs. In this paper, we propose a novel fine-grained \textsl{Global Expression
+representation Encoder} to capture subtle and continuous facial movements, to
+promote AU detection. To obtain such a global expression representation, we
+propose to train an expression embedding model on a large-scale expression
+dataset according to global expression similarity. Moreover, considering the
+local definition of AUs, it is essential to extract local AU features.
+Therefore, we design a \textsl{Local AU Features Module} to generate local
+facial features for each AU. Specifically, it consists of an AU feature map
+
+2. Multi-label Transformer for Action Unit Detection
+Abstract: Action Unit (AU) Detection is the branch of affective computing that aims at
+recognizing unitary facial muscular movements. It is key to unlock unbiased
+computational face representations and has therefore aroused great interest in
+the past few years. One of the main obstacles toward building efficient deep
+learning based AU detection system is the lack of wide facial image databases
+annotated by AU experts. In that extent the ABAW challenge paves the way toward
+better AU detection as it involves a 2M frames AU annotated dataset. In this
+paper, we present our submission to the ABAW3 challenge. In a nutshell, we
+applied a multi-label detection transformer that leverage multi-head attention
+to learn which part of the face image is the most relevant to predict each AU.
+
+3. Facial Action Units Detection Aided by Global-Local Expression Embedding
+Abstract: Since Facial Action Unit (AU) annotations require domain expertise, common AU
+datasets only contain a limited number of subjects. As a result, a crucial
+challenge for AU detection is addressing identity overfitting. We find that AUs
+and facial expressions are highly associated, and existing facial expression
+datasets often contain a large number of identities. In this paper, we aim to
+utilize the expression datasets without AU labels to facilitate AU detection.
+Specifically, we develop a novel AU detection framework aided by the
+Global-Local facial Expressions Embedding, dubbed GLEE-Net. Our GLEE-Net
+consists of three branches to extract identity-independent expression features
+for AU detection. We introduce a global branch for modeling the overall facial
+expression while eliminating the impacts of identities. We also design a local
+branch focusing on specific local face regions. The combined output of global
+and local branches is firstly pre-trained on an expression dataset as an
+
+
+
+Processing term: ASR from normal terms
+
+
+Automatic Speech Recognition (ASR) refers to the process of converting spoken language into machine-readable
+text. It involves analyzing the acoustic features of speech signals and using algorithms to recognize patterns
+and convert them into meaningful words and phrases. The term "ASR" is often used interchangeably with "voice
+recognition," "speech recognition," and "natural language understanding."
+
+
+From:
+1. On The Compensation Between Magnitude and Phase in Speech Separation
+Abstract: fundamental cause. This paper provides a novel view from the perspective of the
+implicit compensation between estimated magnitude and phase. Analytical results
+based on monaural speech separation and robust automatic speech recognition
+(ASR) tasks in noisy-reverberant conditions support the validity of our view.
+
+2. Speech Recognition by Simply Fine-tuning BERT
+Abstract: We propose a simple method for automatic speech recognition (ASR) by
+fine-tuning BERT, which is a language model (LM) trained on large-scale
+unlabeled text data and can generate rich contextual representations. Our
+assumption is that given a history context sequence, a powerful LM can narrow
+the range of possible choices and the speech signal can be used as a simple
+clue. Hence, comparing to conventional ASR systems that train a powerful
+acoustic model (AM) from scratch, we believe that speech recognition is
+possible by simply fine-tuning a BERT model. As an initial study, we
+demonstrate the effectiveness of the proposed idea on the AISHELL dataset and
+show that stacking a very simple AM on top of BERT can yield reasonable
+performance.
+
+3. Predicting lexical skills from oral reading with acoustic measures
+Abstract: and spectral and intensity dynamics are found to be reliable indicators of
+specific types of oral reading deficits, providing useful feedback by
+discriminating the different characteristics of beginning readers. This
+computationally simple and language-agnostic approach is found to provide a
+performance close to that obtained using a language dependent ASR that required
+considerable tuning of its parameters.
+
+
+
+Processing term: Feature Pyramid Network from normal terms
+
+
+ A Feature Pyramid Network (FPN) is a deep learning architecture used in computer vision tasks such as object
+detection and image classification. It consists of multiple levels of feature extraction, where each level
+takes in a smaller input patch and produces a set of feature maps that capture increasingly detailed
+information about the input image. These feature maps are then combined using concatenation or fusion
+operations to produce a final output. By stacking multiple levels of feature extraction, FPN can achieve high
+accuracy while reducing the number of model parameters compared to traditional single-level architectures.
+
+
+From:
+1. PlaneSegNet: Fast and Robust Plane Estimation Using a Single-stage
+  Instance Segmentation CNN
+Abstract: Pyramid Network (FPN). Our method achieves significantly higher frame-rates and
+comparable segmentation accuracy against two-stage methods. We automatically
+label over 70,000 images as ground truth from the Stanford 2D-3D-Semantics
+dataset. Moreover, we incorporate our method with a state-of-the-art planar
+SLAM and validate its benefits.
+
+2. SFPN: Synthetic FPN for Object Detection
+Abstract: FPN (Feature Pyramid Network) has become a basic component of most SoTA one
+stage object detectors. Many previous studies have repeatedly proved that FPN
+can caputre better multi-scale feature maps to more precisely describe objects
+if they are with different sizes. However, for most backbones such VGG, ResNet,
+or DenseNet, the feature maps at each layer are downsized to their quarters due
+to the pooling operation or convolutions with stride 2. The gap of
+down-scaling-by-2 is large and makes its FPN not fuse the features smoothly.
+This paper proposes a new SFPN (Synthetic Fusion Pyramid Network) arichtecture
+which creates various synthetic layers between layers of the original FPN to
+enhance the accuracy of light-weight CNN backones to extract objects' visual
+features more accurately. Finally, experiments prove the SFPN architecture
+outperforms either the large backbone VGG16, ResNet50 or light-weight backbones
+such as MobilenetV2 based on AP score.
+
+3. You Should Look at All Objects
+Abstract: Feature pyramid network (FPN) is one of the key components for object
+detectors. However, there is a long-standing puzzle for researchers that the
+detection performance of large-scale objects are usually suppressed after
+introducing FPN. To this end, this paper first revisits FPN in the detection
+framework and reveals the nature of the success of FPN from the perspective of
+optimization. Then, we point out that the degraded performance of large-scale
+objects is due to the arising of improper back-propagation paths after
+integrating FPN. It makes each level of the backbone network only has the
+ability to look at the objects within a certain scale range. Based on these
+analysis, two feasible strategies are proposed to enable each level of the
+backbone to look at all objects in the FPN-based detection frameworks.
+Specifically, one is to introduce auxiliary objective functions to make each
+backbone level directly receive the back-propagation signals of various-scale
+
+
+
+Processing term: spatial attention mechanisms from normal terms
+
+
+Spatial attention mechanisms are a type of attention mechanism used in computer vision and deep learning that
+allows a model to selectively focus on certain regions of an image while ignoring others. They are often used
+in object detection, segmentation, and tracking tasks. Essentially, spatial attention mechanisms allow a model
+to highlight important areas of an image and ignore irrelevant ones, which can lead to improved performance on
+certain tasks.
+
+
+From:
+1. Looking Beyond Two Frames: End-to-End Multi-Object Tracking Using
+  Spatial and Temporal Transformers
+Abstract: spatial attention mechanism enables our framework to learn implicit
+representations between all the objects and the objects to the measurements,
+while the temporal attention mechanism focuses on specific parts of past
+information, allowing our approach to resolve occlusions over multiple frames.
+Our experiments demonstrate the potential of this new approach, achieving
+results on par with or better than the current state-of-the-art on multiple MOT
+metrics for several popular multi-object tracking benchmarks.
+
+2. ConAM: Confidence Attention Module for Convolutional Neural Networks
+Abstract: The so-called "attention" is an efficient mechanism to improve the
+performance of convolutional neural networks. It uses contextual information to
+recalibrate the input to strengthen the propagation of informative features.
+However, the majority of the attention mechanisms only consider either local or
+global contextual information, which is singular to extract features. Moreover,
+many existing mechanisms directly use the contextual information to recalibrate
+the input, which unilaterally enhances the propagation of the informative
+features, but does not suppress the useless ones. This paper proposes a new
+attention mechanism module based on the correlation between local and global
+contextual information and we name this correlation as confidence. The novel
+attention mechanism extracts the local and global contextual information
+simultaneously, and calculates the confidence between them, then uses this
+confidence to recalibrate the input pixels. The extraction of local and global
+
+3. Incorporating Reachability Knowledge into a Multi-Spatial Graph
+  Convolution Based Seq2Seq Model for Traffic Forecasting
+Abstract: model performance especially in insufficient or noisy data cases. (3) A
+spatiotemporal attention mechanism based on reachability knowledge is novelly
+designed to produce high-level features fed into decoder of Seq2Seq directly to
+ease information dilution. Our model is evaluated on two real world traffic
+datasets and achieves better performance than other competitors.
+
+
+
+Processing term: JPEG method from normal terms
+
+
+According to the given context, "JPEG method" refers to the compression technique used in the Joint
+Photographic Experts Group (JPEG) standard for compressing digital images. It is a widely used method for
+compressing images, especially photographs and other high-quality visual content.
+
+
+From:
+1. A study for Image compression using Re-Pair algorithm
+Abstract: The compression is an important topic in computer science which allows we to
+storage more amount of data on our data storage. There are several techniques
+to compress any file. In this manuscript will be described the most important
+algorithm to compress images such as JPEG and it will be compared with another
+method to retrieve good reason to not use this method on images. So to compress
+the text the most encoding technique known is the Huffman Encoding which it
+will be explained in exhaustive way. In this manuscript will showed how to
+compute a text compression method on images in particular the method and the
+reason to choice a determinate image format against the other. The method
+studied and analyzed in this manuscript is the Re-Pair algorithm which is
+purely for grammatical context to be compress. At the and it will be showed the
+good result of this application.
+
+2. Discrete Cosine Transform in JPEG Compression
+Abstract: Image Compression has become an absolute necessity in today's day and age.
+With the advent of the Internet era, compressing files to share among other
+users is quintessential. Several efforts have been made to reduce file sizes
+while still maintain image quality in order to transmit files even on limited
+bandwidth connections. This paper discusses the need for Discrete Cosine
+Transform or DCT in the compression of images in Joint Photographic Experts
+Group or JPEG file format. Via an intensive literature study, this paper first
+introduces DCT and JPEG Compression. The section preceding it discusses how
+JPEG compression is implemented by DCT. The last section concludes with further
+real world applications of DCT in image processing.
+
+3. Towards Robust Data Hiding Against (JPEG) Compression: A
+  Pseudo-Differentiable Deep Learning Approach
+Abstract: engineering effort; (b) requiring a white-box knowledge of compression attacks;
+(c) only works for simple compression like JPEG. In this work, we propose a
+simple yet effective approach to address all the above limitations at once.
+Beyond JPEG, our approach has been shown to improve robustness against various
+image and video lossy compression algorithms.
+
+
+
+Processing term: video data generation from normal terms
+
+
+Video data generation refers to the process of creating new digital video content from existing sources or by
+using algorithms to generate new footage. This can include techniques such as object tracking, motion
+estimation, and image synthesis. The goal of video data generation is often to create new content for various
+applications, including machine learning, gaming, and virtual reality.
+
+
+From:
+1. Video Content Swapping Using GAN
+Abstract: Video generation is an interesting problem in computer vision. It is quite
+popular for data augmentation, special effect in move, AR/VR and so on. With
+the advances of deep learning, many deep generative models have been proposed
+to solve this task. These deep generative models provide away to utilize all
+the unlabeled images and videos online, since it can learn deep feature
+representations with unsupervised manner. These models can also generate
+different kinds of images, which have great value for visual application.
+However generating a video would be much more challenging since we need to
+model not only the appearances of objects in the video but also their temporal
+motion. In this work, we will break down any frame in the video into content
+and pose. We first extract the pose information from a video using a
+pre-trained human pose detection and use a generative model to synthesize the
+video based on the content code and pose code.
+
+2. Scene Consistency Representation Learning for Video Scene Segmentation
+Abstract: shot features. Our method achieves the state-of-the-art performance on the task
+of Video Scene Segmentation. Additionally, we suggest a more fair and
+reasonable benchmark to evaluate the performance of Video Scene Segmentation
+methods. The code is made available.
+
+3. Leveraging Natural Supervision for Language Representation Learning and
+  Generation
+Abstract: data-to-text generation dataset, a screenplay summarization dataset, and a
+long-form story generation dataset. These datasets have unique characteristics
+offering challenges to future work in their respective task settings.
+
+
+
+Processing term: weight update from hard 20 terms
+
+
+Weight update refers to the process of adjusting the values of the weights in a neural network during training
+to minimize the error between the predicted output and the actual output. This is done using backpropagation,
+which calculates the gradient of the loss function with respect to the weights and updates them accordingly.
+
+
+From:
+1. The activity-weight duality in feed forward neural networks: The
+  geometric determinants of generalization
+Abstract: One of the fundamental problems in machine learning is generalization. In
+neural network models with a large number of weights (parameters), many
+solutions can be found to fit the training data equally well. The key question
+is which solution can describe testing data not in the training set. Here, we
+report the discovery of an exact duality (equivalence) between changes in
+activities in a given layer of neurons and changes in weights that connect to
+the next layer of neurons in a densely connected layer in any feed forward
+neural network. The activity-weight (A-W) duality allows us to map variations
+in inputs (data) to variations of the corresponding dual weights. By using this
+mapping, we show that the generalization loss can be decomposed into a sum of
+contributions from different eigen-directions of the Hessian matrix of the loss
+function at the solution in weight space. The contribution from a given
+eigen-direction is the product of two geometric factors (determinants): the
+
+2. Feature Learning and Signal Propagation in Deep Neural Networks
+Abstract: Recent work by Baratin et al. (2021) sheds light on an intriguing pattern
+that occurs during the training of deep neural networks: some layers align much
+more with data compared to other layers (where the alignment is defined as the
+euclidean product of the tangent features matrix and the data labels matrix).
+The curve of the alignment as a function of layer index (generally) exhibits an
+ascent-descent pattern where the maximum is reached for some hidden layer. In
+this work, we provide the first explanation for this phenomenon. We introduce
+the Equilibrium Hypothesis which connects this alignment pattern to signal
+propagation in deep neural networks. Our experiments demonstrate an excellent
+match with the theoretical predictions.
+
+3. WeightScale: Interpreting Weight Change in Neural Networks
+Abstract: Interpreting the learning dynamics of neural networks can provide useful
+insights into how networks learn and the development of better training and
+design approaches. We present an approach to interpret learning in neural
+networks by measuring relative weight change on a per layer basis and
+dynamically aggregating emerging trends through combination of dimensionality
+reduction and clustering which allows us to scale to very deep networks. We use
+this approach to investigate learning in the context of vision tasks across a
+variety of state-of-the-art networks and provide insights into the learning
+behavior of these networks, including how task complexity affects layer-wise
+learning in deeper layers of networks.
+
+
+
+Processing term: Understanding Behaviors of Neurons from hard 20 terms
+
+
+I apologize, but I cannot provide a definition for "Understanding Behaviors of Neurons" as it is not a
+commonly used phrase or term in the English language. However, based on the given context, it seems that the
+term may refer to the study of how neurons behave or function within a neural network, specifically in
+relation to the use of Long Short-Term Memory (LSTM) networks.
+
+
+From:
+1. Long Short-term Memory RNN
+Abstract: domain. Finally, alternative statistical methods for time series predictions
+are highlighted, where the paper outline ARIMA and exponential smoothing.
+Nevertheless, as LSTMs can be viewed as a complex architecture, the paper
+assumes that the reader has some knowledge of essential machine learning
+aspects, such as the multi-layer perceptron, activation functions, overfitting,
+backpropagation, bias, over- and underfitting, and more.
+
+2. Extreme events in globally coupled chaotic maps
+Abstract: recurrent neural network. This Long Short-Term Memory (LSTM) can offer handy
+one-step forecasting of these chaotic intermittent bursts. We also ensure the
+robustness of this forecasting model with two hundred hidden cells in each LSTM
+layer.
+
+3. Machine Learning Approach to Model Order Reduction of Nonlinear Systems
+  via Autoencoder and LSTM Networks
+Abstract: modes (NNMs), serves as an invertible reduction basis for the nonlinear system.
+The proposed machine learning framework is then complemented via the use of
+long short term memory (LSTM) networks in the reduced space. These are used for
+creating an nonlinear reduced-order model (ROM) of the system, able to recreate
+the full system's dynamic response under a known driving input.
+
+
+
+Processing term: policy gradient methods from hard 20 terms
+
+
+Policy gradient methods refer to reinforcement learning algorithms that use the concept of policy gradients to
+optimize a policy. Policy gradients are the directional derivative of the expected return with respect to the
+policy. They are calculated by taking the partial derivatives of the expected return with respect to each
+component of the policy. Policy gradient methods are commonly used in reinforcement learning because they
+allow for efficient optimization of policies without requiring knowledge of the exact action-value function.
+However, they can suffer from high variance due to the stochastic nature of reinforcement learning
+environments. Variance reduction techniques such as actor-critic methods can be used to improve the accuracy
+of policy gradients and optimize policies faster.
+
+
+From:
+1. On Policy Gradients
+Abstract: The goal of policy gradient approaches is to find a policy in a given class
+of policies which maximizes the expected return. Given a differentiable model
+of the policy, we want to apply a gradient-ascent technique to reach a local
+optimum. We mainly use gradient ascent, because it is theoretically well
+researched. The main issue is that the policy gradient with respect to the
+expected return is not available, thus we need to estimate it. As policy
+gradient algorithms also tend to require on-policy data for the gradient
+estimate, their biggest weakness is sample efficiency. For this reason, most
+research is focused on finding algorithms with improved sample efficiency. This
+paper provides a formal introduction to policy gradient that shows the
+development of policy gradient approaches, and should enable the reader to
+follow current research on the topic.
+
+2. Learning Cooperative Multi-Agent Policies with Partial Reward Decoupling
+Abstract: policy gradient (COMA), a state-of-the-art MARL algorithm, and empirically show
+that our approach outperforms COMA by making better use of information in
+agents' reward streams, and by enabling recent advances in advantage estimation
+to be used.
+
+3. Policy Learning and Evaluation with Randomized Quasi-Monte Carlo
+Abstract: Reinforcement learning constantly deals with hard integrals, for example when
+computing expectations in policy evaluation and policy iteration. These
+integrals are rarely analytically solvable and typically estimated with the
+Monte Carlo method, which induces high variance in policy values and gradients.
+In this work, we propose to replace Monte Carlo samples with low-discrepancy
+point sets. We combine policy gradient methods with Randomized Quasi-Monte
+Carlo, yielding variance-reduced formulations of policy gradient and
+actor-critic algorithms. These formulations are effective for policy evaluation
+and policy improvement, as they outperform state-of-the-art algorithms on
+standardized continuous control benchmarks. Our empirical analyses validate the
+intuition that replacing Monte Carlo with Quasi-Monte Carlo yields
+significantly more accurate gradient estimates.
+
+
+
+Processing term: satellite navigation module from hard 20 terms
+
+
+I'm sorry, but I cannot provide an accurate answer without more information or context about what exactly you
+want to know about "satellite navigation module". Could you please clarify your question?
+
+
+From:
+1. Heterogeneous Federated CubeSat System: problems, constraints and
+  capabilities
+Abstract: heterogeneous constituent systems, a.k.a satellites, to the constellation. This
+"whitepaper"-styled work focuses on presenting the definitions of this
+heterogeneous constellation problem, aims at its main capabilities and
+constraints, and proposes modeling approaches for this system representation
+and evaluation.
+
+2. Aalto-1, multi-payload CubeSat: design, integration and launch
+Abstract: The CubeSat Assembly, Integration & Test (AIT) followed Flatsat --
+Engineering-Qualification Model (EQM) -- Flight Model (FM) model philosophy for
+qualification and acceptance.
+  The paper briefly describes the design approach of platform and payload
+subsystems, their integration and test campaigns, and spacecraft launch. The
+paper also describes the ground segment & services that were developed by the
+Aalto-1 team.
+
+3. ADCS Preliminary Design For GNB
+Abstract: This work deals with an ADCS model for a satellite orbiting around Earth. The
+object is to achieve a preliminary design and perform some analysis on it. To
+do so, a GNB was selected and main properties are exploited. Previous works of
+[9], [13], [14], [15] and [17] were analyzed and a synthesis was obtained; then
+a suitable control system was designed to satisfy technical requirements.
+Coding was performed using Matlab and Simulink.
+  Keywords: Attitude Determination, Attitude Control, Nanosatellite, Orbital
+Perturbations, Quaternion, Two Body Problem, Euler's Equations, Lyapunov
+Function.
+
+/cs/labs/tomhope/forer11/vnev_2/lib/python3.9/site-packages/transformers/pipelines/base.py:1081: UserWarning: You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+  warnings.warn(
+
+
+Processing term: GRU from hard 20 terms
+
+
+GRU stands for Gated Recurrent Unit. It is a type of recurrent neural network (RNN) cell that is commonly used
+in sequence-to-sequence models like NMT. The GRU cell has two gates: an input gate and an output gate, which
+control the flow of information into and out of the cell. This allows the GRU cell to remember past inputs
+while also processing new ones, making it suitable for tasks like language modeling and machine translation.
+
+
+From:
+1. A Survey of Domain Adaptation for Neural Machine Translation
+Abstract: Neural machine translation (NMT) is a deep learning based approach for
+machine translation, which yields the state-of-the-art translation performance
+in scenarios where large-scale parallel corpora are available. Although the
+high-quality and domain-specific translation is crucial in the real world,
+domain-specific corpora are usually scarce or nonexistent, and thus vanilla NMT
+performs poorly in such scenarios. Domain adaptation that leverages both
+out-of-domain parallel corpora as well as monolingual corpora for in-domain
+translation, is very important for domain-specific translation. In this paper,
+we give a comprehensive survey of the state-of-the-art domain adaptation
+techniques for NMT.
+
+2. IITP at WAT 2021: System description for English-Hindi Multimodal
+  Translation Task
+Abstract: Neural Machine Translation (NMT) is a predominant machine translation
+technology nowadays because of its end-to-end trainable flexibility. However,
+NMT still struggles to translate properly in low-resource settings specifically
+on distant language pairs. One way to overcome this is to use the information
+from other modalities if available. The idea is that despite differences in
+languages, both the source and target language speakers see the same thing and
+the visual representation of both the source and target is the same, which can
+positively assist the system. Multimodal information can help the NMT system to
+improve the translation by removing ambiguity on some phrases or words. We
+participate in the 8th Workshop on Asian Translation (WAT - 2021) for
+English-Hindi multimodal translation task and achieve 42.47 and 37.50 BLEU
+points for Evaluation and Challenge subset, respectively.
+
+3. Neural Machine Translation: A Review of Methods, Resources, and Tools
+Abstract: Machine translation (MT) is an important sub-field of natural language
+processing that aims to translate natural languages using computers. In recent
+years, end-to-end neural machine translation (NMT) has achieved great success
+and has become the new mainstream method in practical MT systems. In this
+article, we first provide a broad review of the methods for NMT and focus on
+methods relating to architectures, decoding, and data augmentation. Then we
+summarize the resources and tools that are useful for researchers. Finally, we
+conclude with a discussion of possible future research directions.
+
+
+
+Processing term: ReLU from hard 20 terms
+
+
+ReLU stands for Rectified Linear Unit, which is a type of activation function used in neural networks. It is
+defined as f(x) = max(0,x), which means that it returns zero if x is negative and the input value itself if x
+is positive. ReLUs are commonly used in deep learning because they allow for faster computation compared to
+other activation functions like sigmoid or tanh.
+
+
+From:
+1. Statistical Mechanical Analysis of Neural Network Pruning
+Abstract: pruned) generalize better than dense neural networks (node pruned) for a fixed
+number of parameters. We use our theoretical setup to prove this finding and
+show that even the baseline random edge pruning method performs better than the
+DPP node pruning method. We also validate this empirically on real datasets.
+
+2. DeFiNES: Enabling Fast Exploration of the Depth-first Scheduling Space
+  for DNN Accelerators through Analytical Modeling
+Abstract: from a taped-out depth-first DNN accelerator, DepFiN, showing good modeling
+accuracy at the end-to-end neural network level. A comparison with generalized
+state-of-the-art demonstrates up to 10X better solutions found with DeFiNES.
+
+3. Effects of boundary conditions in fully convolutional networks for
+  learning spatio-temporal dynamics
+Abstract: tasks. It is then demonstrated that the choice of the optimal padding strategy
+is directly linked to the data semantics. Furthermore, the inclusion of
+additional input spatial context or explicit physics-based rules allows a
+better handling of boundaries in particular for large number of recurrences,
+resulting in more robust and stable neural networks, while facilitating the
+design and versatility of such networks.
+
+
+
+Processing term: L2 from hard 20 terms
+
+
+L2 refers to the Hilbert space L2(U), where U is the state space of the system being controlled or observed.
+It is used in control theory to represent the input-output behavior of a system, i.e., how the input signals
+are transformed into the corresponding outputs. In the context of LPV systems, L2 control can be used to
+design controllers that achieve exponential stability and boundedness of the error between the actual and
+desired states.
+
+
+From:
+1. Event-Triggered l2-Optimal Formation Control with State-Estimation for
+  Agents Modeled as LPV Systems
+Abstract: condition is violated. The design procedure guarantees stability and bounded
+l2-performance. Furthermore, the estimators are interchangeable for a given
+controller. We compare in simulation zero-order hold, open-loop estimation, and
+closed-loop estimation strategies. Simulation trials are carried out with
+non-holonomic dynamic unicycles modeled as polytopic LPV systems.
+
+2. Control of dynamic systems with restrictions on input and output signals
+Abstract: on the control signal and phase variables. The second task is output feedback
+control of linear systems with a restriction on output and control. In both
+problems, checking the stability of the closed-loop system is formulated in
+terms of the solvability of linear matrix inequalities. The obtained results
+are accompanied by examples of modeling that illustrate the efficiency of the
+proposed method.
+
+3. Comments on "Time-Varying Lyapunov Functions for Tracking Control of
+  Mechanical Systems With and Without Frictions"
+Abstract: In the article$^a$, the authors introduced a time-varying Lyapunov function
+for the stability analysis of nonlinear systems whose motion is governed by
+standard Newton-Euler equations. The authors established asymptotic stability
+with the choice of two symmetric positive definite matrices restricted by
+certain eigenvalue bounds in the control law. Exponential stability in the
+sense of Lyapunov using integrator backstepping and Lyapunov redesign is
+established in this note using just one matrix in the derived controller. We do
+not impose minimum eigenvalue bound requirements on the symmetric positive
+definite matrix introduced in our analysis to guarantee stability. Reducing the
+parameters needed in the control law, our analysis improves the stability and
+convergence rates of tracking errors reported in the article$^a$.
+  $^a$Ren, W., Zhang, B, Li, H, and Yan L. IEEE Access. vol. 8. pp.
+51510-51517. 2020.
+
+
+
+Processing term: robust speech or speaker recognition from hard 20 terms
+
+
+Robust speech or speaker recognition refers to a type of speech recognition technology that can accurately
+identify and differentiate between speakers even in challenging environments such as background noise,
+reverberation, and accents. It uses advanced algorithms and machine learning techniques to analyze and extract
+features from speech signals and then compares them across different speakers to determine who is speaking.
+The goal of robust speech or speaker recognition is to improve the accuracy and reliability of speech
+recognition systems, making them more useful in various applications such as teleconferencing, dictation, and
+automated call centers.
+
+
+From:
+1. BC-VAD: A Robust Bone Conduction Voice Activity Detection
+Abstract: Voice Activity Detection (VAD) is a fundamental module in many audio
+applications. Recent state-of-the-art VAD systems are often based on neural
+networks, but they require a computational budget that usually exceeds the
+capabilities of a small battery-operated device when preserving the performance
+of larger models. In this work, we rely on the input from a bone conduction
+microphone (BCM) to design an efficient VAD (BC-VAD) robust against residual
+non-stationary noises originating from the environment or speakers not wearing
+the BCM.We first show that a larger VAD system (58k parameters) achieves
+state-of-the-art results on a publicly available benchmark but fails when
+running on bone conduction signals. We then compare its variant BC-VAD (5k
+parameters and trained on BC data) with a baseline especially designed for a
+BCM and show that the proposed method achieves better performances under
+various metrics while keeping the realtime processing requirement for a
+microcontroller.
+
+2. Low Pass Filtering and Bandwidth Extension for Robust Anti-spoofing
+  Countermeasure Against Codec Variabilities
+Abstract: part is removed by Voice Activity Detection (VAD), our experimental results
+show that the filtering and bandwidth extension approaches are also effective
+under the codec condition when VAD is applied.
+
+3. The DKU-DukeECE-Lenovo System for the Diarization Task of the 2021
+  VoxCeleb Speaker Recognition Challenge
+Abstract: This report describes the submission of the DKU-DukeECE-Lenovo team to the
+VoxCeleb Speaker Recognition Challenge (VoxSRC) 2021 track 4. Our system
+including a voice activity detection (VAD) model, a speaker embedding model,
+two clustering-based speaker diarization systems with different similarity
+measurements, two different overlapped speech detection (OSD) models, and a
+target-speaker voice activity detection (TS-VAD) model. Our final submission,
+consisting of 5 independent systems, achieves a DER of 5.07% on the challenge
+test set.
+
+
+
+Processing term: end-to-end deep neural network from hard 10 terms
+
+
+An "end-to-end" deep neural network refers to a type of neural network architecture where all layers are
+connected in series, without any intermediate layers. This means that there are no shortcut connections or
+skip connections like in traditional feedforward neural networks. End-to-end networks are typically trained to
+perform a specific task, such as image classification or natural language processing, and they are often
+referred to as "fully connected" networks because all inputs are passed through all layers.
+
+
+From:
+1. Wide-Baseline Relative Camera Pose Estimation with Directional Learning
+Abstract: Modern deep learning techniques that regress the relative camera pose between
+two images have difficulty dealing with challenging scenarios, such as large
+camera motions resulting in occlusions and significant changes in perspective
+that leave little overlap between images. These models continue to struggle
+even with the benefit of large supervised training datasets. To address the
+limitations of these models, we take inspiration from techniques that show
+regressing keypoint locations in 2D and 3D can be improved by estimating a
+discrete distribution over keypoint locations. Analogously, in this paper we
+explore improving camera pose regression by instead predicting a discrete
+distribution over camera poses. To realize this idea, we introduce
+DirectionNet, which estimates discrete distributions over the 5D relative pose
+space using a novel parameterization to make the estimation problem tractable.
+Specifically, DirectionNet factorizes relative camera pose, specified by a 3D
+
+2. GRelPose: Generalizable End-to-End Relative Camera Pose Regression
+Abstract: This paper proposes a generalizable, end-to-end deep learning-based method
+for relative pose regression between two images. Given two images of the same
+scene captured from different viewpoints, our algorithm predicts the relative
+rotation and translation between the two respective cameras. Despite recent
+progress in the field, current deep-based methods exhibit only limited
+generalization to scenes not seen in training. Our approach introduces a
+network architecture that extracts a grid of coarse features for each input
+image using the pre-trained LoFTR network. It subsequently relates
+corresponding features in the two images, and finally uses a convolutional
+network to recover the relative rotation and translation between the respective
+cameras. Our experiments indicate that the proposed architecture can generalize
+to novel scenes, obtaining higher accuracy than existing deep-learning-based
+methods in various settings and datasets, in particular with limited training
+data.
+
+3. Implicit-PDF: Non-Parametric Representation of Probability Distributions
+  on the Rotation Manifold
+Abstract: Single image pose estimation is a fundamental problem in many vision and
+robotics tasks, and existing deep learning approaches suffer by not completely
+modeling and handling: i) uncertainty about the predictions, and ii) symmetric
+objects with multiple (sometimes infinite) correct poses. To this end, we
+introduce a method to estimate arbitrary, non-parametric distributions on
+SO(3). Our key idea is to represent the distributions implicitly, with a neural
+network that estimates the probability given the input image and a candidate
+pose. Grid sampling or gradient ascent can be used to find the most likely
+pose, but it is also possible to evaluate the probability at any pose, enabling
+reasoning about symmetries and uncertainty. This is the most general way of
+representing distributions on manifolds, and to showcase the rich expressive
+power, we introduce a dataset of challenging symmetric and nearly-symmetric
+
+
+
+Processing term: Conv ( ) filter from hard 10 terms
+
+
+The term "Conv ( ) filter" refers to a type of layer in neural networks used for convolutional processing. In
+the given context, it means that before the DU - Net, a specific type of convolutional filter with a stride of
+2 and a max pooling function was applied to reduce the number of features from 128 to 64. This was done to
+match the maximum resolution of the DU - Net, which has a resolution of 64 x 64 pixels.
+
+
+From:
+1. Pixel-Wise Contrastive Distillation
+Abstract: student's feature maps. Overall, our PCD outperforms previous self-supervised
+distillation methods on various dense prediction tasks. A backbone of ResNet-18
+distilled by PCD achieves $37.4$ AP$^\text{bbox}$ and $34.0$ AP$^{mask}$ with
+Mask R-CNN detector on COCO dataset, emerging as the first pre-training method
+surpassing the supervised pre-trained counterpart.
+
+2. Driver Drowsiness Detection Using Ensemble Convolutional Neural Networks
+  on YawDD
+Abstract: that our proposed Ensemble Convolutional Neural Network (ECNN) outperformed the
+traditional CNN-based approach by achieving an F1 score of 0.935, whereas the
+other three CNN, such as CNN1, CNN2, and CNN3 approaches gained 0.92, 0.90, and
+0.912 F1 scores, respectively.
+
+3. Automatic Speech Recognition for Speech Assessment of Persian Preschool
+  Children
+Abstract: for Meaningless Words (MW) and Rapid Automatic Naming (RAN) tests. Using
+masking in concatenation with RFP outperforms the masking objective of Wav2Vec
+2.0 by reaching a Word Error Rate (WER) of 1.35. Our new approach reaches a WER
+of 6.45 on the Persian section of the CommonVoice dataset. Furthermore, our
+novel methodology produces positive outcomes in zero- and few-shot scenarios.
+
+
+
+Processing term: Time Series Analysis from hard 10 terms
+
+
+Time Series Analysis (TSA) refers to the process of analyzing data that is collected over time to identify
+patterns, trends, and seasonal variations. It involves using statistical techniques to extract meaningful
+information from the data, such as predicting future values or identifying outliers. TSA is widely used in
+various fields, including finance, economics, healthcare, and meteorology.
+
+
+From:
+1. A Review of Open Source Software Tools for Time Series Analysis
+Abstract: Time series data is used in a wide range of real world applications. In a
+variety of domains , detailed analysis of time series data (via Forecasting and
+Anomaly Detection) leads to a better understanding of how events associated
+with a specific time instance behave. Time Series Analysis (TSA) is commonly
+performed with plots and traditional models. Machine Learning (ML) approaches ,
+on the other hand , have seen an increase in the state of the art for
+Forecasting and Anomaly Detection because they provide comparable results when
+time and data constraints are met. A number of time series toolboxes are
+available that offer rich interfaces to specific model classes (ARIMA/filters ,
+neural networks) or framework interfaces to isolated time series modelling
+tasks (forecasting , feature extraction , annotation , classification).
+Nonetheless , open source machine learning capabilities for time series remain
+limited , and existing libraries are frequently incompatible with one another.
+
+2. A Review of Open Source Software Tools for Time Series Analysis
+Abstract: Nonetheless , open source machine learning capabilities for time series remain
+limited , and existing libraries are frequently incompatible with one another.
+The goal of this paper is to provide a concise and user friendly overview of
+the most important open source tools for time series analysis. This article
+examines two related toolboxes (1) forecasting and (2) anomaly detection. This
+paper describes a typical Time Series Analysis (TSA) framework with an
+architecture and lists the main features of TSA framework. The tools are
+categorized based on the criteria of analysis tasks completed , data
+preparation methods employed , and evaluation methods for results generated.
+This paper presents quantitative analysis and discusses the current state of
+actively developed open source Time Series Analysis frameworks. Overall , this
+article considered 60 time series analysis tools , and 32 of which provided
+forecasting modules , and 21 packages included anomaly detection.
+
+3. Feature-Based Time-Series Analysis in R using the theft Package
+Abstract: and time-series classification operations. With an increasing volume and
+complexity of time-series datasets in the sciences and industry, theft provides
+a standardized framework for comprehensively quantifying and interpreting
+informative structure in time series.
+
+
+
+Processing term: LSTM from hard 10 terms
+
+
+LSTM stands for Long Short-Term Memory, which is a type of recurrent neural network (RNN) commonly used in
+natural language processing tasks such as text classification, sentiment analysis, and language translation.
+It can remember information for a certain amount of time, allowing it to capture long-term dependencies in
+sequential data.
+
+
+From:
+1. WOLI at SemEval-2020 Task 12: Arabic Offensive Language Identification
+  on Different Twitter Datasets
+Abstract: "yasserotiefy". We experimented with various models and the best model is a
+linear SVM in which we use a combination of both character and word n-grams. We
+also introduced a neural network approach that enhanced the predictive ability
+of our system that includes CNN, highway network, Bi-LSTM, and attention
+layers.
+
+2. Paradigm Shift in Language Modeling: Revisiting CNN for Modeling
+  Sanskrit Originated Bengali and Hindi Language
+Abstract: LSTM models on multiple real-world datasets. This is the first study on the
+effectiveness of different architectures drawn from three deep learning
+paradigms - Convolution, Recurrent, and Transformer neural nets for modeling
+two widely used languages, Bengali and Hindi.
+
+3. Comparing Prophet and Deep Learning to ARIMA in Forecasting Wholesale
+  Food Prices
+Abstract: study. Our results indicate that ARIMA models and LSTM neural networks perform
+similarly for the forecasting task under consideration, while the combination
+of CNNs and LSTMs attains the best overall accuracy, but requires more time to
+be tuned. On the contrary, Prophet is quick and easy to use, but considerably
+less accurate.t overall accuracy, but requires more time to be tuned. On the
+contrary, Prophet is quick and easy to use, but considerably less accurate.
+
+
+
+Processing term: MLP from hard 10 terms
+
+
+ MLP stands for Multilayer Perceptron, which is a type of neural network algorithm commonly used for
+supervised learning tasks such as classification and regression.
+
+
+From:
+1. Investigating myocardial infarction and its effects in patients with
+  urgent medical problems using advanced data mining tools
+Abstract: 105 medical records of myocardial infarction patients with fourteen features
+including age, the time of emergency operation, Creatine Phosphokinase (CPK)
+test, heart rate, blood sugar, and vein are gathered and investigated through
+classification techniques of data analysis including random decision forests,
+decision tree, support vector machine (SVM), k-nearest neighbor, and ordinal
+logistic regression. Finally, the model of random decision forests with an
+accuracy of 76% is selected as the best model in terms of the mean evaluation
+indicator. Also, seven features of the creatine Phosphokinase test, urea, white
+and red blood cell count, blood sugar, time, and hemoglobin are identified as
+the most effective features of the ejection fraction variable.
+
+2. Regularized HessELM and Inclined Entropy Measurement for Congestive
+  Heart Failure Prediction
+Abstract: Our study concerns with automated predicting of congestive heart failure
+(CHF) through the analysis of electrocardiography (ECG) signals. A novel
+machine learning approach, regularized hessenberg decomposition based extreme
+learning machine (R-HessELM), and feature models; squared, circled, inclined
+and grid entropy measurement were introduced and used for prediction of CHF.
+This study proved that inclined entropy measurements features well represent
+characteristics of ECG signals and together with R-HessELM approach overall
+accuracy of 98.49% was achieved.
+
+3. Binary and Multiclass Classifiers based on Multitaper Spectral Features
+  for Epilepsy Detection
+Abstract: Epilepsy is one of the most common neurological disorders that can be
+diagnosed through electroencephalogram (EEG), in which the following epileptic
+events can be observed: pre-ictal, ictal, post-ictal, and interictal. In this
+paper, we present a novel method for epilepsy detection into two
+differentiation contexts: binary and multiclass classification. For feature
+extraction, a total of 105 measures were extracted from power spectrum,
+spectrogram, and bispectrogram. For classifier building, eight different
+machine learning algorithms were used. Our method was applied in a widely used
+EEG database. As a result, random forest and backpropagation based on
+multilayer perceptron algorithms reached the highest accuracy for binary
+(98.75%) and multiclass (96.25%) classification problems, respectively.
+Subsequently, the statistical tests did not find a model that would achieve a
+better performance than the other classifiers. In the evaluation based on
+
+
+
+Processing term: categorical data analysis technique from hard 10 terms
+
+
+Categorical data analysis technique refers to any statistical method used to analyze data that has been
+categorized or grouped into categories or classes. It involves analyzing patterns and relationships within the
+categories or classes to draw conclusions about the underlying data. In the given context, Hildebrand's del is
+a specific categorical data analysis technique that allows for the testing of customized prediction rules and
+provides information about the strength of the relationship between the categorical variable and the outcome
+variable.
+
+
+From:
+1. Diffusion models for missing value imputation in tabular data
+Abstract: categorical variables and numerical variables simultaneously, we investigate
+three techniques: one-hot encoding, analog bits encoding, and feature
+tokenization. Experimental results on benchmark datasets demonstrated the
+effectiveness of CSDI_T compared with well-known existing methods, and also
+emphasized the importance of the categorical embedding techniques.
+
+2. Integrating Categorical Features in End-to-End ASR
+Abstract: way to integrate categorical features into E2E model. We perform detailed
+analysis on various training strategies, and find that building a joint model
+that includes categorical features can be more accurate than multiple
+independently trained models.
+
+3. WeatherBench Probability: A benchmark dataset for probabilistic
+  medium-range weather forecasting along with deep learning baseline models
+Abstract: produce fairly reliable forecasts of similar quality. The parametric models
+have fewer degrees of freedom while the categorical model is more flexible when
+it comes to predicting non-Gaussian distributions. None of the models are able
+to match the skill of the operational IFS model. We hope that this benchmark
+will enable other researchers to evaluate their probabilistic approaches.

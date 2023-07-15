@@ -1,0 +1,334 @@
+Processing term: unsupervised automatic facial point detection from normal terms
+
+
+Unsupervised automatic facial point detection refers to the process of automatically detecting and tracking
+facial landmarks or points on a person's face in real-time without any prior knowledge or training data about
+the individual's facial features or expressions. This technology can be used in various applications such as
+facial recognition, emotional analysis, and virtual reality.
+
+
+From:
+1. Global-to-local Expression-aware Embeddings for Facial Action Unit
+  Detection
+2. Multi-label Transformer for Action Unit Detection
+3. Facial Action Units Detection Aided by Global-Local Expression Embedding
+
+
+Processing term: ASR from normal terms
+
+
+Automatic Speech Recognition (ASR) refers to the process of converting spoken language into machine-readable
+text. It involves analyzing the acoustic features of speech signals and using algorithms to recognize patterns
+and convert them into meaningful words and phrases. The term "ASR" is often used interchangeably with "voice
+recognition," "speech recognition," and "natural language understanding."
+
+
+From:
+1. On The Compensation Between Magnitude and Phase in Speech Separation
+2. Speech Recognition by Simply Fine-tuning BERT
+3. Predicting lexical skills from oral reading with acoustic measures
+
+
+Processing term: Feature Pyramid Network from normal terms
+
+
+ A Feature Pyramid Network (FPN) is a deep learning architecture used in computer vision tasks such as object
+detection and image classification. It consists of multiple levels of feature extraction, where each level
+takes in a smaller input patch and produces a set of feature maps that capture increasingly detailed
+information about the input image. These feature maps are then combined using concatenation or fusion
+operations to produce a final output. By stacking multiple levels of feature extraction, FPN can achieve high
+accuracy while reducing the number of model parameters compared to traditional single-level architectures.
+
+
+From:
+1. PlaneSegNet: Fast and Robust Plane Estimation Using a Single-stage
+  Instance Segmentation CNN
+2. SFPN: Synthetic FPN for Object Detection
+3. You Should Look at All Objects
+
+
+Processing term: spatial attention mechanisms from normal terms
+
+
+Spatial attention mechanisms are a type of attention mechanism used in computer vision and deep learning that
+allows a model to selectively focus on certain regions of an image while ignoring others. They are often used
+in object detection, segmentation, and tracking tasks. Essentially, spatial attention mechanisms allow a model
+to highlight important areas of an image and ignore irrelevant ones, which can lead to improved performance on
+certain tasks.
+
+
+From:
+1. Looking Beyond Two Frames: End-to-End Multi-Object Tracking Using
+  Spatial and Temporal Transformers
+2. ConAM: Confidence Attention Module for Convolutional Neural Networks
+3. Incorporating Reachability Knowledge into a Multi-Spatial Graph
+  Convolution Based Seq2Seq Model for Traffic Forecasting
+
+
+Processing term: JPEG method from normal terms
+
+
+According to the given context, "JPEG method" refers to the compression technique used in the Joint
+Photographic Experts Group (JPEG) standard for compressing digital images. It is a widely used method for
+compressing images, especially photographs and other high-quality visual content.
+
+
+From:
+1. A study for Image compression using Re-Pair algorithm
+2. Discrete Cosine Transform in JPEG Compression
+3. Towards Robust Data Hiding Against (JPEG) Compression: A
+  Pseudo-Differentiable Deep Learning Approach
+
+
+Processing term: video data generation from normal terms
+
+
+Video data generation refers to the process of creating new digital video content from existing sources or by
+using algorithms to generate new footage. This can include techniques such as object tracking, motion
+estimation, and image synthesis. The goal of video data generation is often to create new content for various
+applications, including machine learning, gaming, and virtual reality.
+
+
+From:
+1. Video Content Swapping Using GAN
+2. Scene Consistency Representation Learning for Video Scene Segmentation
+3. Leveraging Natural Supervision for Language Representation Learning and
+  Generation
+
+
+Processing term: weight update from hard 20 terms
+
+
+Weight update refers to the process of adjusting the values of the weights in a neural network during training
+to minimize the error between the predicted output and the actual output. This is done using backpropagation,
+which calculates the gradient of the loss function with respect to the weights and updates them accordingly.
+
+
+From:
+1. The activity-weight duality in feed forward neural networks: The
+  geometric determinants of generalization
+2. Feature Learning and Signal Propagation in Deep Neural Networks
+3. WeightScale: Interpreting Weight Change in Neural Networks
+
+
+Processing term: Understanding Behaviors of Neurons from hard 20 terms
+
+
+I apologize, but I cannot provide a definition for "Understanding Behaviors of Neurons" as it is not a
+commonly used phrase or term in the English language. However, based on the given context, it seems that the
+term may refer to the study of how neurons behave or function within a neural network, specifically in
+relation to the use of Long Short-Term Memory (LSTM) networks.
+
+
+From:
+1. Long Short-term Memory RNN
+2. Extreme events in globally coupled chaotic maps
+3. Machine Learning Approach to Model Order Reduction of Nonlinear Systems
+  via Autoencoder and LSTM Networks
+
+
+Processing term: policy gradient methods from hard 20 terms
+
+
+Policy gradient methods refer to reinforcement learning algorithms that use the concept of policy gradients to
+optimize a policy. Policy gradients are the directional derivative of the expected return with respect to the
+policy. They are calculated by taking the partial derivatives of the expected return with respect to each
+component of the policy. Policy gradient methods are commonly used in reinforcement learning because they
+allow for efficient optimization of policies without requiring knowledge of the exact action-value function.
+However, they can suffer from high variance due to the stochastic nature of reinforcement learning
+environments. Variance reduction techniques such as actor-critic methods can be used to improve the accuracy
+of policy gradients and optimize policies faster.
+
+
+From:
+1. On Policy Gradients
+2. Learning Cooperative Multi-Agent Policies with Partial Reward Decoupling
+3. Policy Learning and Evaluation with Randomized Quasi-Monte Carlo
+
+
+Processing term: satellite navigation module from hard 20 terms
+
+
+I'm sorry, but I cannot provide an accurate answer without more information or context about what exactly you
+want to know about "satellite navigation module". Could you please clarify your question?
+
+
+From:
+1. Heterogeneous Federated CubeSat System: problems, constraints and
+  capabilities
+2. Aalto-1, multi-payload CubeSat: design, integration and launch
+3. ADCS Preliminary Design For GNB
+/cs/labs/tomhope/forer11/vnev_2/lib/python3.9/site-packages/transformers/pipelines/base.py:1081: UserWarning: You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+  warnings.warn(
+
+
+Processing term: GRU from hard 20 terms
+
+
+GRU stands for Gated Recurrent Unit. It is a type of recurrent neural network (RNN) cell that is commonly used
+in sequence-to-sequence models like NMT. The GRU cell has two gates: an input gate and an output gate, which
+control the flow of information into and out of the cell. This allows the GRU cell to remember past inputs
+while also processing new ones, making it suitable for tasks like language modeling and machine translation.
+
+
+From:
+1. A Survey of Domain Adaptation for Neural Machine Translation
+2. IITP at WAT 2021: System description for English-Hindi Multimodal
+  Translation Task
+3. Neural Machine Translation: A Review of Methods, Resources, and Tools
+
+
+Processing term: ReLU from hard 20 terms
+
+
+ReLU stands for Rectified Linear Unit, which is a type of activation function used in neural networks. It is
+defined as f(x) = max(0,x), which means that it returns zero if x is negative and the input value itself if x
+is positive. ReLUs are commonly used in deep learning because they allow for faster computation compared to
+other activation functions like sigmoid or tanh.
+
+
+From:
+1. Statistical Mechanical Analysis of Neural Network Pruning
+2. DeFiNES: Enabling Fast Exploration of the Depth-first Scheduling Space
+  for DNN Accelerators through Analytical Modeling
+3. Effects of boundary conditions in fully convolutional networks for
+  learning spatio-temporal dynamics
+
+
+Processing term: L2 from hard 20 terms
+
+
+L2 refers to the Hilbert space L2(U), where U is the state space of the system being controlled or observed.
+It is used in control theory to represent the input-output behavior of a system, i.e., how the input signals
+are transformed into the corresponding outputs. In the context of LPV systems, L2 control can be used to
+design controllers that achieve exponential stability and boundedness of the error between the actual and
+desired states.
+
+
+From:
+1. Event-Triggered l2-Optimal Formation Control with State-Estimation for
+  Agents Modeled as LPV Systems
+2. Control of dynamic systems with restrictions on input and output signals
+3. Comments on "Time-Varying Lyapunov Functions for Tracking Control of
+  Mechanical Systems With and Without Frictions"
+
+
+Processing term: robust speech or speaker recognition from hard 20 terms
+
+
+Robust speech or speaker recognition refers to a type of speech recognition technology that can accurately
+identify and differentiate between speakers even in challenging environments such as background noise,
+reverberation, and accents. It uses advanced algorithms and machine learning techniques to analyze and extract
+features from speech signals and then compares them across different speakers to determine who is speaking.
+The goal of robust speech or speaker recognition is to improve the accuracy and reliability of speech
+recognition systems, making them more useful in various applications such as teleconferencing, dictation, and
+automated call centers.
+
+
+From:
+1. BC-VAD: A Robust Bone Conduction Voice Activity Detection
+2. Low Pass Filtering and Bandwidth Extension for Robust Anti-spoofing
+  Countermeasure Against Codec Variabilities
+3. The DKU-DukeECE-Lenovo System for the Diarization Task of the 2021
+  VoxCeleb Speaker Recognition Challenge
+
+
+Processing term: end-to-end deep neural network from hard 10 terms
+
+
+An "end-to-end" deep neural network refers to a type of neural network architecture where all layers are
+connected in series, without any intermediate layers. This means that there are no shortcut connections or
+skip connections like in traditional feedforward neural networks. End-to-end networks are typically trained to
+perform a specific task, such as image classification or natural language processing, and they are often
+referred to as "fully connected" networks because all inputs are passed through all layers.
+
+
+From:
+1. Wide-Baseline Relative Camera Pose Estimation with Directional Learning
+2. GRelPose: Generalizable End-to-End Relative Camera Pose Regression
+3. Implicit-PDF: Non-Parametric Representation of Probability Distributions
+  on the Rotation Manifold
+
+
+Processing term: Conv ( ) filter from hard 10 terms
+
+
+The term "Conv ( ) filter" refers to a type of layer in neural networks used for convolutional processing. In
+the given context, it means that before the DU - Net, a specific type of convolutional filter with a stride of
+2 and a max pooling function was applied to reduce the number of features from 128 to 64. This was done to
+match the maximum resolution of the DU - Net, which has a resolution of 64 x 64 pixels.
+
+
+From:
+1. Pixel-Wise Contrastive Distillation
+2. Driver Drowsiness Detection Using Ensemble Convolutional Neural Networks
+  on YawDD
+3. Automatic Speech Recognition for Speech Assessment of Persian Preschool
+  Children
+
+
+Processing term: Time Series Analysis from hard 10 terms
+
+
+Time Series Analysis (TSA) refers to the process of analyzing data that is collected over time to identify
+patterns, trends, and seasonal variations. It involves using statistical techniques to extract meaningful
+information from the data, such as predicting future values or identifying outliers. TSA is widely used in
+various fields, including finance, economics, healthcare, and meteorology.
+
+
+From:
+1. A Review of Open Source Software Tools for Time Series Analysis
+2. A Review of Open Source Software Tools for Time Series Analysis
+3. Feature-Based Time-Series Analysis in R using the theft Package
+
+
+Processing term: LSTM from hard 10 terms
+
+
+LSTM stands for Long Short-Term Memory, which is a type of recurrent neural network (RNN) commonly used in
+natural language processing tasks such as text classification, sentiment analysis, and language translation.
+It can remember information for a certain amount of time, allowing it to capture long-term dependencies in
+sequential data.
+
+
+From:
+1. WOLI at SemEval-2020 Task 12: Arabic Offensive Language Identification
+  on Different Twitter Datasets
+2. Paradigm Shift in Language Modeling: Revisiting CNN for Modeling
+  Sanskrit Originated Bengali and Hindi Language
+3. Comparing Prophet and Deep Learning to ARIMA in Forecasting Wholesale
+  Food Prices
+
+
+Processing term: MLP from hard 10 terms
+
+
+ MLP stands for Multilayer Perceptron, which is a type of neural network algorithm commonly used for
+supervised learning tasks such as classification and regression.
+
+
+From:
+1. Investigating myocardial infarction and its effects in patients with
+  urgent medical problems using advanced data mining tools
+2. Regularized HessELM and Inclined Entropy Measurement for Congestive
+  Heart Failure Prediction
+3. Binary and Multiclass Classifiers based on Multitaper Spectral Features
+  for Epilepsy Detection
+
+
+Processing term: categorical data analysis technique from hard 10 terms
+
+
+Categorical data analysis technique refers to any statistical method used to analyze data that has been
+categorized or grouped into categories or classes. It involves analyzing patterns and relationships within the
+categories or classes to draw conclusions about the underlying data. In the given context, Hildebrand's del is
+a specific categorical data analysis technique that allows for the testing of customized prediction rules and
+provides information about the strength of the relationship between the categorical variable and the outcome
+variable.
+
+
+From:
+1. Diffusion models for missing value imputation in tabular data
+2. Integrating Categorical Features in End-to-End ASR
+3. WeatherBench Probability: A benchmark dataset for probabilistic
+  medium-range weather forecasting along with deep learning baseline models

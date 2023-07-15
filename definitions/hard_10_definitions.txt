@@ -1,0 +1,41 @@
+
+term: {'role': 'user', 'content': 'end-to-end deep neural network'}
+ context: {'role': 'system', 'content': 'this is the context of the term: Instead we predict multiple camera pose hypotheses as well as the respective uncertainty for each prediction . Towards this aim , we use Bingham distributions , to model the orientation of the camera pose , and a multivariate Gaussian to model the position , with an end-to-end deep neural network . By incorporating a Winner-Takes-All training scheme , we finally obtain a mixture model that is well suited for explaining ambiguities in the scene , yet does not suffer from mode collapse , a common problem with mixture density networks .'}
+
+
+term definition: An end-to-end deep neural network refers to a machine learning model that takes raw input data and produces a final output without requiring any manual feature extraction or transformation. It consists of multiple layers of interconnected nodes that can learn and represent complex patterns in the data through backpropagation algorithm. In essence, the model learns to identify relevant features and relationships between them by itself, making it a powerful and increasingly popular approach in various domains, including computer vision, natural language processing, and speech recognition.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'Conv ( ) filter'}
+ context: {'role': 'system', 'content': 'this is the context of the term: The input resolution is normalized to 256 256 . Before the DU - Net , a Conv ( ) filter with stride 2 and a max pooling would produce 128 features with resolution 64 64 . Hence , the maximum resolution of DU - Net is 64 64 .'}
+
+
+term definition: The Conv() filter is a mathematical operation used in convolutional neural networks, which applies a set of learnable filters to input data in order to identify local patterns and extract features. It is commonly used in image and speech recognition tasks.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'Time Series Analysis'}
+ context: {'role': 'system', 'content': 'this is the context of the term: What is Bootstrapping ? Estimation Confidence Sets and Hypothesis Testing Regression Analysis Forecasting and Time Series Analysis Which Resampling Method Should You Use ?'}
+
+
+term definition: Time series analysis involves the collection and analysis of data over a period of time to identify patterns or trends that can be used to predict future behavior. It is commonly used in fields such as finance, economics, and weather forecasting.
+----------------------------------------
+
+
+term: {'role': 'user', 'content': 'LSTM'}
+ context: {'role': 'system', 'content': 'this is the context of the term: Websites of high results are referred to as authoritative sites under the search query , thus providing a new perspective to measure website authoritativeness . By comparing the three model experiments with Word2vec , CNN and LSTM , the experimental results on open datasets show that it is effective to use these three models , of which the LSTM model works best .'}
+
+
+term definition: LSTM stands for Long Short-Term Memory, which is a type of neural network architecture used in deep learning. This architecture is designed to allow for capturing long-term dependencies in sequential data by selectively remembering or forgeting previous information. The LSTM model is particularly effective in tasks such as speech recognition and natural language processing.
+----------------------------------------  term: {'role': 'user', 'content': 'MLP'}
+ context: {'role': 'system', 'content': 'this is the context of the term: ECG(Electrocardiogram ) , a field of Bio-signal , is generally experimented with classification algorithms most of which are SVM(Support Vector Machine ) , MLP(Multilayer Perceptron ) . But this study modified the Random Forest Algorithm along the basis of signal characteristics and comparatively analyzed the accuracies of modified algorithm with those of SVM and MLP to prove the ability of modified algorithm . The R-R interval extracted from ECG is used in this study and the results of established researches which experimented co-equal data are also comparatively analyzed .'}
+
+
+term definition: MLP stands for Multilayer Perceptron, which is a class of artificial neural networks consisting of multiple layers of nodes (artificial neurons). Each node takes a set of input values, processes them and produces an output value based on the defined activation function. MLPs are commonly used in solving classification and regression problems.
+----------------------------------------  term: {'role': 'user', 'content': 'categorical data analysis technique'}
+ context: {'role': 'system', 'content': "this is the context of the term: This paper introduces a categorical data analysis technique called Hildebrand 's del . The advantages of del are ; it allows for the testing of customized prediction rules , it provides a strength of a ..."}
+
+
+term definition: Categorical data analysis technique is a statistical method used to analyze data with categorical variables. It involves the use of techniques such as frequency tables, contingency tables, and chi-square tests to draw inferences and make predictions about the relationships between categories of data.
+----------------------------------------

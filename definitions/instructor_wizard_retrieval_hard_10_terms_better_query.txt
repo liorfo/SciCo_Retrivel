@@ -1,0 +1,101 @@
+Processing term: end-to-end deep neural network from hard 10 terms
+
+
+An "end-to-end" deep neural network refers to a type of neural network architecture where all the layers from
+the input layer to the output layer are connected together in a single chain without any intermediate layers.
+This means that there are no separate pre-processing or feature extraction layers before the
+classification/regression layers. The term "deep" refers to the number of hidden layers in the network, which
+can range from one to hundreds or more. End-to-end deep neural networks are commonly used for tasks such as
+image recognition, natural language processing, speech recognition, and autonomous driving.
+
+
+From:
+1. StereoSpike: Depth Learning with a Spiking Neural Network
+2. Dilated Fully Convolutional Neural Network for Depth Estimation from a
+  Single Image
+3. Interpretability in Contact-Rich Manipulation via Kinodynamic Images
+
+
+Processing term: Conv ( ) filter from hard 10 terms
+
+
+ A conv ( ) filter refers to a convolutional filter used in computer vision and machine learning. It is a
+mathematical operator that performs a specific operation on two-dimensional arrays, known as images. Conv
+filters are commonly used in deep learning architectures such as convolutional neural networks (CNNs). They
+are designed to extract features from images by applying a set of weights to the input pixels. The output of a
+conv filter is a new image that highlights certain features within the original image.
+
+
+From:
+1. Resolution learning in deep convolutional networks using scale-space
+  theory
+2. Gabor filter incorporated CNN for compression
+3. Multidimensional Projection Filters via Automatic Differentiation and
+  Sparse-Grid Integration
+
+
+Processing term: Time Series Analysis from hard 10 terms
+
+
+Time Series Analysis (TSA) is a statistical technique used to analyze data that is collected over time. It
+involves analyzing patterns and trends in the data over multiple time periods to identify any changes or
+anomalies that may occur. TSA is often used in fields such as finance, economics, and meteorology to make
+predictions about future events based on past data.
+
+
+From:
+1. A Review of Open Source Software Tools for Time Series Analysis
+2. Foundations of Sequence-to-Sequence Modeling for Time Series
+3. A Survey of Estimation Methods for Sparse High-dimensional Time Series
+  Models
+
+
+Processing term: LSTM from hard 10 terms
+
+
+ LSTM stands for Long Short-Term Memory, which is a type of recurrent neural network (RNN) that is designed to
+handle long-term dependencies in sequential data. It is particularly useful for tasks like language modeling,
+speech recognition, and sentiment analysis. The LSTM cell consists of a memory gate and an update gate, which
+allow it to remember important features of the input sequence while also updating its internal state based on
+new information.
+
+
+From:
+1. Word Sense Disambiguation with LSTM: Do We Really Need 100 Billion
+  Words?
+2. A Comprehensive Survey on Word Representation Models: From Classical to
+  State-Of-The-Art Word Representation Language Models
+3. LSTM based models stability in the context of Sentiment Analysis for
+  social media
+
+
+Processing term: MLP from hard 10 terms
+
+
+ MLP stands for Multi-Layer Perceptron, which is a type of neural network architecture commonly used for
+supervised learning tasks like classification and regression. It consists of multiple layers of nodes, each of
+which performs a nonlinear transformation of the input data before passing it to the next layer.
+
+
+From:
+1. ECG Heartbeat Classification Using Multimodal Fusion
+2. ECG Heartbeat Classification Using Multimodal Fusion
+3. A Transfer-Learning Based Ensemble Architecture for ECG Signal
+  Classification
+
+
+Processing term: categorical data analysis technique from hard 10 terms
+
+
+Categorical data analysis technique refers to any statistical method used to analyze data that has been
+categorized or grouped into categories or classes. Hildebrand's del is a specific technique used in
+epidemiology to identify risk factors associated with a particular disease or condition. It involves dividing
+the population into subsets based on certain characteristics, such as age or gender, and then comparing the
+incidence rates of the disease within each subgroup.
+
+
+From:
+1. Classification at the Accuracy Limit -- Facing the Problem of Data
+  Ambiguity
+2. Unbiased Top-k Learning to Rank with Causal Likelihood Decomposition
+3. Benchmarking distance-based partitioning methods for mixed-type data

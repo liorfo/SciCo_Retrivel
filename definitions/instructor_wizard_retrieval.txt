@@ -1,0 +1,343 @@
+Processing term: unsupervised automatic facial point detection from normal terms
+
+
+Unsupervised automatic facial point detection refers to a process where computer algorithms are used to
+identify and locate specific points on a person's face without any prior knowledge or training data about
+those points. It involves analyzing images of faces and identifying patterns or landmarks that can be used to
+track changes in facial expressions and movements.
+
+
+From:
+1. Facial emotion expressions in human-robot interaction: A survey
+2. CoNFies: Controllable Neural Face Avatars
+3. Attention Based Relation Network for Facial Action Units Recognition
+
+
+Processing term: ASR from normal terms
+
+
+ Automatic Speech Recognition (ASR) is a technology that enables machines to recognize and understand human
+speech. It involves converting spoken words into text or commands that can be used by computers or other
+devices. ASR systems use various algorithms and models to analyze and interpret the acoustic signals produced
+by the human voice. These signals are typically captured using microphones and then processed through a series
+of steps before being converted into text or commands.
+
+
+From:
+1. Visualizing Automatic Speech Recognition -- Means for a Better
+  Understanding?
+2. Evolutionary optimization of contexts for phonetic correction in speech
+  recognition systems
+3. Speech Recognition by Simply Fine-tuning BERT
+
+
+Processing term: Feature Pyramid Network from normal terms
+
+
+ Feature Pyramid Network (FPN) is a deep learning model architecture used for image classification, object
+detection, and semantic segmentation. It consists of a series of convolutional layers that take in input
+images at different scales and produces feature maps at each level. These feature maps are then combined using
+concatenations and upscaling operations to produce final predictions. FPN has become a popular choice for many
+state-of-the-art models because it can learn half of the preceding feature maps and has fewer parameters
+compared to traditional architectures that use separate convolutional layers for each scale.
+
+
+From:
+1. SFPN: Synthetic FPN for Object Detection
+2. Pyramid Point: A Multi-Level Focusing Network for Revisiting Feature
+  Layers
+3. SPFNet:Subspace Pyramid Fusion Network for Semantic Segmentation
+
+
+Processing term: spatial attention mechanisms from normal terms
+
+
+Spatial attention mechanisms refer to a type of attention mechanism that focuses on specific regions of an
+image or video frame while ignoring other regions. These mechanisms are designed to improve the accuracy and
+efficiency of object detection, segmentation, and tracking tasks. They do this by learning the importance of
+different regions of an image or frame and using this information to adjust the weights of the neural network
+during training.
+
+
+From:
+1. Looking Beyond Two Frames: End-to-End Multi-Object Tracking Using
+  Spatial and Temporal Transformers
+2. ConAM: Confidence Attention Module for Convolutional Neural Networks
+3. SA-Net: Shuffle Attention for Deep Convolutional Neural Networks
+
+
+Processing term: JPEG method from normal terms
+
+
+The term "JPEG method" refers to the process of compressing and decompressing digital images using the Joint
+Photographic Experts Group (JPEG) algorithm. It is a widely used standard for lossy compression of
+photographic images, which reduces the size of the image while retaining most of its visual quality.
+
+
+From:
+1. Discrete Cosine Transform in JPEG Compression
+2. Learning to Immunize Images for Tamper Localization and Self-Recovery
+3. Neural JPEG: End-to-End Image Compression Leveraging a Standard JPEG
+  Encoder-Decoder
+
+
+Processing term: video data generation from normal terms
+
+
+ Video data generation refers to the process of creating new digital video content or modifying existing
+content to create new versions of the same video. This may involve adding special effects, changing camera
+angles, adjusting lighting, or altering other parameters to create variations of the original video. The goal
+of video data generation is often to create new content that can be used for various purposes, such as
+training machine learning models, creating virtual reality experiences, or enhancing entertainment content.
+
+
+From:
+1. Video Content Swapping Using GAN
+2. GPT2MVS: Generative Pre-trained Transformer-2 for Multi-modal Video
+  Summarization
+3. Comprehensive Video Understanding: Video summarization with
+  content-based video recommender design
+
+
+Processing term: weight update from hard 20 terms
+
+
+Weight update refers to the process of adjusting the weights of a neural network based on the errors
+encountered during training. This is done in order to improve the accuracy of the network's predictions.
+During each iteration of the training process, the weights are updated using an optimization algorithm such as
+stochastic gradient descent. The goal is to find the optimal values of the weights that minimize the loss
+function and lead to the best possible predictions.
+
+
+From:
+1. Meta-Weight-Net: Learning an Explicit Mapping For Sample Weighting
+2. The activity-weight duality in feed forward neural networks: The
+  geometric determinants of generalization
+3. A Modern Self-Referential Weight Matrix That Learns to Modify Itself
+
+
+Processing term: Understanding Behaviors of Neurons from hard 20 terms
+
+
+Understanding Behaviors of Neurons refers to the study of how neurons in the brain behave and interact with
+each other during different tasks or activities. It involves analyzing the electrical signals generated by
+neurons and how they communicate with each other to perform specific functions. The term is often used in the
+field of neuroscience and is important for understanding how the brain processes information and performs
+complex tasks.
+
+
+From:
+1. Account for Neuronal Representations from the Perspective of Neurons
+2. Capturing cross-session neural population variability through
+  self-supervised identification of consistent neuron ensembles
+3. Neuron-level Interpretation of Deep NLP Models: A Survey
+
+
+Processing term: policy gradient methods from hard 20 terms
+
+
+ Policy gradient methods are a type of reinforcement learning algorithm that uses the gradient descent method
+to optimize a policy that maps states to actions. They are based on the idea that the gradient of the expected
+return with respect to the policy parameters can be estimated using samples of experience tuples (states,
+actions, rewards). By iteratively updating the policy parameters using these estimates, policy gradient
+methods can learn an optimal policy that maximizes the expected return.
+
+
+From:
+1. Semi-On-Policy Training for Sample Efficient Multi-Agent Policy
+  Gradients
+2. Stein Variational Policy Gradient
+3. On Policy Gradients
+
+
+Processing term: satellite navigation module from hard 20 terms
+
+
+ A satellite navigation module is a component of an unmanned aerial vehicle (UAV) or drone that uses satellite
+signals to determine the position and orientation of the UAV. It may also use other sensors such as GPS,
+GLONASS, or BeiDou to improve accuracy. The module typically includes a GPS or other satellite antenna, a GPS
+or other satellite signal processor, and a microcontroller or other processing hardware to interpret the
+signals and calculate the UAV's position and orientation.
+
+
+From:
+1. Customizable Stochastic High Fidelity Model of the Sensors and Camera
+  onboard a Low SWaP Fixed Wing Autonomous Aircraft
+2. Stochastic High Fidelity Simulation and Scenarios for Testing of Fixed
+  Wing Autonomous GNSS-Denied Navigation Algorithms
+3. Integrated guidance and control framework for the waypoint navigation of
+  a miniature aircraft with highly coupled longitudinal and lateral dynamics
+/cs/labs/tomhope/forer11/vnev_2/lib/python3.9/site-packages/transformers/pipelines/base.py:1081: UserWarning: You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+  warnings.warn(
+
+
+Processing term: GRU from hard 20 terms
+
+
+GRU stands for Gated Recurrent Unit. It is a type of recurrent neural network (RNN) cell that is commonly used
+in sequence-to-sequence models like NMT. The GRU cell consists of three gates: an input gate, a forget gate,
+and an output gate. These gates help the model remember relevant information while forgetting irrelevant
+information during the processing of each input sequence.
+
+
+From:
+1. Neural Machine Translation: A Review of Methods, Resources, and Tools
+2. A Survey of Domain Adaptation for Neural Machine Translation
+3. English-Japanese Neural Machine Translation with
+  Encoder-Decoder-Reconstructor
+
+
+Processing term: ReLU from hard 20 terms
+
+
+ReLU stands for Rectified Linear Unit, which is a commonly used activation function in neural networks. It is
+defined as f(x) = max(0, x), which means that it returns zero if the input is negative and the input itself if
+the input is positive. While ReLU is simple and easy to implement, it has some limitations such as being non-
+differentiable at the origin, which makes it difficult to train certain deep neural networks.
+
+
+From:
+1. SAU: Smooth activation function using convolution with approximate
+  identities
+2. Deep Nonparametric Regression on Approximately Low-dimensional Manifolds
+3. SMU: smooth activation function for deep networks using smoothing
+  maximum technique
+
+
+Processing term: L2 from hard 20 terms
+
+
+L2 refers to the Hilbert space of square-integrable functions on a certain domain, often denoted by $\cal
+L^2(\Omega)$. It is commonly used in quantum mechanics and signal processing, among other fields. In the
+context of control theory, L2 is sometimes used to refer to the norm of a vector or matrix in a specific inner
+product space. Specifically, if $X$ is a matrix whose columns span a control input space, then the L2 norm of
+$X$ is defined as $\|X\|_2 = \sqrt{\sum_{i=1}^{n} x_i^2}$, where $x_i$ represents the $i$-th column of $X$.
+This norm is
+
+
+From:
+1. SOS Methods for Multi-Delay Systems: A Dual Form of Lyapanov-Krasovskii
+  Functional
+2. On Linear Time-Invariant Systems Analysis via A Single Trajectory: A
+  Linear Programming Approach
+3. $H_{\infty}$-optimal control of coupled ODE-PDE systems using PIE
+  framework and LPIs
+
+
+Processing term: robust speech or speaker recognition from hard 20 terms
+
+
+Robust speech or speaker recognition refers to speech technology that can accurately recognize speech even in
+challenging conditions such as background noise, accents, and dialects. It involves using advanced algorithms
+and machine learning techniques to analyze and understand spoken language.
+
+
+From:
+1. Unsupervised Voice Activity Detection by Modeling Source and System
+  Information using Zero Frequency Filtering
+2. SG-VAD: Stochastic Gates Based Speech Activity Detection
+3. Improvement of Noise-Robust Single-Channel Voice Activity Detection with
+  Spatial Pre-processing
+
+
+Processing term: end-to-end deep neural network from hard 10 terms
+
+
+An "end-to-end" deep neural network refers to a type of neural network architecture where all the layers from
+the input layer to the output layer are connected together in a single chain without any intermediate layers.
+This means that there are no separate pre-processing or feature extraction layers before the
+classification/regression layers. The term "deep" refers to the number of hidden layers in the network, which
+can range from one to hundreds or more. End-to-end deep neural networks are commonly used for tasks such as
+image recognition, natural language processing, speech recognition, and autonomous driving.
+
+
+From:
+1. StereoSpike: Depth Learning with a Spiking Neural Network
+2. Dilated Fully Convolutional Neural Network for Depth Estimation from a
+  Single Image
+3. Interpretability in Contact-Rich Manipulation via Kinodynamic Images
+
+
+Processing term: Conv ( ) filter from hard 10 terms
+
+
+ A conv ( ) filter refers to a convolutional filter used in computer vision and machine learning. It is a
+mathematical operator that performs a specific operation on two-dimensional arrays, known as images. Conv
+filters are commonly used in deep learning architectures such as convolutional neural networks (CNNs). They
+are designed to extract features from images by applying a set of weights to the input pixels. The output of a
+conv filter is a new image that highlights certain features within the original image.
+
+
+From:
+1. Resolution learning in deep convolutional networks using scale-space
+  theory
+2. Gabor filter incorporated CNN for compression
+3. Multidimensional Projection Filters via Automatic Differentiation and
+  Sparse-Grid Integration
+
+
+Processing term: Time Series Analysis from hard 10 terms
+
+
+Time Series Analysis (TSA) is a statistical technique used to analyze data that is collected over time. It
+involves analyzing patterns and trends in the data over multiple time periods to identify any changes or
+anomalies that may occur. TSA is often used in fields such as finance, economics, and meteorology to make
+predictions about future events based on past data.
+
+
+From:
+1. A Review of Open Source Software Tools for Time Series Analysis
+2. Foundations of Sequence-to-Sequence Modeling for Time Series
+3. A Survey of Estimation Methods for Sparse High-dimensional Time Series
+  Models
+
+
+Processing term: LSTM from hard 10 terms
+
+
+ LSTM stands for Long Short-Term Memory, which is a type of recurrent neural network (RNN) that is designed to
+handle long-term dependencies in sequential data. It is particularly useful for tasks like language modeling,
+speech recognition, and sentiment analysis. The LSTM cell consists of a memory gate and an update gate, which
+allow it to remember important features of the input sequence while also updating its internal state based on
+new information.
+
+
+From:
+1. Word Sense Disambiguation with LSTM: Do We Really Need 100 Billion
+  Words?
+2. A Comprehensive Survey on Word Representation Models: From Classical to
+  State-Of-The-Art Word Representation Language Models
+3. LSTM based models stability in the context of Sentiment Analysis for
+  social media
+
+
+Processing term: MLP from hard 10 terms
+
+
+ MLP stands for Multi-Layer Perceptron, which is a type of neural network architecture commonly used for
+supervised learning tasks like classification and regression. It consists of multiple layers of nodes, each of
+which performs a nonlinear transformation of the input data before passing it to the next layer.
+
+
+From:
+1. ECG Heartbeat Classification Using Multimodal Fusion
+2. ECG Heartbeat Classification Using Multimodal Fusion
+3. A Transfer-Learning Based Ensemble Architecture for ECG Signal
+  Classification
+
+
+Processing term: categorical data analysis technique from hard 10 terms
+
+
+Categorical data analysis technique refers to any statistical method used to analyze data that has been
+categorized or grouped into categories or classes. Hildebrand's del is a specific technique used in
+epidemiology to identify risk factors associated with a particular disease or condition. It involves dividing
+the population into subsets based on certain characteristics, such as age or gender, and then comparing the
+incidence rates of the disease within each subgroup.
+
+
+From:
+1. Classification at the Accuracy Limit -- Facing the Problem of Data
+  Ambiguity
+2. Unbiased Top-k Learning to Rank with Causal Likelihood Decomposition
+3. Benchmarking distance-based partitioning methods for mixed-type data
