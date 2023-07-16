@@ -1,13 +1,5 @@
 import jsonlines
 import sys
-import os
-
-from eval.hypernym import HypernymScore
-from eval.hypernym_50 import HypernymScore50
-from eval.shortest_path import ShortestPath
-from utils.conll import write_output_file
-from coval.coval.conll import reader
-from coval.coval.eval import evaluator
 from itertools import combinations
 
 
@@ -16,42 +8,32 @@ def generate_mention_couples(mentions):
     return mention_couples
 
 
-def eval_coref(gold, system):
-    allmetrics = [('mentions', evaluator.mentions), ('muc', evaluator.muc),
-                  ('bcub', evaluator.b_cubed), ('ceafe', evaluator.ceafe),
-                  ('lea', evaluator.lea)]
+def get_sentence_context(mention, tokens, sentences):
+    doc_id, start, end, _ = mention
+    sent_start, sent_end = 0, len(tokens) - 1
+    i = 0
+    while i < len(sentences[doc_id]):
+        sent_start, sent_end = sentences[doc_id][i]
+        if start >= sent_start and end <= sent_end:
+            break
+        i += 1
 
-    NP_only = False
-    remove_nested = False
-    keep_singletons = False
-    min_span = False
+    mention_rep = tokens[doc_id][sent_start:start] + ['<m>'] + tokens[doc_id][start:end + 1] + ['</m>']
+    mention_rep_with_sep = mention_rep + tokens[doc_id][end + 1:sent_end]
 
-    conll = 0
-
-    doc_coref_infos = reader.get_coref_infos(gold, system, NP_only, remove_nested, keep_singletons, min_span)
-    scores = {}
-
-    for name, metric in allmetrics:
-        recall, precision, f1 = evaluator.evaluate_documents(doc_coref_infos, metric, beta=1)
-        scores[name] = [recall, precision, f1]
-
-        if name in ["muc", "bcub", "ceafe"]:
-            conll += f1
-
-    scores['conll'] = conll
-    return scores
+    return ' '.join(mention_rep_with_sep)
 
 
-def get_coref_scores(gold, system):
-    output_path = 'tmp'
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
-
-    write_output_file(gold, output_path, 'gold')
-    write_output_file(system, output_path, 'system')
-    coref_scores = eval_coref('tmp/gold_simple.conll', 'tmp/system_simple.conll')
-
-    return coref_scores
+def get_couple_class_tag(couple, relations):
+    cluster_x, cluster_y = couple[0][-1], couple[1][-1]
+    if cluster_x == cluster_y:
+        return 'same cluster'
+    elif [cluster_x, cluster_y] in relations:
+        return 'first -> second'
+    elif [cluster_y, cluster_x] in relations:
+        return 'second -> first'
+    else:
+        return 'no relation'
 
 
 if __name__ == '__main__':
@@ -68,15 +50,32 @@ if __name__ == '__main__':
 
     with jsonlines.open(new_model_path, 'r') as f:
         new_model = [line for line in f]
-
     if hard:
         gold = [topic for topic in gold if topic[hard] == True]
         system = [topic for topic in system if topic['id'] in [x['id'] for x in gold]]
         new_model = [topic for topic in new_model if topic['id'] in [x['id'] for x in gold]]
 
-    for i in range(len(gold)):
-        all_gold_couples = generate_mention_couples(gold[i]['mentions'])
-        all_system_couples = generate_mention_couples(system[i]['mentions'])
-        print(len(all_system_couples))
+    for topic_index in range(len(gold)):
+        all_gold_couples, all_system_couples, all_new_model_couples = generate_mention_couples(
+            gold[topic_index]['mentions']), generate_mention_couples(
+            system[topic_index]['mentions']), generate_mention_couples(
+            new_model[topic_index]['mentions'])
 
-    print(f'Number of topics to evaluate {len(gold)}')
+        gold_relations, system_relations, new_model_relations = gold[topic_index]['relations'], system[topic_index][
+            'relations'], \
+            new_model[topic_index]['relations']
+
+        for couple_index in range(len(all_gold_couples)):
+            gold_couple, system_couple, new_model_couple = all_gold_couples[couple_index], all_system_couples[
+                couple_index], all_new_model_couples[couple_index]
+
+            gold_couple_class = get_couple_class_tag(gold_couple, gold_relations)
+            system_couple_class = get_couple_class_tag(system_couple, system_relations)
+            new_model_couple_class = get_couple_class_tag(new_model_couple, new_model_relations)
+
+            if gold_couple_class == new_model_couple_class and gold_couple_class != system_couple_class:
+                first_sentence = get_sentence_context(gold_couple[0], gold[topic_index]['tokens'],
+                                                      gold[topic_index]['sentences'])
+                second_sentence = get_sentence_context(gold_couple[1], gold[topic_index]['tokens'],
+                                                       gold[topic_index]['sentences'])
+                print(f'class: {gold_couple_class}\nfirst:\n{first_sentence}\nsecond:\n{second_sentence}\n\n\n')
