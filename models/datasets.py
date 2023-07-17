@@ -1,13 +1,13 @@
-import torch
-from torch.utils import data
 import collections
-from itertools import product, combinations
-import numpy as np
 import jsonlines
-import re
+import numpy as np
 import pickle
+import re
+import torch
+from itertools import product, combinations
+from torch.utils import data
 
-from SciCo_Retrivel.definition_extractor import get_definition_retrieval_model, get_definition
+from SciCo_Retrivel.definition_extractor import get_definition
 
 
 class CrossEncoderDataset(data.Dataset):

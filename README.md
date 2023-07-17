@@ -1,30 +1,70 @@
-# SciCo
+# SciCo with definitions retrieval
 
 
-This repository contains the data and code for the paper:
+This repository contains the updated model for Scico with definitions retrieval.
+
+the original paper:
 
 [SciCo: Hierarchical Cross-Document Coreference for Scientific Concepts](https://arxiv.org/abs/2104.08809) \
-*Arie Cattan, Sophie Johnson, Daniel S. Weld, Ido Dagan, Iz Beltagy, Doug Downey and Tom Hope* \
-AKBC 2021. <b>Outstanding Paper Award! 🎉🎉</b>
+*Arie Cattan, Sophie Johnson, Daniel S. Weld, Ido Dagan, Iz Beltagy, Doug Downey and Tom Hope*
 
-Check out our [website](https://scico.apps.allenai.org/)!
+## Project Description
+
+The goal of this project is to improve the [SciCo model](https://github.com/ariecattan/SciCo/tree/main) by adding 
+a definitions retrieval step. The definition retrival was tested and implemented only on the Multiclass unified model, trained on longformer.
+
+Note that this project's code was written including hard-coding of specific local paths, and will require adjustments to run. The code is organized in chronological running order.
+
+# Steps to run the project
+
+## 1. Run the original Scico model
+First you should run the next part (the original Scico, only with the multiclass part) [here](#original-scico-walkthrough)  with the original multiclass.yaml config: https://github.com/ariecattan/SciCo/blob/main/configs/multiclass.yaml#L1 and be familiar with it 
+
+## 2. Create the definition extractor model
+
+The unarxiv data is a dataset of scientific papers, we will use it to retrieve definitions for the scientific concepts in the Scico dataset.
+
+In this part we will do the following:
+
+1. Save the unarxiv data in a format that is easy to work with
+2. Embed each abstract and its metadata with the Instructor text embeddings [instructor](https://instructor-embedding.github.io/)
+3. Create a vector store of the embeddings for fast retrieval using [chroma](https://python.langchain.com/docs/modules/data_connection/vectorstores/integrations/chroma)
+4. Create the llm model we use create the definitions (I used [wizard](https://huggingface.co/TheBloke/wizardLM-7B-HF))
+5. Then we will have the complete definition extractor model. The model will get a query with a term, and it's context, extract the k most similar abstracts from the unarxiv dataset, and then define the term using the llm model and said abstracts.
+
+![Alt text](definitions/definition-extarctor.png?raw=true "Title")
+
+To create the above model, open the file definition_extractor.py and change the paths to the paths you want to use (look for paths that have /cs/labs/tomhope/forer11 in them).
+
+Then in definition_extractor.py, uncomment the line: run_example_retrieval().
+
+## 3. update the Scico dataset with the definitions
+
+1. In definition_extractor.py, comment the line: run_example_retrieval().
+2. Remember to search the project for remaining local paths 
+3. In the multiclass.yaml config, change 'definition_extraction' to False and 'should_save_definition' to True
+4. Run train 1 time with the new config, this will save the definitions in the Scico dataset
+
+## 4. Run the Scico model with the definitions
+
+1. In the multiclass.yaml config, change 'definition_extraction' to True and 'should_save_definition' to False
+2. Run train as usual
+3. run run_coref_scorer.py 
+4. change the threshold in multiclass.yaml to the best threshold you found
+5. run predict as usual
+6. run evaluate as usual
+
+## 5. Compare to the original Scico model
+
+Run compare_results.py with the paths to the original Scico model and the new Scico model. This will output 4 files where in each you will have the terms that the second model improved on the first model on each category (same cluster, a->b, b->a, no relation).
 
 
-```
-@inproceedings{
-    cattan2021scico,
-    title={SciCo: Hierarchical Cross-Document Coreference for Scientific Concepts},
-    author={Arie Cattan and Sophie Johnson and Daniel S. Weld and Ido Dagan and Iz Beltagy and Doug Downey and Tom Hope},
-    booktitle={3rd Conference on Automated Knowledge Base Construction},
-    year={2021},
-    url={https://openreview.net/forum?id=OFLbgUP04nC}
-}
-```
-
-**NEW**
-- :white_check_mark:&nbsp; Integrated to [Huggingface Spaces](https://huggingface.co/spaces) with [Gradio](https://github.com/gradio-app/gradio). See [Gradio Web Demo](https://huggingface.co/spaces/akhaliq/longformer-scico).
 
 
+
+
+
+## Original Scico walkthrough
 
 ## Dataset
 

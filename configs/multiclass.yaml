@@ -24,7 +24,8 @@ model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/model_with_attention
 log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 
 # definition extraction
-definition_extraction: true
+definition_extraction: false
+should_save_definition: false
 
 
 # inference

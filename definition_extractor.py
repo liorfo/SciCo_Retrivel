@@ -357,9 +357,11 @@ def get_definition_retrieval_model(
 
 
 def run_example_retrieval():
-    qa_chain = get_definition_retrieval_model()
+    qa_chain = get_definition_retrieval_model(load_model=False, should_save_arxive_lists=True,
+                                              embedding_type=INSTRUCTOR, persist_directory=instructor_persist_directory)
     process_terms(qa_chain, normal_terms_contexts, 'normal terms', False)
     process_terms(qa_chain, hard_20_terms_contexts, 'hard 20 terms', False)
     process_terms(qa_chain, hard_10_terms_contexts, 'hard 10 terms', False)
+
 
 # run_example_retrieval()

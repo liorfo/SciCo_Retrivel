@@ -261,11 +261,12 @@ class HypernymInference:
 def predict_multiclass(config, trainer):
     logger.info('Predicting multiclass scores')
     model = MulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+    should_load_definition = config["definition_extraction"]
     test = CrossEncoderDataset(config["data"]["test_set"],
                                full_doc=config['full_doc'],
                                multiclass=model_name,
                                is_training=False,
-                               should_load_definition=True, data_label='test')
+                               should_load_definition=should_load_definition, data_label='test')
     test_loader = data.DataLoader(test,
                                   batch_size=config["model"]["batch_size"] * 64,
                                   shuffle=False,

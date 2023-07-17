@@ -48,8 +48,9 @@ if __name__ == '__main__':
 
     logger.info('loading models')
     model = MulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+    should_load_definition = config["definition_extraction"]
     dev = CrossEncoderDataset(config["data"]["dev_set"], full_doc=config['full_doc'], multiclass='multiclass',
-                              should_load_definition=True, data_label='dev')
+                              should_load_definition=should_load_definition, data_label='dev')
     dev_loader = data.DataLoader(dev,
                                  batch_size=config["model"]["batch_size"] * 4,
                                  shuffle=False,
