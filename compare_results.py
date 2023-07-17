@@ -42,6 +42,8 @@ if __name__ == '__main__':
     new_model_path = sys.argv[3]
     hard = sys.argv[4] if len(sys.argv) > 4 else None
 
+    same_class, first_to_second, second_to_first, no_relation = '', '', '', ''
+
     with jsonlines.open(gold_path, 'r') as f:
         gold = [line for line in f]
 
@@ -78,4 +80,24 @@ if __name__ == '__main__':
                                                       gold[topic_index]['sentences'])
                 second_sentence = get_sentence_context(gold_couple[1], gold[topic_index]['tokens'],
                                                        gold[topic_index]['sentences'])
-                print(f'class: {gold_couple_class}\nfirst:\n{first_sentence}\nsecond:\n{second_sentence}\n\n\n')
+
+                sentences_string = f'class: {gold_couple_class}\nfirst:\n{first_sentence}\nsecond:\n{second_sentence}\n\n\n'
+
+                if gold_couple_class == 'same cluster':
+                    same_class += sentences_string
+                elif gold_couple_class == 'first -> second':
+                    first_to_second += sentences_string
+                elif gold_couple_class == 'second -> first':
+                    second_to_first += sentences_string
+                elif gold_couple_class == 'no relation':
+                    no_relation += sentences_string
+
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/same_class.txt', 'w') as f:
+        f.write(same_class)
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/first_to_second.txt', 'w') as f:
+        f.write(first_to_second)
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/second_to_first.txt', 'w') as f:
+        f.write(second_to_first)
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/no_relation.txt', 'w') as f:
+        f.write(no_relation)
+
