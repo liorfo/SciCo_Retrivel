@@ -1,0 +1,39 @@
+Same Class:
+
+Here the basic model could have not known that ML refers to machine learning (the basic model said no relation), and the definition helped
+
+class: same cluster, base class: no relation
+first:
+Eventually , eight papers were accepted for the special issue , spanning a variety of topics in terms of <m> machine learning </m> and its utilization for analyzingmotion includingbiological trajectorymatching .
+second:
+The question thus becomes the following : is the act of training a model for <m> ML purposes </m> a copyright relevant activity ?
+
+First to Second:
+
+Here the basic model chose 'no relation' as the relation, but the definition helped to choose 'first to second'
+
+class: first -> second, base class: no relation
+first:
+While <m> MLP processing </m> alone did not have a large effect on the overall performance , the best results were obtained for MLP-processed phase sensitive filters and added MFCCs , with relative error reductions of over 40 % for both noisy and clean training .
+second:
+In EXAM , we use a <m> non - linear MLP </m> to be the aggregation layer , and it will generalize FastText to a non - linear setting which might be more expressive than the original one . section :
+
+Second to First:
+
+I think this is the best example where the definition helped to choose 'second to first', because with the definition of AST BPE the new model could understand the relation to source and target byte - pair encoding
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+We also consider a joint <m> source and target byte - pair encoding </m> ( BPE ) with 40 K types [ reference ][ reference ] .
+
+No Relation:
+
+In this example the basic model chose 'first to second' as the relation, but the definition helped to choose 'no relation' as Embedding Dimensionality does not have an hierarchical relation to word embedding vectors
+
+class: no relation, base class: first -> second
+first:
+subsection : Experimental Setup We use pre - trained - Glove vectors to initialize our <m> word embedding vectors </m> .
+second:
+subsection : <m> Embedding Dimensionality </m> We explored various embedding dimensionalities and selected 128 for all experiments other than the comparison reported in Table [ reference ] .

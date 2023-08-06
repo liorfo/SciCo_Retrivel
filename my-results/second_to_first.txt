@@ -1,0 +1,1057 @@
+class: second -> first, base class: no relation
+first:
+The basic architecture of our neural network is similar to the fully convolutional segmentation network of , namely , we repeat the operation of convolving a vertex function by kernels and applying a <m> non - linear transformation </m> .
+second:
+We take the final hidden state as the segment embedding vector , then can be represented as where corresponds to one layer or multiple layers of <m> linear or non - linear transformation </m> .
+
+
+class: second -> first, base class: no relation
+first:
+<m> Anti mutual-information subsampling </m> does not require to remove from the brain signals the shared variance between aging and fluid intelligence , and hence does not display this pessimistic behavior .
+second:
+The paper proposes three modifications to the 3-step hierarchical search block-matching algorithm for video coding : a multiple-winner search that improves the estimation accuracy , a <m> method of subsampling </m> that reduces computation and input data amount , and an overlapping strategy that improves the accuracy of large-area search .
+
+
+class: second -> first, base class: no relation
+first:
+<m> Anti mutual-information subsampling </m> does not require to remove from the brain signals the shared variance between aging and fluid intelligence , and hence does not display this pessimistic behavior .
+second:
+It is a highly ill - posed problem , due to the loss of high - frequency information that occurs during the non - invertible low - pass filtering and <m> subsampling operations </m> .
+
+
+class: second -> first, base class: no relation
+first:
+A <m> subsampling stochastic gradient descent algorithm </m> has been proposed to accelerate the training of recurrent neural network language models .
+second:
+The paper proposes three modifications to the 3-step hierarchical search block-matching algorithm for video coding : a multiple-winner search that improves the estimation accuracy , a <m> method of subsampling </m> that reduces computation and input data amount , and an overlapping strategy that improves the accuracy of large-area search .
+
+
+class: second -> first, base class: no relation
+first:
+A <m> subsampling stochastic gradient descent algorithm </m> has been proposed to accelerate the training of recurrent neural network language models .
+second:
+It is a highly ill - posed problem , due to the loss of high - frequency information that occurs during the non - invertible low - pass filtering and <m> subsampling operations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+We explore a <m> subsampling bootstrap procedure </m> to serve as the basis for goodness of fit and model selection with a single observed network that circumvents the intractability of such likelihoods .
+second:
+It is a highly ill - posed problem , due to the loss of high - frequency information that occurs during the non - invertible low - pass filtering and <m> subsampling operations </m> .
+
+
+class: second -> first, base class: no relation
+first:
+Subsampling in CSXI is accomplished by either <m> view angle spectral subsampling </m> , spatial subsampling enabled by block-unblock coded apertures placed at the source or detector side , or both .
+second:
+It is a highly ill - posed problem , due to the loss of high - frequency information that occurs during the non - invertible low - pass filtering and <m> subsampling operations </m> .
+
+
+class: second -> first, base class: no relation
+first:
+subsection : Results of Hierarchical Subsampling We first demonstrate the results of the <m> hierarchical subsampling recurrent network </m> , which is the key to speed up our experiments .
+second:
+We discuss the practical training and decoding algorithms of this model for speech recognition , and the <m> subsampling network </m> to reduce the computational cost .
+
+
+class: second -> first, base class: no relation
+first:
+The overall best performance was obtained with a normalized correlation metric coupled with <m> HFUS downsampling </m> and a one-plus-one evolutionary optimizer , yielding a mean registration error of 0.05 mm .
+second:
+In the first system , we consider a method for <m> reorganizing , downsampling </m> and interpolating the residual data .
+
+
+class: second -> first, base class: no relation
+first:
+The overall best performance was obtained with a normalized correlation metric coupled with <m> HFUS downsampling </m> and a one-plus-one evolutionary optimizer , yielding a mean registration error of 0.05 mm .
+second:
+For characteristics of the system , Grabcut algorithm is optimized with <m> downsampling technology </m> to accelerate the segmentation speed and concurrently accelerates trimap generating algorithm and Shared Matting to further improve the processing speed .
+
+
+class: second -> first, base class: no relation
+first:
+The overall best performance was obtained with a normalized correlation metric coupled with <m> HFUS downsampling </m> and a one-plus-one evolutionary optimizer , yielding a mean registration error of 0.05 mm .
+second:
+Either of these two configurations can be selected in real time by changing clock signals and <m> output downsampling filters </m> .
+
+
+class: second -> first, base class: no relation
+first:
+The overall best performance was obtained with a normalized correlation metric coupled with <m> HFUS downsampling </m> and a one-plus-one evolutionary optimizer , yielding a mean registration error of 0.05 mm .
+second:
+These can be categorised as multi - image SR methods and exploit explicit redundancy by constraining the ill - posed problem with additional information and attempting to invert the <m> downsampling process </m> .
+
+
+class: second -> first, base class: no relation
+first:
+The overall best performance was obtained with a normalized correlation metric coupled with <m> HFUS downsampling </m> and a one-plus-one evolutionary optimizer , yielding a mean registration error of 0.05 mm .
+second:
+The <m> downsampling operation </m> is deterministic and known : to produce from , we first convolve using a Gaussian filter - thus simulating the camera ’s point spread function - then downsample the image by a factor of .
+
+
+class: second -> first, base class: no relation
+first:
+The overall best performance was obtained with a normalized correlation metric coupled with <m> HFUS downsampling </m> and a one-plus-one evolutionary optimizer , yielding a mean registration error of 0.05 mm .
+second:
+Because the <m> downsampling method </m> can influence the compression performance , we have made the used downsampled images available .
+
+
+class: second -> first, base class: no relation
+first:
+The overall best performance was obtained with a normalized correlation metric coupled with <m> HFUS downsampling </m> and a one-plus-one evolutionary optimizer , yielding a mean registration error of 0.05 mm .
+second:
+subsection : Spatial Sampling Let be the <m> downsampling function </m> that decimates an image to the corresponding image of size .
+
+
+class: second -> first, base class: no relation
+first:
+The overall best performance was obtained with a normalized correlation metric coupled with <m> HFUS downsampling </m> and a one-plus-one evolutionary optimizer , yielding a mean registration error of 0.05 mm .
+second:
+There are two technical hurdles in the application of DCNNs to image labeling tasks : <m> signal downsampling </m> , and spatial ‘
+
+
+class: second -> first, base class: no relation
+first:
+We further evaluate three potential defense methods to mitigate such attacks , including adversarial training , <m> audio downsampling </m> , and moving average filtering , which leads to promising directions for further research .
+second:
+Either of these two configurations can be selected in real time by changing clock signals and <m> output downsampling filters </m> .
+
+
+class: second -> first, base class: first -> second
+first:
+Performance analysis demonstrates that the proposed <m> downsampling nodes </m> and full nodes have similar broadcast accuracy with appropriate $ M$. The simulation results show that the proposed algorithm can provide a better cost-effective choice for nodes between broadcast accuracy and storage .
+second:
+Either of these two configurations can be selected in real time by changing clock signals and <m> output downsampling filters </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+Performance analysis demonstrates that the proposed <m> downsampling nodes </m> and full nodes have similar broadcast accuracy with appropriate $ M$. The simulation results show that the proposed algorithm can provide a better cost-effective choice for nodes between broadcast accuracy and storage .
+second:
+These can be categorised as multi - image SR methods and exploit explicit redundancy by constraining the ill - posed problem with additional information and attempting to invert the <m> downsampling process </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+Performance analysis demonstrates that the proposed <m> downsampling nodes </m> and full nodes have similar broadcast accuracy with appropriate $ M$. The simulation results show that the proposed algorithm can provide a better cost-effective choice for nodes between broadcast accuracy and storage .
+second:
+The <m> downsampling operation </m> is deterministic and known : to produce from , we first convolve using a Gaussian filter - thus simulating the camera ’s point spread function - then downsample the image by a factor of .
+
+
+class: second -> first, base class: same cluster
+first:
+Performance analysis demonstrates that the proposed <m> downsampling nodes </m> and full nodes have similar broadcast accuracy with appropriate $ M$. The simulation results show that the proposed algorithm can provide a better cost-effective choice for nodes between broadcast accuracy and storage .
+second:
+Because the <m> downsampling method </m> can influence the compression performance , we have made the used downsampled images available .
+
+
+class: second -> first, base class: same cluster
+first:
+Performance analysis demonstrates that the proposed <m> downsampling nodes </m> and full nodes have similar broadcast accuracy with appropriate $ M$. The simulation results show that the proposed algorithm can provide a better cost-effective choice for nodes between broadcast accuracy and storage .
+second:
+subsection : Spatial Sampling Let be the <m> downsampling function </m> that decimates an image to the corresponding image of size .
+
+
+class: second -> first, base class: same cluster
+first:
+Performance analysis demonstrates that the proposed <m> downsampling nodes </m> and full nodes have similar broadcast accuracy with appropriate $ M$. The simulation results show that the proposed algorithm can provide a better cost-effective choice for nodes between broadcast accuracy and storage .
+second:
+There are two technical hurdles in the application of DCNNs to image labeling tasks : <m> signal downsampling </m> , and spatial ‘
+
+
+class: second -> first, base class: no relation
+first:
+This leaves open the question of whether severe <m> intermediate downsampling </m> was truly necessary .
+second:
+subsection : Spatial Sampling Let be the <m> downsampling function </m> that decimates an image to the corresponding image of size .
+
+
+class: second -> first, base class: no relation
+first:
+This leaves open the question of whether severe <m> intermediate downsampling </m> was truly necessary .
+second:
+There are two technical hurdles in the application of DCNNs to image labeling tasks : <m> signal downsampling </m> , and spatial ‘
+
+
+class: second -> first, base class: no relation
+first:
+Since the hourglass network has a symmetrical structure , <m> delayed downsampling </m> results in higher resolution feature maps during the upsampling .
+second:
+subsection : Spatial Sampling Let be the <m> downsampling function </m> that decimates an image to the corresponding image of size .
+
+
+class: second -> first, base class: no relation
+first:
+Since the hourglass network has a symmetrical structure , <m> delayed downsampling </m> results in higher resolution feature maps during the upsampling .
+second:
+There are two technical hurdles in the application of DCNNs to image labeling tasks : <m> signal downsampling </m> , and spatial ‘
+
+
+class: second -> first, base class: no relation
+first:
+However , it is still in infancy and has not been applied widely in <m> educational chatbot development </m> .
+second:
+These features do not yet exist in the <m> chatbot application system </m> in other studies .
+
+
+class: second -> first, base class: no relation
+first:
+However , it is still in infancy and has not been applied widely in <m> educational chatbot development </m> .
+second:
+However , in many other practical applications , such as poem generation and <m> chatbot </m> , a task specific loss may not be directly available to score a generated sequence accurately .
+
+
+class: second -> first, base class: no relation
+first:
+Certified metrics are available with <m> Alexa Pro plans </m> , which gives traffic data accurately by the code installed in the server of the website .
+second:
+Design/methodology/approach – The study applies web analytical tools , such as <m> Alexa.com </m> , in the collection of data about Canadian libraries ' visibility performance in the ranking of search engine results .
+
+
+class: second -> first, base class: same cluster
+first:
+The <m> Virtual Operative Assistant </m> successfully classified skilled and novice participants using 4 metrics with an accuracy , specificity and sensitivity of 92 , 82 and 100 % , respectively .
+second:
+As a result , many <m> AI assistants </m> are available in the market such as Software and Hardware based ( Google Assistant , Amazon Alexa , and Apple Siri ) and Augmented Reality based ( Microsoft HoloLens ) .
+
+
+class: second -> first, base class: same cluster
+first:
+In the standard setting , two kinds of training corpora are used : a very large unlabeled corpus for learning the <m> word embedding representations </m> ; and an in-domain training corpus with gold labels for training classifiers on the target NLP task .
+second:
+Natural language processing research has made major advances with the concept of representing words , sentences , paragraphs , and even documents by <m> embedded vector representations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+In the standard setting , two kinds of training corpora are used : a very large unlabeled corpus for learning the <m> word embedding representations </m> ; and an in-domain training corpus with gold labels for training classifiers on the target NLP task .
+second:
+After that , we exploit pseudo word sequence as the input of <m> embedding vector model </m> and finally learn the text feature which could reflect the text semantic with social network characteristics .
+
+
+class: second -> first, base class: same cluster
+first:
+We showed that our segment LSTM model , with only <m> word embedding feature </m> and no manual feature engineering , achieved a micro-averaged f-measure of 0.661 for classifying medical problem-treatment relations , 0.800 for medical problem-test relations , and 0.683 for medical problem-medical problem relations .
+second:
+Natural language processing research has made major advances with the concept of representing words , sentences , paragraphs , and even documents by <m> embedded vector representations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+We showed that our segment LSTM model , with only <m> word embedding feature </m> and no manual feature engineering , achieved a micro-averaged f-measure of 0.661 for classifying medical problem-treatment relations , 0.800 for medical problem-test relations , and 0.683 for medical problem-medical problem relations .
+second:
+After that , we exploit pseudo word sequence as the input of <m> embedding vector model </m> and finally learn the text feature which could reflect the text semantic with social network characteristics .
+
+
+class: second -> first, base class: same cluster
+first:
+While the <m> word embedding vectors </m> like Word2Vec were successfully employed in many NLP approaches .
+second:
+Natural language processing research has made major advances with the concept of representing words , sentences , paragraphs , and even documents by <m> embedded vector representations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+While the <m> word embedding vectors </m> like Word2Vec were successfully employed in many NLP approaches .
+second:
+After that , we exploit pseudo word sequence as the input of <m> embedding vector model </m> and finally learn the text feature which could reflect the text semantic with social network characteristics .
+
+
+class: second -> first, base class: same cluster
+first:
+Our results also suggested that the Global Vectors for <m> word representation embedding </m> in general domain provides a very strong baseline , which can be further improved by applying the principal component analysis to generate more isotropic vectors .
+second:
+Natural language processing research has made major advances with the concept of representing words , sentences , paragraphs , and even documents by <m> embedded vector representations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+Our results also suggested that the Global Vectors for <m> word representation embedding </m> in general domain provides a very strong baseline , which can be further improved by applying the principal component analysis to generate more isotropic vectors .
+second:
+After that , we exploit pseudo word sequence as the input of <m> embedding vector model </m> and finally learn the text feature which could reflect the text semantic with social network characteristics .
+
+
+class: second -> first, base class: same cluster
+first:
+The input to the character - level GRUs is character embeddings , while the input to the word - level GRUs is the concatenation of character - level GRU hidden states and <m> word embeddings </m> .
+second:
+Natural language processing research has made major advances with the concept of representing words , sentences , paragraphs , and even documents by <m> embedded vector representations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+The input to the character - level GRUs is character embeddings , while the input to the word - level GRUs is the concatenation of character - level GRU hidden states and <m> word embeddings </m> .
+second:
+After that , we exploit pseudo word sequence as the input of <m> embedding vector model </m> and finally learn the text feature which could reflect the text semantic with social network characteristics .
+
+
+class: second -> first, base class: same cluster
+first:
+<m> Word embedding layer </m> also maps each word to a high - dimensional vector space .
+second:
+Natural language processing research has made major advances with the concept of representing words , sentences , paragraphs , and even documents by <m> embedded vector representations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+<m> Word embedding layer </m> also maps each word to a high - dimensional vector space .
+second:
+After that , we exploit pseudo word sequence as the input of <m> embedding vector model </m> and finally learn the text feature which could reflect the text semantic with social network characteristics .
+
+
+class: second -> first, base class: same cluster
+first:
+subsection : Experimental Setup We use pre - trained - Glove vectors to initialize our <m> word embedding vectors </m> .
+second:
+Natural language processing research has made major advances with the concept of representing words , sentences , paragraphs , and even documents by <m> embedded vector representations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+subsection : Experimental Setup We use pre - trained - Glove vectors to initialize our <m> word embedding vectors </m> .
+second:
+After that , we exploit pseudo word sequence as the input of <m> embedding vector model </m> and finally learn the text feature which could reflect the text semantic with social network characteristics .
+
+
+class: second -> first, base class: same cluster
+first:
+subsection : Formal Description Our model uses one <m> word embedding function </m> and two encoder functions .
+second:
+Natural language processing research has made major advances with the concept of representing words , sentences , paragraphs , and even documents by <m> embedded vector representations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+subsection : Formal Description Our model uses one <m> word embedding function </m> and two encoder functions .
+second:
+After that , we exploit pseudo word sequence as the input of <m> embedding vector model </m> and finally learn the text feature which could reflect the text semantic with social network characteristics .
+
+
+class: second -> first, base class: same cluster
+first:
+We study their effectiveness under various learning scenarios ( point - wise and pair - wise models ) and using different input representations ( i.e. , from encoding query - document pairs into dense / sparse vectors to using <m> word embedding representation </m> ) .
+second:
+Natural language processing research has made major advances with the concept of representing words , sentences , paragraphs , and even documents by <m> embedded vector representations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+We study their effectiveness under various learning scenarios ( point - wise and pair - wise models ) and using different input representations ( i.e. , from encoding query - document pairs into dense / sparse vectors to using <m> word embedding representation </m> ) .
+second:
+After that , we exploit pseudo word sequence as the input of <m> embedding vector model </m> and finally learn the text feature which could reflect the text semantic with social network characteristics .
+
+
+class: second -> first, base class: same cluster
+first:
+As described in the previous section , we initialized the <m> word - vector embedding </m> with pre - trained word vectors obtained from word2vec .
+second:
+Natural language processing research has made major advances with the concept of representing words , sentences , paragraphs , and even documents by <m> embedded vector representations </m> .
+
+
+class: second -> first, base class: same cluster
+first:
+As described in the previous section , we initialized the <m> word - vector embedding </m> with pre - trained word vectors obtained from word2vec .
+second:
+After that , we exploit pseudo word sequence as the input of <m> embedding vector model </m> and finally learn the text feature which could reflect the text semantic with social network characteristics .
+
+
+class: second -> first, base class: no relation
+first:
+We employ the <m> attentional architecture </m> from Luong2015 , which achieved state - of - the - art results on English German translation .
+second:
+For learning such saliency models , we introduce a <m> neural network architecture </m> , which has fully connected layers on top of CNNs responsible for feature extraction at three different scales .
+
+
+class: second -> first, base class: no relation
+first:
+We employ the <m> attentional architecture </m> from Luong2015 , which achieved state - of - the - art results on English German translation .
+second:
+In this paper , we introduce a Wavelet and Gabor based Image Retrieval ( WAGBIR ) system , a <m> Neural Network based architecture </m> for content based image retrieval .
+
+
+class: second -> first, base class: no relation
+first:
+We employ the <m> attentional architecture </m> from Luong2015 , which achieved state - of - the - art results on English German translation .
+second:
+However , a new challenge of <m> neural network architecture design </m> has also attracted attention : due to the high dimension of fMRI volume images , the manual process of network model design is very time-consuming and error prone .
+
+
+class: second -> first, base class: no relation
+first:
+We employ the <m> attentional architecture </m> from Luong2015 , which achieved state - of - the - art results on English German translation .
+second:
+In this paper we propose a new <m> neural network model architecture </m> , namely multi-stream self-attention , to address the issue thus make the self-attention mechanism more effective for speech recognition .
+
+
+class: second -> first, base class: no relation
+first:
+We employ the <m> attentional architecture </m> from Luong2015 , which achieved state - of - the - art results on English German translation .
+second:
+U-Nets have been established as a standard <m> neural network design architecture </m> for image-to-image learning problems such as segmentation and inverse problems in imaging .
+
+
+class: second -> first, base class: no relation
+first:
+We employ the <m> attentional architecture </m> from Luong2015 , which achieved state - of - the - art results on English German translation .
+second:
+section : Conclusions We introduced a <m> neural network architecture </m> and training procedure for learning compact representations of image sets for template - based face recognition .
+
+
+class: second -> first, base class: no relation
+first:
+The paper presents an extension of the <m> modified Smith predictor controller </m> referred to as the flexible Smith predictor control scheme .
+second:
+Several studies have also confirmed that this philosophy of making the <m> predictor </m> robust against random and local perturbation is effective in semi - supervised learning .
+
+
+class: second -> first, base class: no relation
+first:
+The paper presents an extension of the <m> modified Smith predictor controller </m> referred to as the flexible Smith predictor control scheme .
+second:
+As in Fig 2 ( top ) , our network has an encoder stage and a <m> predictor stage </m> .
+
+
+class: second -> first, base class: no relation
+first:
+subsection : Locality Sensitive Hashing ( LSH ) An alternative approach to BASS and DISCO is to use well - established <m> feature generation methods </m> that are agnostic about the type of input they receive .
+second:
+This would amount to an additional <m> feature level </m> GAN loss ( see Figure [ reference ] orange portion ) : Taken together , these loss functions form our complete objective : This ultimately corresponds to solving for a target model according to the optimization problem We have introduced a method for unsupervised adaptation which generalizes adversarial objectives to be viewed as operating at the pixel or feature level .
+
+
+class: second -> first, base class: no relation
+first:
+subsection : Unimodal Feature Extraction For a fair comparison with the state - of - the - art method , conversational memory networks ( CMN ) , we follow identical <m> feature extraction procedures </m> .
+second:
+This would amount to an additional <m> feature level </m> GAN loss ( see Figure [ reference ] orange portion ) : Taken together , these loss functions form our complete objective : This ultimately corresponds to solving for a target model according to the optimization problem We have introduced a method for unsupervised adaptation which generalizes adversarial objectives to be viewed as operating at the pixel or feature level .
+
+
+class: second -> first, base class: no relation
+first:
+But this study modified the Random Forest Algorithm along the basis of signal characteristics and comparatively analyzed the accuracies of modified algorithm with those of SVM and <m> MLP </m> to prove the ability of modified algorithm .
+second:
+In the Neural Module Networks , the question is processed by a dependency parser , and fragments of the parse , selected with ad hoc fixed rules are associated with modules , are assembled into a <m> full neural network </m> .
+
+
+class: second -> first, base class: no relation
+first:
+But this study modified the Random Forest Algorithm along the basis of signal characteristics and comparatively analyzed the accuracies of modified algorithm with those of SVM and <m> MLP </m> to prove the ability of modified algorithm .
+second:
+Based on the <m> neuron network technique </m> , methods of interpolation to the charted depth are suggested in this paper .
+
+
+class: second -> first, base class: no relation
+first:
+Roughly , the principle is based on <m> main MLP </m> ( Multilayered Perceptron ) in which each synaptic weight connection value is estimated by another MLP ( an OWE ) with respect to context representation .
+second:
+In the Neural Module Networks , the question is processed by a dependency parser , and fragments of the parse , selected with ad hoc fixed rules are associated with modules , are assembled into a <m> full neural network </m> .
+
+
+class: second -> first, base class: no relation
+first:
+Roughly , the principle is based on <m> main MLP </m> ( Multilayered Perceptron ) in which each synaptic weight connection value is estimated by another MLP ( an OWE ) with respect to context representation .
+second:
+Based on the <m> neuron network technique </m> , methods of interpolation to the charted depth are suggested in this paper .
+
+
+class: second -> first, base class: no relation
+first:
+While <m> MLP processing </m> alone did not have a large effect on the overall performance , the best results were obtained for MLP-processed phase sensitive filters and added MFCCs , with relative error reductions of over 40 % for both noisy and clean training .
+second:
+In the Neural Module Networks , the question is processed by a dependency parser , and fragments of the parse , selected with ad hoc fixed rules are associated with modules , are assembled into a <m> full neural network </m> .
+
+
+class: second -> first, base class: no relation
+first:
+While <m> MLP processing </m> alone did not have a large effect on the overall performance , the best results were obtained for MLP-processed phase sensitive filters and added MFCCs , with relative error reductions of over 40 % for both noisy and clean training .
+second:
+Based on the <m> neuron network technique </m> , methods of interpolation to the charted depth are suggested in this paper .
+
+
+class: second -> first, base class: no relation
+first:
+In terms of model parsimony , the B-spline neurofuzzy model is found to be more parsimonious than the <m> back-propagation MLP model </m> .
+second:
+Advanced <m> neural network-oriented classifier </m> is able to achieve competing result on the benchmark streams via an aggregated recurrent unit incorporated with sophis- ticated convolving layer .
+
+
+class: second -> first, base class: no relation
+first:
+We evaluate the proposed learning rule by training <m> deep spiking multi-layer perceptron ( MLP ) </m> and spiking convolutional neural network ( CNN ) on the UCI machine learning and MNIST handwritten digit datasets .
+second:
+The selected MFCC features were then used to train several <m> ANN Multi-Layer Perceptron ( MLP </m> ) .
+
+
+class: second -> first, base class: no relation
+first:
+They are averaging , Karmarker 's linear programming algorithm , <m> MLP combiner </m> and fuzzy neural network .
+second:
+A <m> Fully Connected Neural Network </m> was used to build the ensemble model , and it achieved an accuracy of 94.02 % .
+
+
+class: second -> first, base class: no relation
+first:
+They are averaging , Karmarker 's linear programming algorithm , <m> MLP combiner </m> and fuzzy neural network .
+second:
+The proposed system ( EmoDet ) ensembles a <m> fully connected neural network architecture </m> and LSTM neural network to obtain performance results that show substantial improvements ( F1-Score 0.67 ) over the baseline model provided by Task 3 organizers ( F1score 0.58 ) .
+
+
+class: second -> first, base class: no relation
+first:
+They are averaging , Karmarker 's linear programming algorithm , <m> MLP combiner </m> and fuzzy neural network .
+second:
+The residual errors of both encoders are then fed into a <m> fully-connected neural network layer </m> to detect whether a post was published by the specified user or by a hacker .
+
+
+class: second -> first, base class: no relation
+first:
+They are averaging , Karmarker 's linear programming algorithm , <m> MLP combiner </m> and fuzzy neural network .
+second:
+According to traditional multi-layer feed-forward neural network , this paper elaborates the concept of <m> completely-fully connected neural network </m> and then puts forward a cross-connected multi-layer feed-forward neural network algorithm .
+
+
+class: second -> first, base class: no relation
+first:
+They are averaging , Karmarker 's linear programming algorithm , <m> MLP combiner </m> and fuzzy neural network .
+second:
+We attempt to replace the hierarchical architecture by a <m> fully connected layer </m> .
+
+
+class: second -> first, base class: no relation
+first:
+They are averaging , Karmarker 's linear programming algorithm , <m> MLP combiner </m> and fuzzy neural network .
+second:
+In summary , we use the sub - vectors to model and according to : where denotes inner product , is a <m> fully - connected neural network </m> with model parameter , denotes the element - wise sigmoid function , and is the softmax function with temperature parameter .
+
+
+class: second -> first, base class: no relation
+first:
+They are averaging , Karmarker 's linear programming algorithm , <m> MLP combiner </m> and fuzzy neural network .
+second:
+<m> Fully connected deep neural networks </m> with ELUs ( ) , ReLUs , and LReLUs ( ) were trained on the MNIST digit classification dataset while each hidden unit ’s activation was tracked .
+
+
+class: second -> first, base class: no relation
+first:
+They are averaging , Karmarker 's linear programming algorithm , <m> MLP combiner </m> and fuzzy neural network .
+second:
+To experiment with <m> fully - connected neural nets </m> , as in CNN , we minimized square loss with regularization and optional dropout by SGD , and activation was fixed to rectifier .
+
+
+class: second -> first, base class: no relation
+first:
+The selected MFCC features were then used to train several <m> ANN Multi-Layer Perceptron ( MLP </m> ) .
+second:
+In the Neural Module Networks , the question is processed by a dependency parser , and fragments of the parse , selected with ad hoc fixed rules are associated with modules , are assembled into a <m> full neural network </m> .
+
+
+class: second -> first, base class: no relation
+first:
+The selected MFCC features were then used to train several <m> ANN Multi-Layer Perceptron ( MLP </m> ) .
+second:
+Based on the <m> neuron network technique </m> , methods of interpolation to the charted depth are suggested in this paper .
+
+
+class: second -> first, base class: no relation
+first:
+Further experiment shows that using <m> MLP merging </m> and decision , the problem of variation of thresholds can be solved to some extent , and the robustness of the system can be improved effectively .
+second:
+A <m> Fully Connected Neural Network </m> was used to build the ensemble model , and it achieved an accuracy of 94.02 % .
+
+
+class: second -> first, base class: no relation
+first:
+Further experiment shows that using <m> MLP merging </m> and decision , the problem of variation of thresholds can be solved to some extent , and the robustness of the system can be improved effectively .
+second:
+The proposed system ( EmoDet ) ensembles a <m> fully connected neural network architecture </m> and LSTM neural network to obtain performance results that show substantial improvements ( F1-Score 0.67 ) over the baseline model provided by Task 3 organizers ( F1score 0.58 ) .
+
+
+class: second -> first, base class: no relation
+first:
+Further experiment shows that using <m> MLP merging </m> and decision , the problem of variation of thresholds can be solved to some extent , and the robustness of the system can be improved effectively .
+second:
+The residual errors of both encoders are then fed into a <m> fully-connected neural network layer </m> to detect whether a post was published by the specified user or by a hacker .
+
+
+class: second -> first, base class: no relation
+first:
+Further experiment shows that using <m> MLP merging </m> and decision , the problem of variation of thresholds can be solved to some extent , and the robustness of the system can be improved effectively .
+second:
+According to traditional multi-layer feed-forward neural network , this paper elaborates the concept of <m> completely-fully connected neural network </m> and then puts forward a cross-connected multi-layer feed-forward neural network algorithm .
+
+
+class: second -> first, base class: no relation
+first:
+Further experiment shows that using <m> MLP merging </m> and decision , the problem of variation of thresholds can be solved to some extent , and the robustness of the system can be improved effectively .
+second:
+We attempt to replace the hierarchical architecture by a <m> fully connected layer </m> .
+
+
+class: second -> first, base class: no relation
+first:
+Further experiment shows that using <m> MLP merging </m> and decision , the problem of variation of thresholds can be solved to some extent , and the robustness of the system can be improved effectively .
+second:
+In summary , we use the sub - vectors to model and according to : where denotes inner product , is a <m> fully - connected neural network </m> with model parameter , denotes the element - wise sigmoid function , and is the softmax function with temperature parameter .
+
+
+class: second -> first, base class: no relation
+first:
+Further experiment shows that using <m> MLP merging </m> and decision , the problem of variation of thresholds can be solved to some extent , and the robustness of the system can be improved effectively .
+second:
+<m> Fully connected deep neural networks </m> with ELUs ( ) , ReLUs , and LReLUs ( ) were trained on the MNIST digit classification dataset while each hidden unit ’s activation was tracked .
+
+
+class: second -> first, base class: no relation
+first:
+Further experiment shows that using <m> MLP merging </m> and decision , the problem of variation of thresholds can be solved to some extent , and the robustness of the system can be improved effectively .
+second:
+To experiment with <m> fully - connected neural nets </m> , as in CNN , we minimized square loss with regularization and optional dropout by SGD , and activation was fixed to rectifier .
+
+
+class: second -> first, base class: no relation
+first:
+A second project has involved the installation of 3 Cyclops Coastal Imaging Stations in Durban and Cape Town which use an <m> RGB based MLP neural network </m> to extract waterlines on a short timescale .
+second:
+The <m> MLP </m> has one hidden layer with tanh activation and softmax output layer in our experiments .
+
+
+class: second -> first, base class: no relation
+first:
+A second project has involved the installation of 3 Cyclops Coastal Imaging Stations in Durban and Cape Town which use an <m> RGB based MLP neural network </m> to extract waterlines on a short timescale .
+second:
+We apply dropout ( p = 0.5 ) on the output of the word embedding layer and the input and the output of the <m> MLP layer </m> .
+
+
+class: second -> first, base class: no relation
+first:
+A second project has involved the installation of 3 Cyclops Coastal Imaging Stations in Durban and Cape Town which use an <m> RGB based MLP neural network </m> to extract waterlines on a short timescale .
+second:
+As introduced in section [ reference ] , BaseModel follows the Embedding & <m> MLP architecture </m> and is the base of most of subsequently developed deep networks for CTR modeling .
+
+
+class: second -> first, base class: no relation
+first:
+The <m> MLP </m> has one hidden layer with tanh activation and softmax output layer in our experiments .
+second:
+In the Neural Module Networks , the question is processed by a dependency parser , and fragments of the parse , selected with ad hoc fixed rules are associated with modules , are assembled into a <m> full neural network </m> .
+
+
+class: second -> first, base class: no relation
+first:
+The <m> MLP </m> has one hidden layer with tanh activation and softmax output layer in our experiments .
+second:
+Based on the <m> neuron network technique </m> , methods of interpolation to the charted depth are suggested in this paper .
+
+
+class: second -> first, base class: no relation
+first:
+We apply dropout ( p = 0.5 ) on the output of the word embedding layer and the input and the output of the <m> MLP layer </m> .
+second:
+In the Neural Module Networks , the question is processed by a dependency parser , and fragments of the parse , selected with ad hoc fixed rules are associated with modules , are assembled into a <m> full neural network </m> .
+
+
+class: second -> first, base class: no relation
+first:
+We apply dropout ( p = 0.5 ) on the output of the word embedding layer and the input and the output of the <m> MLP layer </m> .
+second:
+Based on the <m> neuron network technique </m> , methods of interpolation to the charted depth are suggested in this paper .
+
+
+class: second -> first, base class: no relation
+first:
+As introduced in section [ reference ] , BaseModel follows the Embedding & <m> MLP architecture </m> and is the base of most of subsequently developed deep networks for CTR modeling .
+second:
+In the Neural Module Networks , the question is processed by a dependency parser , and fragments of the parse , selected with ad hoc fixed rules are associated with modules , are assembled into a <m> full neural network </m> .
+
+
+class: second -> first, base class: no relation
+first:
+As introduced in section [ reference ] , BaseModel follows the Embedding & <m> MLP architecture </m> and is the base of most of subsequently developed deep networks for CTR modeling .
+second:
+Based on the <m> neuron network technique </m> , methods of interpolation to the charted depth are suggested in this paper .
+
+
+class: second -> first, base class: no relation
+first:
+Through computer vision and deep learning , the final <m> fully-connected feed-forward neural network </m> achieves competitive results compared to Dräger JM-103 , a state-of-the-art bilirubinometer .
+second:
+We are not the first to consider alternatives to traditional <m> neuron models </m> in CNNs .
+
+
+class: second -> first, base class: no relation
+first:
+We trained a <m> fully - connected 2 - layer neural networks </m> with 50 rectified linear units ( ReLU ) in each layer on 50 bootstrapped samples from the data .
+second:
+Based on the <m> neuron network technique </m> , methods of interpolation to the charted depth are suggested in this paper .
+
+
+class: second -> first, base class: no relation
+first:
+For experiments with the synthetic datasets , the following <m> fully - connected feed forward neural networks </m> are employed where FC and BN denote fully - connected layer and batch normalization layer respectively .
+second:
+We are not the first to consider alternatives to traditional <m> neuron models </m> in CNNs .
+
+
+class: second -> first, base class: no relation
+first:
+They demonstrate large improvements in reducing the number of parameters of the output softmax layer , but only modest improvements for the <m> hidden fully connected layers </m> .
+second:
+Their method simultaneously minimizes classification error while improving the directness and transparency of the <m> hidden layer learning process </m> .
+
+
+class: second -> first, base class: no relation
+first:
+They demonstrate large improvements in reducing the number of parameters of the output softmax layer , but only modest improvements for the <m> hidden fully connected layers </m> .
+second:
+This was found sufficient , with the following <m> hidden layers learning </m> to combine the multi - scale features .
+
+
+class: second -> first, base class: no relation
+first:
+Our experimental results show that DAN/K-DAN outperform the present <m> S-DNNs </m> and also the BP-trained DNNs , including multiplayer perceptron , deep belief network , etc . , without data augmentation applied .
+second:
+section : Abstract - We propose a <m> deep learning method </m> for single image super - resolution ( SR ) .
+
+
+class: second -> first, base class: no relation
+first:
+Our experimental results show that DAN/K-DAN outperform the present <m> S-DNNs </m> and also the BP-trained DNNs , including multiplayer perceptron , deep belief network , etc . , without data augmentation applied .
+second:
+In , authors present a <m> deep learning architecture </m> for learning on Riemannian manifold which can be employed for covariance pooling .
+
+
+class: second -> first, base class: no relation
+first:
+Our experimental results show that DAN/K-DAN outperform the present <m> S-DNNs </m> and also the BP-trained DNNs , including multiplayer perceptron , deep belief network , etc . , without data augmentation applied .
+second:
+By combining the <m> deep learning algorithm </m> , the discriminative scheme has achieved substantial improvement on AIFR .
+
+
+class: second -> first, base class: no relation
+first:
+A classic problem , the spatial movement to goal problem , is used to illustrate the power of causal learning in vastly reducing the problem solving search space involved , and this is contrasted with the traditional <m> AI A * algorithm </m> which requires a huge search space .
+second:
+The question thus becomes the following : is the act of training a model for <m> ML purposes </m> a copyright relevant activity ?
+
+
+class: second -> first, base class: no relation
+first:
+A classic problem , the spatial movement to goal problem , is used to illustrate the power of causal learning in vastly reducing the problem solving search space involved , and this is contrasted with the traditional <m> AI A * algorithm </m> which requires a huge search space .
+second:
+Most researchers in <m> ML </m> use average overall accuracy .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+<m> AI itself </m> is the senses cognitive and machine learning process in problem- solving .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+Then the system architecture for the AI-enabled emotion communication is introduced in detail , and the no-tag learning model of dataset labeling and processing as well as the <m> AI algorithm model </m> for emotion recognition are elaborated in detail , and experiments are done to verify the interactive delay in the AI-enabled emotion communication system and accuracy of emotion recognition .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+For robotics and <m> AI especially </m> this means that if the power behind the cloud could be harnessed , it would be possible to build smaller , more battery effective robots because there would be no need to have a powerful computer on board , but the brain of the robot can be in the cloud .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+The <m> AI layer </m> accomplishes this by selecting and applying appropriate methods from the SID library and performing qualitative , symbolic , algebraic , and geometric reasoning on the user 's inputs .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+They argued unlike physics , areas in <m> AI </m> are more likely to see an impact using more data - driven approaches .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+What makes for a compelling " AI - complete " task ? We believe that in order to spawn the next generation of <m> AI algorithms </m> , an ideal task should ( i ) require multi - modal knowledge beyond a single sub - domain ( such as CV ) and ( ii ) have a well - defined quantitative evaluation metric to track progress .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+On the other hand , it became immediately clear that everybody has strong feelings or at least a qualified opinion about the languages which he or she uses to create <m> AI programs </m> .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+On the contrary , all <m> AI oriented programs </m> should fit in .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+This fact basically explains why expert systems and other <m> AI-application programs </m> implemented in Prolog run very slowly on traditional general-purpose computers .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+Demonstration of value on processes and outcomes will be necessary to support the use of ML as a feature in monitoring system development : Future research is needed to evaluate all <m> AI based programs </m> before clinical implementation in non-research settings .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+Chess , Atari2600 and Go , are some of the most mediatic demonstrations where <m> AI computer programs </m> defeated human players .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+The level of awareness held by Google is explored and some recent developments in the uses of <m> AI programmes </m> for social media are covered .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+Abstract Prolog is one of the most important candidates to build expert systems and <m> AI-related programs </m> and has potential applications in embedded systems .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+The intent for developing such criteria is to have a logical rationale that may be used to guide the development of Ada tools and methodology to support KBS requirements , and to identify those <m> AI technology components </m> that may most readily and effectively be deployed in Ada versus those best left in a functional language .
+
+
+class: second -> first, base class: no relation
+first:
+Based on the simple and well specified autonomous driving and navigation environment called ' Duckietown ' , <m> AI-DO </m> includes a series of tasks of increasing complexity -- from simple lane-following to fleet management .
+second:
+Our hope is that by using the methodology advocated in this paper , we can work in a bottom - up fashion towards developing more sophisticated <m> AI technology </m> while still maintaining empirical rigor .
+
+
+class: second -> first, base class: same cluster
+first:
+Deploying a received signal model that takes care of flat fading , the proposed scheme first uses a <m> ML-based approach </m> to obtain a ML estimate of the ratio of jamming fading gains .
+second:
+The question thus becomes the following : is the act of training a model for <m> ML purposes </m> a copyright relevant activity ?
+
+
+class: second -> first, base class: same cluster
+first:
+Deploying a received signal model that takes care of flat fading , the proposed scheme first uses a <m> ML-based approach </m> to obtain a ML estimate of the ratio of jamming fading gains .
+second:
+Most researchers in <m> ML </m> use average overall accuracy .
+
+
+class: second -> first, base class: no relation
+first:
+Abstract Let U n be U -statistics based on a <m> symmetric kernel h </m> ( x , y ) and i.i.d . samples { X n ; n ≥ 1 } .
+second:
+The structured random transformations developed in the <m> kernel literature </m> perform very well on MNIST without any learning ; however , when moving to ImageNet , the benefit of adaptation becomes clear , as it allows us to achieve substantially better performance .
+
+
+class: second -> first, base class: no relation
+first:
+Abstract Let U n be U -statistics based on a <m> symmetric kernel h </m> ( x , y ) and i.i.d . samples { X n ; n ≥ 1 } .
+second:
+taubtabib2015template suggest a <m> kernel - based approach </m> to implicitly consider all possible feature combinations over sets of core - features .
+
+
+class: second -> first, base class: no relation
+first:
+Abstract Let U n be U -statistics based on a <m> symmetric kernel h </m> ( x , y ) and i.i.d . samples { X n ; n ≥ 1 } .
+second:
+Furthermore , to deal with the non - linearity of the person ’s appearance , a <m> kernel version </m> can be developed easily to further boost the matching performance within the null space .
+
+
+class: second -> first, base class: no relation
+first:
+The proposed <m> online kernel method </m> is evaluated by handling the Cascades Tanks system .
+second:
+Iris location is a <m> kernel procession </m> in an iris recognition system .
+
+
+class: second -> first, base class: no relation
+first:
+In the constant bit rate encoder , the <m> kernel MPEG encoder circuit </m> is followed by a buffer having a certain actual capacity .
+second:
+The structured random transformations developed in the <m> kernel literature </m> perform very well on MNIST without any learning ; however , when moving to ImageNet , the benefit of adaptation becomes clear , as it allows us to achieve substantially better performance .
+
+
+class: second -> first, base class: no relation
+first:
+In the constant bit rate encoder , the <m> kernel MPEG encoder circuit </m> is followed by a buffer having a certain actual capacity .
+second:
+taubtabib2015template suggest a <m> kernel - based approach </m> to implicitly consider all possible feature combinations over sets of core - features .
+
+
+class: second -> first, base class: no relation
+first:
+In the constant bit rate encoder , the <m> kernel MPEG encoder circuit </m> is followed by a buffer having a certain actual capacity .
+second:
+Furthermore , to deal with the non - linearity of the person ’s appearance , a <m> kernel version </m> can be developed easily to further boost the matching performance within the null space .
+
+
+class: second -> first, base class: no relation
+first:
+Kernel online convex optimization ( KOCO ) is a framework combining the expressiveness of <m> non-parametric kernel models </m> with the regret guarantees of online learning .
+second:
+The structured random transformations developed in the <m> kernel literature </m> perform very well on MNIST without any learning ; however , when moving to ImageNet , the benefit of adaptation becomes clear , as it allows us to achieve substantially better performance .
+
+
+class: second -> first, base class: no relation
+first:
+Kernel online convex optimization ( KOCO ) is a framework combining the expressiveness of <m> non-parametric kernel models </m> with the regret guarantees of online learning .
+second:
+taubtabib2015template suggest a <m> kernel - based approach </m> to implicitly consider all possible feature combinations over sets of core - features .
+
+
+class: second -> first, base class: no relation
+first:
+Kernel online convex optimization ( KOCO ) is a framework combining the expressiveness of <m> non-parametric kernel models </m> with the regret guarantees of online learning .
+second:
+Furthermore , to deal with the non - linearity of the person ’s appearance , a <m> kernel version </m> can be developed easily to further boost the matching performance within the null space .
+
+
+class: second -> first, base class: no relation
+first:
+Using tools from representation theory , we explain the limited expressive power of the Kendall kernel by characterizing its degenerate spectrum , and in sharp contrast , we prove that <m> Mallows ' kernel </m> is universal and characteristic .
+second:
+The second one is sampled from and serves as input to the generator along with a latent vector to generate an image , and it can be sampled using different approaches : Kernel density estimation : also known as Parzen window estimation , it consists in randomly sampling from a <m> kernel </m> ( e.g. Gaussian kernel with a cross - validated ) .
+
+
+class: second -> first, base class: same cluster
+first:
+However , the approach used fixed convolutional features , and can not jointly learn the <m> kernel classifier </m> and convolutional filters .
+second:
+The structured random transformations developed in the <m> kernel literature </m> perform very well on MNIST without any learning ; however , when moving to ImageNet , the benefit of adaptation becomes clear , as it allows us to achieve substantially better performance .
+
+
+class: second -> first, base class: same cluster
+first:
+However , the approach used fixed convolutional features , and can not jointly learn the <m> kernel classifier </m> and convolutional filters .
+second:
+taubtabib2015template suggest a <m> kernel - based approach </m> to implicitly consider all possible feature combinations over sets of core - features .
+
+
+class: second -> first, base class: same cluster
+first:
+However , the approach used fixed convolutional features , and can not jointly learn the <m> kernel classifier </m> and convolutional filters .
+second:
+Furthermore , to deal with the non - linearity of the person ’s appearance , a <m> kernel version </m> can be developed easily to further boost the matching performance within the null space .
+
+
+class: second -> first, base class: no relation
+first:
+Different from image deblurring , the <m> blur kernel setting </m> of SISR is usually simple .
+second:
+Where the attention mechanism is a <m> kernel on </m> , then ( [ reference ] ) is akin to a kernel density estimator .
+
+
+class: second -> first, base class: same cluster
+first:
+For example , defines a <m> kernel with dilation </m> .
+second:
+Where the attention mechanism is a <m> kernel on </m> , then ( [ reference ] ) is akin to a kernel density estimator .
+
+
+class: second -> first, base class: first -> second
+first:
+Moreover , since it does not need <m> word segmentation </m> , it can be applied to Eastern languages where they do not put clear spacing between words .
+second:
+Inspired by three characteristics , we develop three steps to <m> word and subword segmentation approach </m> : in the word or sub-words segmentation step , a peaks detection function is adopted to model the maximum and minimum peaks .
+
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+• We adapt byte pair encoding ( <m> BPE </m> ) [ reference ] , a compression algorithm , to the task of word segmentation .
+
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+Table 1 shows that our fully convolutional sequence to sequence model ( ConvS2S ) outperforms the WMT'16 winning entry for English - Romanian by 1.9 BLEU with a <m> BPE encoding </m> and by 1.3 BLEU with a word factored vocabulary .
+
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+We thus follow the approach described in , first mapping the Russian text into Latin characters via ISO - 9 transliteration , then learning the <m> BPE operations </m> on the concatenation of the English and latinized Russian training data , then mapping the BPE operations back into Cyrillic alphabet .
+
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+Grammar based compression , where one replaces a long string by a small contextfree grammar that generates the string , is a simple and powerful paradigm that captures many of the popular compression schemes , including the Lempel-Ziv family , Run-Length Encoding , <m> Byte-Pair Encoding </m> , Sequitur and Re-Pair .
+
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+The dominant approach to subword segmentation is <m> Byte Pair Encoding ( BPE ) </m> , which keeps the most frequent words intact while splitting the rare ones into multiple tokens .
+
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+Different from the methods which generate regular expressions from character level , we first utilize <m> byte pair encoder ( BPE ) </m> to extract some frequent items , which are then used to construct regular expressions .
+
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+The submitted system is based on Neural Machine Translation using <m> byte-pair encoding segmentation </m> on both source and target languages for open-vocabulary translations .
+
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+Using a <m> byte - pair - encoding </m> ( BPE ) of various sized we notice that a 32 , 000 word - piece vocabulary achieves a better bits per character ( BPC ) loss over one epoch of the Amazon Reviews dataset than a small vocabulary .
+
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+In terms of computational complexity , self - attention layers are faster than recurrent layers when the sequence length is smaller than the representation dimensionality , which is most often the case with sentence representations used by state - of - the - art models in machine translations , such as word - piece wu2016google and <m> byte - pair </m> sennrich2015neural representations .
+
+
+class: second -> first, base class: no relation
+first:
+Additionally , we present <m> AST BPE </m> , which is a version of BPE that uses the Abstract Syntax Tree ( AST ) of the SQL statement to guide BPE merges and therefore produce BPE encodings that generalize better .
+second:
+We also consider a joint <m> source and target byte - pair encoding </m> ( BPE ) with 40 K types [ reference ][ reference ] .
+
+
+class: second -> first, base class: no relation
+first:
+Although this approach is the traditional architecture choice for <m> text classification CNNs </m> , it introduces a significant number of parameter in the network .
+second:
+Authorship attribution may be considered as a <m> text categorization problem </m> .
+
+
