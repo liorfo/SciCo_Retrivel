@@ -8,6 +8,7 @@ import logging
 from datetime import datetime
 import os
 import torch
+import gc
 from tqdm import tqdm
 import jsonlines
 from sklearn.cluster import AgglomerativeClustering
@@ -16,7 +17,8 @@ import collections
 from itertools import product
 
 from models.datasets import CrossEncoderDataset
-from models.muticlass import MulticlassBiEncoder, MulticlassCrossEncoder, BinaryCorefCrossEncoder, HypernymCrossEncoder
+from models.muticlass import MulticlassBiEncoder, MulticlassCrossEncoder, BinaryCorefCrossEncoder, HypernymCrossEncoder, \
+    MulticlassModel
 from utils.model_utils import get_greedy_relations, get_hypernym_relations
 from models.baselines import EntailmentModel
 
@@ -259,8 +261,13 @@ class HypernymInference:
 
 
 def predict_multiclass(config, trainer):
+    # torch.cuda.empty_cache()
+    # gc.collect()
     logger.info('Predicting multiclass scores')
-    model = MulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+    if config['from_gpt']:
+        model = MulticlassModel.get_model(model_name, config, True)
+    else:
+        model = MulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
     should_load_definition = config["definition_extraction"]
     test = CrossEncoderDataset(config["data"]["test_set"],
                                full_doc=config['full_doc'],
@@ -268,10 +275,9 @@ def predict_multiclass(config, trainer):
                                is_training=False,
                                should_load_definition=should_load_definition, data_label='test')
     test_loader = data.DataLoader(test,
-                                  batch_size=config["model"]["batch_size"] * 64,
+                                  batch_size=config["model"]["batch_size"] * 36,
                                   shuffle=False,
                                   collate_fn=model.tokenize_batch,
-                                  num_workers=16,
                                   pin_memory=True)
     results = trainer.predict(model, dataloaders=test_loader)
     results = torch.cat([torch.tensor(x) for x in results])
@@ -375,7 +381,7 @@ if __name__ == '__main__':
     logger.info(f"Using {model_name}")
     logger.info('loading models')
     pl_logger = CSVLogger(save_dir='logs', name='multiclass_inference')
-    trainer = pl.Trainer(gpus=config['gpu_num'], accelerator='dp', logger=pl_logger)
+    trainer = pl.Trainer(logger=pl_logger)
 
     #### multiclass
     if model_name == 'multiclass':

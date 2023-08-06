@@ -1,6 +1,7 @@
 import jsonlines
 import sys
 from itertools import combinations
+import pickle
 
 
 def generate_mention_couples(mentions):
@@ -18,10 +19,11 @@ def get_sentence_context(mention, tokens, sentences):
             break
         i += 1
 
+    mention = ' '.join(tokens[doc_id][start:end + 1]).rstrip()
     mention_rep = tokens[doc_id][sent_start:start] + ['<m>'] + tokens[doc_id][start:end + 1] + ['</m>']
     mention_rep_with_sep = mention_rep + tokens[doc_id][end + 1:sent_end]
 
-    return ' '.join(mention_rep_with_sep)
+    return ' '.join(mention_rep_with_sep), mention
 
 
 def get_couple_class_tag(couple, relations):
@@ -36,13 +38,40 @@ def get_couple_class_tag(couple, relations):
         return 'no relation'
 
 
+def get_sentences(first_to_second, no_relation, same_class, second_to_first):
+    first_sentence, first_mention = get_sentence_context(gold_couple[0], gold[topic_index]['tokens'],
+                                                         gold[topic_index]['sentences'])
+    second_sentence, second_mention = get_sentence_context(gold_couple[1], gold[topic_index]['tokens'],
+                                                           gold[topic_index]['sentences'])
+    mentions[first_mention] = first_mention
+    mentions[second_mention] = second_mention
+    sentences_string = f'class: {gold_couple_class}, base class: {system_couple_class}, ' \
+                       f'new model class: {new_model_couple_class}\n' \
+                       f'first:\n{first_sentence}\nsecond:\n{second_sentence}\n\n\n'
+    if gold_couple_class == 'same cluster':
+        same_class += sentences_string
+    elif gold_couple_class == 'first -> second':
+        first_to_second += sentences_string
+    elif gold_couple_class == 'second -> first':
+        second_to_first += sentences_string
+    elif gold_couple_class == 'no relation':
+        no_relation += sentences_string
+    return first_to_second, no_relation, same_class, second_to_first, (len(first_sentence) + len(second_sentence))
+
+
 if __name__ == '__main__':
     gold_path = sys.argv[1]
     sys_path = sys.argv[2]
     new_model_path = sys.argv[3]
     hard = sys.argv[4] if len(sys.argv) > 4 else None
+    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/data/test_definitions', "rb") as fp:
+        definitions = pickle.load(fp)
 
     same_class, first_to_second, second_to_first, no_relation = '', '', '', ''
+    wrong_same_class, wrong_first_to_second, wrong_second_to_first, wrong_no_relation = '', '', '', ''
+    mentions = {}
+    num_of_tokens = 0
+    num_samples = 0
 
     with jsonlines.open(gold_path, 'r') as f:
         gold = [line for line in f]
@@ -75,22 +104,15 @@ if __name__ == '__main__':
             system_couple_class = get_couple_class_tag(system_couple, system_relations)
             new_model_couple_class = get_couple_class_tag(new_model_couple, new_model_relations)
 
-            if gold_couple_class == new_model_couple_class and gold_couple_class != system_couple_class:
-                first_sentence = get_sentence_context(gold_couple[0], gold[topic_index]['tokens'],
-                                                      gold[topic_index]['sentences'])
-                second_sentence = get_sentence_context(gold_couple[1], gold[topic_index]['tokens'],
-                                                       gold[topic_index]['sentences'])
+            # if gold_couple_class == new_model_couple_class and gold_couple_class != system_couple_class:
+            #     first_to_second, no_relation, same_class, second_to_first, _sent_len = get_sentences(first_to_second, no_relation,
+            #                                                                               same_class, second_to_first)
 
-                sentences_string = f'class: {gold_couple_class}\nfirst:\n{first_sentence}\nsecond:\n{second_sentence}\n\n\n'
-
-                if gold_couple_class == 'same cluster':
-                    same_class += sentences_string
-                elif gold_couple_class == 'first -> second':
-                    first_to_second += sentences_string
-                elif gold_couple_class == 'second -> first':
-                    second_to_first += sentences_string
-                elif gold_couple_class == 'no relation':
-                    no_relation += sentences_string
+            wrong_first_to_second, wrong_no_relation, wrong_same_class, wrong_second_to_first, sent_len = get_sentences(
+                wrong_first_to_second, wrong_no_relation,
+                wrong_same_class, wrong_second_to_first)
+            num_of_tokens += sent_len
+            num_samples += 1
 
     with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/same_class.txt', 'w') as f:
         f.write(same_class)
@@ -100,4 +122,15 @@ if __name__ == '__main__':
         f.write(second_to_first)
     with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/no_relation.txt', 'w') as f:
         f.write(no_relation)
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/wrong_same_class.txt', 'w') as f:
+        f.write(wrong_same_class)
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/wrong_first_to_second.txt', 'w') as f:
+        f.write(wrong_first_to_second)
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/wrong_second_to_first.txt', 'w') as f:
+        f.write(wrong_second_to_first)
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/wrong_no_relation.txt', 'w') as f:
+        f.write(wrong_no_relation)
 
+    mentions_file_string = '\n'.join([mention for mention in mentions])
+    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/mentions_{hard}.txt', 'w') as f:
+        f.write(mentions_file_string)

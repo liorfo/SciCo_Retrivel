@@ -1,4 +1,4 @@
-gpu_num: [0, 1, 2]
+gpu_num: [ 0]
 random_seed: 0
 
 #model
@@ -27,11 +27,13 @@ log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 definition_extraction: false
 should_save_definition: false
 
+from_gpt: True
+
 
 # inference
-checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/model_with_attention/multiclass/version_0/checkpoints/epoch=0-step=11849.ckpt
+checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/net/nfs.cs/s2-research/ariec/scico/models/multiclass/version_4/checkpoints/epoch=0-step=8887.ckpt
 checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
 hypernym_threshold: 0.4 # for hypernym scores
-save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/multiclass_results_def_attention
+save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/gpt_results

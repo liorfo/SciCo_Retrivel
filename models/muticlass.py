@@ -4,6 +4,17 @@ import torch
 import torch.nn as nn
 from transformers import AutoModel, AutoTokenizer
 from typing import Any, Optional
+import numpy as np
+import random
+
+from SciCo_Retrivel.gpt_multiclass_model import get_gpt_response
+
+
+def get_gpt_score(input):
+    ind = int(get_gpt_response(input))
+    l = [0.001, 0.001, 0.001, 0.001]
+    l[ind] = 1
+    return l
 
 
 def get_global_attention(input_ids, start_token, end_token):
@@ -22,13 +33,91 @@ class MulticlassModel:
         super(MulticlassModel, self).__init__()
 
     @classmethod
-    def get_model(cls, name, config):
+    def get_model(cls, name, config, is_gpt=False):
         if name == 'multiclass':
+            if is_gpt:
+                return MulticlassCrossEncoderGPT(config, num_classes=4)
             return MulticlassCrossEncoder(config, num_classes=4)
         elif name == 'coref':
             return BinaryCorefCrossEncoder(config)
         elif name == 'hypernym':
             return HypernymCrossEncoder(config)
+
+
+class MulticlassCrossEncoderGPT(pl.LightningModule):
+    '''
+    multiclass classification with labels:
+    0 not related
+    1 coref
+    2. hypernym
+    3. neutral (hyponym)
+    '''
+
+    def __init__(self, config, num_classes=4):
+        super(MulticlassCrossEncoderGPT, self).__init__()
+        self.acc = pl.metrics.Accuracy(top_k=1)
+        self.f1 = pl.metrics.F1(num_classes=num_classes, average='none')
+        self.recall = pl.metrics.Recall(num_classes=num_classes, average='none')
+        self.val_precision = pl.metrics.Precision(num_classes=num_classes, average='none')
+
+    def forward(self, inputs):
+        scores = [get_gpt_score(inputs[i]) for i in range(len(inputs))]
+        scores = torch.tensor(scores, dtype=torch.float)
+        return scores
+
+    def training_step(self, batch, batch_idx):
+        pass
+
+    def validation_step(self, batch, batch_idx):
+        pass
+
+    def validation_epoch_end(self, outputs):
+        self.log_metrics()
+
+    def test_step(self, batch, batch_idx):
+        pass
+
+    def test_step_end(self, outputs):
+        pass
+
+    def test_epoch_end(self, outputs):
+        pass
+
+    def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: Optional[int] = None):
+        x, y = batch
+        y_hat = self(x)
+        y_hat = torch.softmax(y_hat, dim=1)
+        return y_hat
+
+    def compute_metrics(self, y_hat, y):
+        self.acc(y_hat, y)
+        self.f1(y_hat, y)
+        self.recall(y_hat, y)
+        self.val_precision(y_hat, y)
+
+    def log_metrics(self):
+        self.log('acc', self.acc.compute())
+        f1_negative, f1_coref, f1_hypernym, f1_hyponym = self.f1.compute()
+        recall_negative, recall_coref, recall_hypernym, recall_hyponym = self.recall.compute()
+        precision_negative, precision_coref, precision_hypernym, precision_hyponym = self.val_precision.compute()
+        self.log('f1_coref', f1_coref)
+        self.log('recall_coref', recall_coref)
+        self.log('precision_coref', precision_coref)
+        self.log('f1_hypernym', f1_hypernym)
+        self.log('recall_hypernym', recall_hypernym)
+        self.log('precision_hypernym', precision_hypernym)
+        self.log('f1_hyponym', f1_hyponym)
+        self.log('recall_hyponym', recall_hyponym)
+        self.log('precision_hyponym', precision_hyponym)
+
+    def configure_optimizers(self):
+        return torch.optim.AdamW(self.parameters(), lr=self.config['model']['lr'])
+
+    def tokenize_batch(self, batch):
+        inputs, labels = zip(*batch)
+        labels = np.array(labels)
+
+        return np.array(inputs), labels
 
 
 class MulticlassCrossEncoder(pl.LightningModule):
@@ -49,12 +138,12 @@ class MulticlassCrossEncoder(pl.LightningModule):
         self.tokenizer = AutoTokenizer.from_pretrained(config["model"]["bert_model"])
         self.tokenizer.add_tokens('<m>', special_tokens=True)
         self.tokenizer.add_tokens('</m>', special_tokens=True)
-        self.tokenizer.add_tokens('<def>', special_tokens=True)
-        self.tokenizer.add_tokens('</def>', special_tokens=True)
+        # self.tokenizer.add_tokens('<def>', special_tokens=True)
+        # self.tokenizer.add_tokens('</def>', special_tokens=True)
         self.start = self.tokenizer.convert_tokens_to_ids('<m>')
         self.end = self.tokenizer.convert_tokens_to_ids('</m>')
-        self.start_def = self.tokenizer.convert_tokens_to_ids('<def>')
-        self.end_def = self.tokenizer.convert_tokens_to_ids('</def>')
+        # self.start_def = self.tokenizer.convert_tokens_to_ids('<def>')
+        # self.end_def = self.tokenizer.convert_tokens_to_ids('</def>')
         self.sep = self.tokenizer.convert_tokens_to_ids('</s>')
         self.doc_start = self.tokenizer.convert_tokens_to_ids('<doc-s>') if self.cdlm else None
         self.doc_end = self.tokenizer.convert_tokens_to_ids('</doc-s>') if self.cdlm else None
@@ -156,14 +245,14 @@ class MulticlassCrossEncoder(pl.LightningModule):
         global_attention_mask[:, 0] = 1  # global attention to the CLS token
         start = torch.nonzero(input_ids == self.start)
         end = torch.nonzero(input_ids == self.end)
-        start_def = torch.nonzero(input_ids == self.start_def)
-        end_def = torch.nonzero(input_ids == self.end_def)
+        # start_def = torch.nonzero(input_ids == self.start_def)
+        # end_def = torch.nonzero(input_ids == self.end_def)
         if self.cdlm:
             doc_start = torch.nonzero(input_ids == self.doc_start)
             doc_end = torch.nonzero(input_ids == self.doc_end)
             globs = torch.cat((start, end, doc_start, doc_end))
         else:
-            globs = torch.cat((start, end, start_def, end_def))
+            globs = torch.cat((start, end))
 
         value = torch.ones(globs.shape[0])
         global_attention_mask.index_put_(tuple(globs.t()), value)
