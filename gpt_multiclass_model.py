@@ -1,7 +1,7 @@
 import openai
 
 MAX_TOKENS = 10
-API_KEY = ''
+API_KEY = 'sk-<your key here>'
 
 sent = ('This is similar to a standard <m> machine learning problem of learning </m> from finite samples . '
         '</s></s>Adding <m> MLP in </m> does not seem to help , yielding slightly worse result than without MLP . </s>')

@@ -1,4 +1,4 @@
-gpu_num: [ 0]
+gpu_num: [ 0, 1, 2, 3]
 random_seed: 0
 
 #model
@@ -20,20 +20,20 @@ data:
 
 
 full_doc: true
-model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/model_with_attention
+model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/def_after_term_results_bigger_window
 log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 
 # definition extraction
-definition_extraction: false
-should_save_definition: false
+definition_extraction: True
+should_save_definition: False
 
-from_gpt: True
+from_gpt: False
 
 
 # inference
-checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/net/nfs.cs/s2-research/ariec/scico/models/multiclass/version_4/checkpoints/epoch=0-step=8887.ckpt
+checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/def_after_term_results_bigger_window/multiclass/version_1/checkpoints/epoch=0-step=8887.ckpt
 checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
-hypernym_threshold: 0.4 # for hypernym scores
-save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/gpt_results
+hypernym_threshold: 0.5 # for hypernym scores
+save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/def_after_term_results_bigger_window

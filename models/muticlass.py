@@ -138,18 +138,18 @@ class MulticlassCrossEncoder(pl.LightningModule):
         self.tokenizer = AutoTokenizer.from_pretrained(config["model"]["bert_model"])
         self.tokenizer.add_tokens('<m>', special_tokens=True)
         self.tokenizer.add_tokens('</m>', special_tokens=True)
-        # self.tokenizer.add_tokens('<def>', special_tokens=True)
-        # self.tokenizer.add_tokens('</def>', special_tokens=True)
+        self.tokenizer.add_tokens('<def>', special_tokens=True)
+        self.tokenizer.add_tokens('</def>', special_tokens=True)
         self.start = self.tokenizer.convert_tokens_to_ids('<m>')
         self.end = self.tokenizer.convert_tokens_to_ids('</m>')
-        # self.start_def = self.tokenizer.convert_tokens_to_ids('<def>')
-        # self.end_def = self.tokenizer.convert_tokens_to_ids('</def>')
+        self.start_def = self.tokenizer.convert_tokens_to_ids('<def>')
+        self.end_def = self.tokenizer.convert_tokens_to_ids('</def>')
         self.sep = self.tokenizer.convert_tokens_to_ids('</s>')
         self.doc_start = self.tokenizer.convert_tokens_to_ids('<doc-s>') if self.cdlm else None
         self.doc_end = self.tokenizer.convert_tokens_to_ids('</doc-s>') if self.cdlm else None
 
         self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False,
-                                               cache_dir='/cs/labs/tomhope/forer11/cache', attention_window=1012)
+                                               cache_dir='/cs/labs/tomhope/forer11/cache', attention_window=512)
         self.model.resize_token_embeddings(len(self.tokenizer))
         self.linear = nn.Linear(self.model.config.hidden_size, num_classes)
         self.criterion = torch.nn.CrossEntropyLoss()
@@ -245,14 +245,15 @@ class MulticlassCrossEncoder(pl.LightningModule):
         global_attention_mask[:, 0] = 1  # global attention to the CLS token
         start = torch.nonzero(input_ids == self.start)
         end = torch.nonzero(input_ids == self.end)
-        # start_def = torch.nonzero(input_ids == self.start_def)
-        # end_def = torch.nonzero(input_ids == self.end_def)
+        start_def = torch.nonzero(input_ids == self.start_def)
+        end_def = torch.nonzero(input_ids == self.end_def)
         if self.cdlm:
             doc_start = torch.nonzero(input_ids == self.doc_start)
             doc_end = torch.nonzero(input_ids == self.doc_end)
             globs = torch.cat((start, end, doc_start, doc_end))
         else:
-            globs = torch.cat((start, end))
+            globs = torch.cat((start, end, start_def, end_def))
+            # globs = torch.cat((start, end))
 
         value = torch.ones(globs.shape[0])
         global_attention_mask.index_put_(tuple(globs.t()), value)

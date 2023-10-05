@@ -1,0 +1,93 @@
+1-########################################################################################################################################################################################################################################
+
+**good def**
+
+class: no relation, base class: first -> second, new model class: first -> second
+first:
+In this paper , we review internal and external representations of the UCS , and propose a <m> byte encoding </m> for the UCS .
+
+def:
+Byte encoding refers to the process of converting data into bytes or groups of bytes for storage or transmission.
+It is often used when working with computer files or digital communication protocols. The proposed "byte encoding"
+in the given context likely refers to the method of representing characters or symbols in a computer file using a
+fixed number of bytes.
+
+second:
+Different from the methods which generate regular expressions from character level , we first utilize <m> byte pair encoder ( BPE ) </m> to extract some frequent items , which are then used to construct regular expressions .
+
+def:
+Byte Pair Encoding (BPE) is a technique used in Natural Language Processing (NLP) to convert text into a
+more compact binary representation. It works by breaking down each word in a sentence into two halves,
+known as "byte pairs," and encoding them separately. This reduces the amount of memory needed to store
+the text and makes it easier to process it using computer algorithms. The resulting encoded text can
+then be decoded back into readable form.
+
+2-########################################################################################################################################################################################################################################
+
+**bad def?**
+
+class: no relation, base class: same cluster, new model class: same cluster
+first:
+We model tag recommendation task as <m> multi-label text classification problem </m> and use Naive Bayes classifier as the base learner of the multilabel classifier .
+
+def:
+Multi-label text classification refers to the problem of predicting more than one label for a given piece of text. It involves identifying and categorizing text into multiple categories or
+labels instead of just one. The challenge lies in capturing the relationships between different labels and the complexity of the label space.
+
+second:
+We demonstrate the efficacy of node2vec over existing state - of - the - art techniques on <m> multi - label classification </m> and link prediction in several real - world networks from diverse domains .
+
+def:
+Multi-label classification is a machine learning technique used to predict multiple possible output classes for a
+given input instance instead of just one. It is commonly used in text classification, image recognition, and
+recommendation systems. In other words, it involves assigning multiple labels or categories to a single data point rather than just one.
+
+3-########################################################################################################################################################################################################################################
+
+**bad def (with bad results even if the def was good)**
+
+class: no relation, base class: first -> second, new model class: second -> first
+first:
+They argued unlike physics , areas in <m> AI </m> are more likely to see an impact using more data - driven approaches .
+
+def:
+Artificial Intelligence refers to the simulation of human intelligence processes by machines, especially computer
+systems. It involves programming machines to perform tasks that would typically require human intelligence,
+such as visual perception, speech recognition, decision-making, and language translation.
+
+second:
+We do so by applying the maximum likelihood ( <m> ML </m> ) in order to obtain the best performance achievable .
+
+def:
+Machine Learning (ML) refers to the process of training algorithms to recognize patterns in data and make
+predictions based on those patterns. It involves using statistical techniques to analyze large amounts of
+data and identify trends and relationships between variables. The goal of machine learning is to create
+models that can accurately predict outcomes without being explicitly programmed to do so.
+
+
+4-########################################################################################################################################################################################################################################
+
+**bad def for mlk but still why same cluster?**
+
+class: no relation, base class: same cluster, new model class: same cluster
+first:
+This work focuses on the problem of multi-label learning with missing labels ( <m> MLML </m> ) , which aims to label
+each test instance with multiple class labels given training instances that have an incomplete/partial set of these labels ( i.e. some of their labels are missing ) .
+
+def:
+The term "MLML" stands for "Multi-Label Learning with Missing Labels". It refers to a type of machine learning problem
+where the goal is to predict multiple labels for each instance, but some of the labels may be missing or
+unknown. This can occur when there is insufficient data to train a model for all possible label combinations,
+or when the labels themselves are not well defined or subject to change.
+
+second:
+We adopted state - of - art graphs kernels for comparison namely : Random Walk ( RW ) , Shortest Path Kernel ( SP ) ,
+Graphlet Kernel ( GK ) , Weisfeiler - Lehman Sub - tree Kernel ( WL ) , Deep Graph Kernels ( DGK ) and Multiscale Laplacian Graph Kernels ( <m> MLK </m> ) .
+
+def:
+'The term "MLK" is not defined in the given context. It seems to be a misspelling or typo of "Merkle-Leiner'
+
+5-########################################################################################################################################################################################################################################
+
+**000**
+

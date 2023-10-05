@@ -278,6 +278,7 @@ def predict_multiclass(config, trainer):
                                   batch_size=config["model"]["batch_size"] * 36,
                                   shuffle=False,
                                   collate_fn=model.tokenize_batch,
+                                  num_workers=16,
                                   pin_memory=True)
     results = trainer.predict(model, dataloaders=test_loader)
     results = torch.cat([torch.tensor(x) for x in results])
@@ -381,7 +382,7 @@ if __name__ == '__main__':
     logger.info(f"Using {model_name}")
     logger.info('loading models')
     pl_logger = CSVLogger(save_dir='logs', name='multiclass_inference')
-    trainer = pl.Trainer(logger=pl_logger)
+    trainer = pl.Trainer(gpus=config['gpu_num'], accelerator='dp', logger=pl_logger)
 
     #### multiclass
     if model_name == 'multiclass':

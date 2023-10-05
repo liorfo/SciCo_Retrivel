@@ -104,15 +104,15 @@ if __name__ == '__main__':
             system_couple_class = get_couple_class_tag(system_couple, system_relations)
             new_model_couple_class = get_couple_class_tag(new_model_couple, new_model_relations)
 
-            # if gold_couple_class == new_model_couple_class and gold_couple_class != system_couple_class:
-            #     first_to_second, no_relation, same_class, second_to_first, _sent_len = get_sentences(first_to_second, no_relation,
-            #                                                                               same_class, second_to_first)
-
-            wrong_first_to_second, wrong_no_relation, wrong_same_class, wrong_second_to_first, sent_len = get_sentences(
-                wrong_first_to_second, wrong_no_relation,
-                wrong_same_class, wrong_second_to_first)
-            num_of_tokens += sent_len
-            num_samples += 1
+            if gold_couple_class == new_model_couple_class and gold_couple_class != system_couple_class:
+                first_to_second, no_relation, same_class, second_to_first, _sent_len = get_sentences(first_to_second,
+                                                                                                     no_relation,
+                                                                                                     same_class,
+                                                                                                     second_to_first)
+            elif gold_couple_class != new_model_couple_class and gold_couple_class != system_couple_class:
+                wrong_first_to_second, wrong_no_relation, wrong_same_class, wrong_second_to_first, sent_len = get_sentences(
+                    wrong_first_to_second, wrong_no_relation,
+                    wrong_same_class, wrong_second_to_first)
 
     with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/same_class.txt', 'w') as f:
         f.write(same_class)

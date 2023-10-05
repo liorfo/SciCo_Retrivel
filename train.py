@@ -49,7 +49,7 @@ def get_train_dev_loader(config):
     cdlm = 'cdlm' in config['model']['bert_model'].lower()
     # add definition extraction
     def_extraction_model = None
-    if config["definition_extraction"]:
+    if should_save_definition:
         def_extraction_model = get_definition_retrieval_model()
 
     train = CrossEncoderDataset(config["data"]["training_set"], full_doc=config['full_doc'], multiclass=model_name,
