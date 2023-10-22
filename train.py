@@ -2,7 +2,7 @@ import argparse
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import CSVLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.plugins import DDPPlugin
+from pytorch_lightning.strategies import FSDPStrategy
 import socket
 import yaml
 from torch.utils import data
@@ -11,6 +11,8 @@ import os
 from transformers import AutoTokenizer
 import logging
 from multiprocessing import set_start_method
+from pytorch_lightning.plugins.environments import SLURMEnvironment
+
 
 from SciCo_Retrivel.definition_extractor import get_definition_retrieval_model
 from utils.utils import *
@@ -60,8 +62,8 @@ def get_train_dev_loader(config):
                                    batch_size=config["model"]["batch_size"],
                                    shuffle=True,
                                    collate_fn=model.tokenize_batch,
-                                   num_workers=16,
-                                   pin_memory=True)
+                                   pin_memory=True,
+                                   num_workers=16)
     logger.info(f'training size: {len(train)}')
 
     dev = CrossEncoderDataset(config["data"]["dev_set"], full_doc=config['full_doc'], multiclass=model_name, cdlm=cdlm,
@@ -72,8 +74,8 @@ def get_train_dev_loader(config):
                                  batch_size=config["model"]["batch_size"],
                                  shuffle=False,
                                  collate_fn=model.tokenize_batch,
-                                 num_workers=16,
-                                 pin_memory=True)
+                                 pin_memory=True,
+                                 num_workers=16)
     logger.info(f'Validation size: {len(dev)}')
 
     return train_loader, dev_loader
@@ -110,15 +112,34 @@ if __name__ == '__main__':
         pl_logger = CSVLogger(save_dir=config['model_path'], name=model_name)
         pl_logger.log_hyperparams(config)
         checkpoint_callback = ModelCheckpoint(save_top_k=-1)
-        trainer = pl.Trainer(gpus=config['gpu_num'],
+
+        # use when pytorch_lightning version is 1.3.0
+
+        # trainer = pl.Trainer(gpus=config['gpu_num'],
+        #                      default_root_dir=config['model_path'],
+        #                      accelerator='ddp',
+        #                      plugins=DDPPlugin(find_unused_parameters=False),
+        #                      max_epochs=config['model']['epochs'],
+        #                      callbacks=[checkpoint_callback],
+        #                      logger=pl_logger,
+        #                      gradient_clip_val=config['model']['gradient_clip'],
+        #                      accumulate_grad_batches=config['model']['gradient_accumulation'],
+        #                      val_check_interval=1.0)
+        # # set_start_method('spawn', force=True)
+        # trainer.fit(model, train_dataloader=train_loader, val_dataloaders=dev_loader)
+        os.environ['RDMAV_FORK_SAFE'] = '1'
+        # strategy = FSDPStrategy(
+        #     cpu_offload=True
+        # )
+        trainer = pl.Trainer(devices=config['gpu_num'],
                              default_root_dir=config['model_path'],
-                             accelerator='ddp',
-                             plugins=DDPPlugin(find_unused_parameters=False),
+                             accelerator='cuda',
+                             strategy='fsdp',
+                             # plugins=SLURMEnvironment(auto_requeue=False),
                              max_epochs=config['model']['epochs'],
                              callbacks=[checkpoint_callback],
                              logger=pl_logger,
                              gradient_clip_val=config['model']['gradient_clip'],
                              accumulate_grad_batches=config['model']['gradient_accumulation'],
                              val_check_interval=1.0)
-        # set_start_method('spawn', force=True)
-        trainer.fit(model, train_dataloader=train_loader, val_dataloaders=dev_loader)
+        trainer.fit(model, train_dataloaders=train_loader, val_dataloaders=dev_loader)

@@ -20,6 +20,7 @@ from models.datasets import CrossEncoderDataset
 from models.muticlass import MulticlassBiEncoder, MulticlassCrossEncoder, BinaryCorefCrossEncoder, HypernymCrossEncoder, \
     MulticlassModel
 from utils.model_utils import get_greedy_relations, get_hypernym_relations
+from LLaMA_2_7B_32K.LLaMA_model import LlamaMulticlassCrossEncoder
 from models.baselines import EntailmentModel
 
 
@@ -267,7 +268,8 @@ def predict_multiclass(config, trainer):
     if config['from_gpt']:
         model = MulticlassModel.get_model(model_name, config, True)
     else:
-        model = MulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+        # TODO change to a dynamic loader
+        model = LlamaMulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
     should_load_definition = config["definition_extraction"]
     test = CrossEncoderDataset(config["data"]["test_set"],
                                full_doc=config['full_doc'],
@@ -382,7 +384,11 @@ if __name__ == '__main__':
     logger.info(f"Using {model_name}")
     logger.info('loading models')
     pl_logger = CSVLogger(save_dir='logs', name='multiclass_inference')
-    trainer = pl.Trainer(gpus=config['gpu_num'], accelerator='dp', logger=pl_logger)
+
+    # use when pytorch_lightning version is 1.3.0
+    # trainer = pl.Trainer(gpus=config['gpu_num'], accelerator='dp', logger=pl_logger)
+
+    trainer = pl.Trainer(devices=config['gpu_num'], logger=pl_logger)
 
     #### multiclass
     if model_name == 'multiclass':
