@@ -16,7 +16,7 @@ os.environ['RDMAV_FORK_SAFE'] = '1'
 #                                              trust_remote_code=True,
 #                                              torch_dtype=torch.float16,
 #                                              cache_dir='/cs/labs/tomhope/forer11/cache/')
-
+#
 # device = "cuda:0" if torch.cuda.is_available() else "cpu"
 # print(device)
 # input_context = "When did the Soviet Union end?"
@@ -42,14 +42,14 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
         self.long = True if 'longformer' in config["model"]["bert_model"] or self.cdlm else False
         self.config = config
 
-        # self.tokenizer11 = AutoTokenizer.from_pretrained("togethercomputer/LLaMA-2-7B-32K",
-        #                                           cache_dir='/cs/labs/tomhope/forer11/cache/')
-        # self.model11 = AutoModelForCausalLM.from_pretrained("togethercomputer/LLaMA-2-7B-32K",
-        #                                              trust_remote_code=True,
-        #                                              torch_dtype=torch.float16,
-        #                                              cache_dir='/cs/labs/tomhope/forer11/cache/')
+        self.tokenizer = AutoTokenizer.from_pretrained("togethercomputer/LLaMA-2-7B-32K",
+                                                  cache_dir='/cs/labs/tomhope/forer11/cache/')
+        self.model = AutoModelForCausalLM.from_pretrained("togethercomputer/LLaMA-2-7B-32K",
+                                                     trust_remote_code=True,
+                                                     # torch_dtype=torch.float16,
+                                                     cache_dir='/cs/labs/tomhope/forer11/cache/')
 
-        self.tokenizer = AutoTokenizer.from_pretrained(config["model"]["bert_model"])
+        # self.tokenizer = AutoTokenizer.from_pretrained(config["model"]["bert_model"])
         self.tokenizer.add_tokens('<m>', special_tokens=True)
         self.tokenizer.add_tokens('</m>', special_tokens=True)
         self.tokenizer.add_tokens('<def>', special_tokens=True)
@@ -62,8 +62,8 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
         self.doc_start = self.tokenizer.convert_tokens_to_ids('<doc-s>') if self.cdlm else None
         self.doc_end = self.tokenizer.convert_tokens_to_ids('</doc-s>') if self.cdlm else None
 
-        self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False,
-                                               cache_dir='/cs/labs/tomhope/forer11/cache', attention_window=512)
+        # self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False,
+        #                                        cache_dir='/cs/labs/tomhope/forer11/cache', attention_window=512)
         self.model.resize_token_embeddings(len(self.tokenizer))
         self.linear = nn.Linear(self.model.config.hidden_size, num_classes)
         self.criterion = torch.nn.CrossEntropyLoss()
@@ -73,24 +73,23 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
         self.recall = tm.Recall(task="multiclass", num_classes=num_classes, average='none')
         self.val_precision = tm.Precision(task="multiclass", num_classes=num_classes, average='none')
 
-    def forward(self, input_ids, attention_mask, global_attention_mask):
-        output = self.model(input_ids, attention_mask=attention_mask,
-                            global_attention_mask=global_attention_mask)
+    def forward(self, input_ids, attention_mask):
+        output = self.model(input_ids, attention_mask=attention_mask)
         cls_vector = output.last_hidden_state[:, 0, :]
         scores = self.linear(cls_vector)
         return scores
 
     def training_step(self, batch, batch_idx):
         x, y = batch
-        input_ids, attention_mask, global_attention_mask = x
-        y_hat = self(input_ids, attention_mask, global_attention_mask)
+        input_ids, attention_mask = x
+        y_hat = self(input_ids, attention_mask)
         loss = self.criterion(y_hat, y)
         return loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
-        input_ids, attention_mask, global_attention_mask = x
-        y_hat = self(input_ids, attention_mask, global_attention_mask)
+        input_ids, attention_mask = x
+        y_hat = self(input_ids, attention_mask)
         loss = self.criterion(y_hat, y)
         y_hat = torch.softmax(y_hat, dim=1)
         self.compute_metrics(y_hat, y)
@@ -103,8 +102,8 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         x, y = batch
-        input_ids, attention_mask, global_attention_mask = x
-        y_hat = self(input_ids, attention_mask, global_attention_mask)
+        input_ids, attention_mask = x
+        y_hat = self(input_ids, attention_mask)
         loss = self.criterion(y_hat, y)
         y_hat = torch.softmax(y_hat, dim=1)
 
@@ -125,8 +124,8 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
 
     def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: Optional[int] = None):
         x, y = batch
-        input_ids, attention_mask, global_attention_mask = x
-        y_hat = self(input_ids, attention_mask, global_attention_mask)
+        input_ids, attention_mask = x
+        y_hat = self(input_ids, attention_mask)
         y_hat = torch.softmax(y_hat, dim=1)
         return y_hat
 
@@ -178,7 +177,6 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
         tokens = self.tokenizer(list(inputs), padding=True)
         input_ids = torch.tensor(tokens['input_ids'])
         attention_mask = torch.tensor(tokens['attention_mask'])
-        global_attention_mask = self.get_global_attention(input_ids)
         labels = torch.stack(labels)
 
-        return (input_ids, attention_mask, global_attention_mask), labels
+        return (input_ids, attention_mask), labels

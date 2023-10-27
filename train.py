@@ -8,10 +8,10 @@ import yaml
 from torch.utils import data
 from tqdm import tqdm
 import os
-from transformers import AutoTokenizer
 import logging
-from multiprocessing import set_start_method
-from pytorch_lightning.plugins.environments import SLURMEnvironment
+import gc
+import torch
+
 
 
 from SciCo_Retrivel.definition_extractor import get_definition_retrieval_model
@@ -62,8 +62,8 @@ def get_train_dev_loader(config):
                                    batch_size=config["model"]["batch_size"],
                                    shuffle=True,
                                    collate_fn=model.tokenize_batch,
-                                   pin_memory=True,
-                                   num_workers=16)
+                                   # num_workers=16,
+                                   pin_memory=True)
     logger.info(f'training size: {len(train)}')
 
     dev = CrossEncoderDataset(config["data"]["dev_set"], full_doc=config['full_doc'], multiclass=model_name, cdlm=cdlm,
@@ -74,8 +74,8 @@ def get_train_dev_loader(config):
                                  batch_size=config["model"]["batch_size"],
                                  shuffle=False,
                                  collate_fn=model.tokenize_batch,
-                                 pin_memory=True,
-                                 num_workers=16)
+                                 # num_workers=16,
+                                 pin_memory=True)
     logger.info(f'Validation size: {len(dev)}')
 
     return train_loader, dev_loader
@@ -131,10 +131,16 @@ if __name__ == '__main__':
         # strategy = FSDPStrategy(
         #     cpu_offload=True
         # )
+
+        # torch.cuda.empty_cache()
+        # gc.collect()
+
         trainer = pl.Trainer(devices=config['gpu_num'],
                              default_root_dir=config['model_path'],
-                             accelerator='cuda',
-                             strategy='fsdp',
+                             # accelerator='cuda',
+
+
+                             # strategy='fsdp',
                              # plugins=SLURMEnvironment(auto_requeue=False),
                              max_epochs=config['model']['epochs'],
                              callbacks=[checkpoint_callback],
