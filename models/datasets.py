@@ -48,7 +48,7 @@ class CrossEncoderDataset(data.Dataset):
         self.info_pairs = []
         self.definitions = {}
         if should_load_definition:
-            with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/data/{data_label}_definitions', "rb") as fp:
+            with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/def_data/{data_label}_definitions', "rb") as fp:
                 self.definitions = pickle.load(fp)
         all_definitions = {}
         for i, topic in enumerate(self.data):
@@ -71,7 +71,7 @@ class CrossEncoderDataset(data.Dataset):
             self.info_pairs.extend(info_pairs)
         if should_save_definition:
             print(f'saving all definitions for {data_label}...')
-            with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/data/{data_label}_definitions', 'wb') as f:
+            with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/def_data/{data_label}_definitions', 'wb') as f:
                 pickle.dump(all_definitions, f)
 
         if self.multiclass == 'multiclass' or self.multiclass == 'hypernym':
