@@ -222,9 +222,9 @@ class MistarlLightCrossEncoder(pl.LightningModule):
         self.log('precision_hyponym', precision_hyponym)
 
     def configure_optimizers(self):
-        # return FusedAdam(self.parameters(), lr=self.config['model']['lr'])
+        return FusedAdam(self.parameters(), lr=self.config['model']['lr'])
         # return torch.optim.SGD(self.parameters(), lr=self.config['model']['lr'])
-        return Lion(self.parameters(), lr=1e-4, weight_decay=1e-2)
+        # return Lion(self.parameters(), lr=1e-4, weight_decay=1e-2)
 
     def get_global_attention(self, input_ids):
         global_attention_mask = torch.zeros(input_ids.shape)

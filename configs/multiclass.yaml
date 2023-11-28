@@ -20,7 +20,7 @@ data:
 
 
 full_doc: true
-model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/LLaMA-2-7B-32K
+model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralLite/checkpoints
 log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 
 # definition extraction
