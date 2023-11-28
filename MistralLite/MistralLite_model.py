@@ -1,4 +1,5 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel, MistralForSequenceClassification
+import transformers
 import os
 import pytorch_lightning as pl
 import torch
@@ -6,30 +7,85 @@ import torch.nn as nn
 from typing import Any, Optional
 import torchmetrics as tm
 from deepspeed.ops.adam import FusedAdam
-
+import flash_attn
+from transformers.utils import (
+    is_flash_attn_2_available,
+    is_torch_available,
+)
+import importlib.metadata
+from typing import Any, Tuple, Union
+from packaging import version
+from lion_pytorch import Lion
 
 os.environ['CUDA_HOME'] = '/usr/local/nvidia/cuda/11.7'
 os.environ['RDMAV_FORK_SAFE'] = '1'
 
 
-# tokenizer = AutoTokenizer.from_pretrained("togethercomputer/LLaMA-2-7B-32K",
-#                                           cache_dir='/cs/labs/tomhope/forer11/cache/')
-# model = AutoModelForCausalLM.from_pretrained("togethercomputer/LLaMA-2-7B-32K",
-#                                              trust_remote_code=True,
-#                                              torch_dtype=torch.float16,
-#                                              cache_dir='/cs/labs/tomhope/forer11/cache/')
+# def convert_inputs_into_prompts(inputs):
+#     pass
+
+
+# def _is_package_available(pkg_name: str, return_version: bool = False) -> Union[Tuple[bool, str], bool]:
+#     # Check we're not importing a "pkg_name" directory somewhere but the actual library by trying to grab the version
+#     package_exists = importlib.util.find_spec(pkg_name) is not None
+#     package_version = "N/A"
+#     if package_exists:
+#         try:
+#             package_version = importlib.metadata.version(pkg_name)
+#             package_exists = True
+#         except importlib.metadata.PackageNotFoundError:
+#             package_exists = False
+#     if return_version:
+#         return package_exists, package_version
+#     else:
+#         return package_exists
 #
-# device = "cuda:0" if torch.cuda.is_available() else "cpu"
-# print(device)
-# input_context = "When did the Soviet Union end?"
-# input_ids = tokenizer.encode(input_context, return_tensors="pt").to(device)
-# model = model.to(device)
-# output = model.generate(input_ids, max_length=128, temperature=0.7)
-# output_text = tokenizer.decode(output[0], skip_special_tokens=True)
-# print(output_text)
+# print(torch.version.cuda)
+# print(is_flash_attn_2_available())
+# print(_is_package_available("flash_attn") and version.parse(
+#     importlib.metadata.version("flash_attn")))
+# print(torch.cuda.is_available())
+
+prompt = (f'<|prompter|>'
+          'You are given 2 texts below seperated by </s></s>, in each text there is a scientific term inside <m> </m> and a context for said term. please read them carefully and answer the follow up question.\n'
+          '=== BEGIN ===\n'
+          '{sentences}'
+          '\n=== END OF SENTENCES ===\n'
+          'Please define the hierarchy between Term A and Term B using the following levels: '
+          '0 - No relation, no hierarchical connection for example: "Systems Network Architecture" and "AI Network Architecture"'
+          '1 - Same level, co-referring terms (for example: "self-driving cars" and "autonomous vehicles")'
+          '2 - Term A is a parent concept of term B for example: "Information Extraction" is a parent concept of "Definition extraction"'
+          '3 - Term A is a child concept of Term B for example: "image synthesis task" is a child concept of "computer vision"'
+          'answer shortly with only the number of the correct hierarchy level\n'
+          '</s><|assistant|>')
 
 
-class LlamaMulticlassCrossEncoder(pl.LightningModule):
+# model_id = "amazon/MistralLite"
+#
+# tokenizer = AutoTokenizer.from_pretrained(model_id)
+# model = AutoModelForCausalLM.from_pretrained(model_id,
+#                                              torch_dtype=torch.bfloat16,
+#                                              use_flash_attention_2=True,
+#                                              device_map="auto",
+#                                              cache_dir='/cs/labs/tomhope/forer11/cache')
+# pipeline = transformers.pipeline(
+#     "text-generation",
+#     model=model,
+#     tokenizer=tokenizer,
+# )
+# sequences = pipeline(
+#     prompt.format(sentences='We consider the problem of developing a <m> linear transformation process </m> to compensate for range-dependent bistatic clutter spectral dispersion . </s></s>The simple <m> linear projection </m> makes the method easy to interpret , while the visualization task is made well-defined by the novel information retrieval criterion . </s>'),
+#     max_new_tokens=400,
+#     do_sample=False,
+#     return_full_text=False,
+#     num_return_sequences=1,
+#     eos_token_id=tokenizer.eos_token_id,
+# )
+# for seq in sequences:
+#     print(f"{seq['generated_text']}")
+
+
+class MistarlLightCrossEncoder(pl.LightningModule):
     '''
     multiclass classification with labels:
     0 not related
@@ -39,19 +95,25 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
     '''
 
     def __init__(self, config, num_classes=4):
-        super(LlamaMulticlassCrossEncoder, self).__init__()
+        super(MistarlLightCrossEncoder, self).__init__()
         self.cdlm = 'cdlm' in config["model"]["bert_model"].lower()
         self.long = True if 'longformer' in config["model"]["bert_model"] or self.cdlm else False
         self.config = config
 
-        # self.tokenizer = AutoTokenizer.from_pretrained("togethercomputer/LLaMA-2-7B-32K",
-        #                                                cache_dir='/cs/labs/tomhope/forer11/cache/')
-        # self.model = AutoModelForCausalLM.from_pretrained("togethercomputer/LLaMA-2-7B-32K",
-        #                                                   trust_remote_code=False,
-        #                                                   torch_dtype=torch.float16,
-        #                                                   cache_dir='/cs/labs/tomhope/forer11/cache/')
+        model_id = "amazon/MistralLite"
 
-        self.tokenizer = AutoTokenizer.from_pretrained(config["model"]["bert_model"])
+        self.tokenizer = AutoTokenizer.from_pretrained(model_id)
+        self.model = MistralForSequenceClassification.from_pretrained(model_id,
+                                                                      torch_dtype=torch.bfloat16,
+                                                                      use_flash_attention_2=True,
+                                                                      # device_map="auto",
+                                                                      cache_dir='/cs/labs/tomhope/forer11/cache',
+                                                                      output_hidden_states=True,
+                                                                      num_labels=num_classes)
+
+        # self.model = self.model.to('cuda')
+
+        # self.tokenizer = AutoTokenizer.from_pretrained(config["model"]["bert_model"])
         self.tokenizer.add_tokens('<m>', special_tokens=True)
         self.tokenizer.add_tokens('</m>', special_tokens=True)
         self.tokenizer.add_tokens('<def>', special_tokens=True)
@@ -64,10 +126,10 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
         self.doc_start = self.tokenizer.convert_tokens_to_ids('<doc-s>') if self.cdlm else None
         self.doc_end = self.tokenizer.convert_tokens_to_ids('</doc-s>') if self.cdlm else None
 
-        self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False,
-                                               cache_dir='/cs/labs/tomhope/forer11/cache', attention_window=512)
+        # self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False,
+        #                                        cache_dir='/cs/labs/tomhope/forer11/cache', attention_window=512)
         self.model.resize_token_embeddings(len(self.tokenizer))
-        self.linear = nn.Linear(self.model.config.hidden_size, num_classes)
+        # self.linear = nn.Linear(self.model.config.hidden_size, num_classes)
         # self.linear = nn.Linear(32004, num_classes)
         # self.linear.weight.data = self.linear.weight.data.to(torch.float16)
         # self.linear.bias.data = self.linear.bias.data.to(torch.float16)
@@ -84,9 +146,9 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
         # cls_vector = output.logits[:, 0, :]
         # scores = self.linear(cls_vector.to(torch.float16))
 
-        cls_vector = output.last_hidden_state[:, 0, :]
-        scores = self.linear(cls_vector)
-        return scores
+        # cls_vector = output.last_hidden_state[:, 0, :]
+        # scores = self.linear(cls_vector)
+        return output.logits
 
     def training_step(self, batch, batch_idx):
         x, y = batch
@@ -160,9 +222,9 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
         self.log('precision_hyponym', precision_hyponym)
 
     def configure_optimizers(self):
-        return FusedAdam(self.parameters(), lr=self.config['model']['lr'])
-        # return torch.optim.AdamW(self.parameters(), lr=self.config['model']['lr'])
-
+        # return FusedAdam(self.parameters(), lr=self.config['model']['lr'])
+        # return torch.optim.SGD(self.parameters(), lr=self.config['model']['lr'])
+        return Lion(self.parameters(), lr=1e-4, weight_decay=1e-2)
 
     def get_global_attention(self, input_ids):
         global_attention_mask = torch.zeros(input_ids.shape)
@@ -185,6 +247,7 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
 
     def tokenize_batch(self, batch):
         inputs, labels = zip(*batch)
+        inputs = tuple(prompt.format(sentences=s) for s in inputs)
         tokens = self.tokenizer(list(inputs), padding=True)
         input_ids = torch.tensor(tokens['input_ids'])
         attention_mask = torch.tensor(tokens['attention_mask'])

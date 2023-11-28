@@ -1,4 +1,4 @@
-gpu_num: [0]
+gpu_num: [0, 1, 2]
 random_seed: 0
 
 #model
@@ -24,7 +24,7 @@ model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/LLaMA-2-7B-32K
 log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 
 # definition extraction
-definition_extraction: True
+definition_extraction: False
 should_save_definition: False
 
 from_gpt: False

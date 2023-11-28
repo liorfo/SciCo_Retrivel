@@ -62,7 +62,7 @@ def get_train_dev_loader(config):
                                    batch_size=config["model"]["batch_size"],
                                    shuffle=True,
                                    collate_fn=model.tokenize_batch,
-                                   # num_workers=16,
+                                   num_workers=16,
                                    pin_memory=True)
     logger.info(f'training size: {len(train)}')
 
@@ -74,7 +74,7 @@ def get_train_dev_loader(config):
                                  batch_size=config["model"]["batch_size"],
                                  shuffle=False,
                                  collate_fn=model.tokenize_batch,
-                                 # num_workers=16,
+                                 num_workers=16,
                                  pin_memory=True)
     logger.info(f'Validation size: {len(dev)}')
 
@@ -137,10 +137,9 @@ if __name__ == '__main__':
 
         trainer = pl.Trainer(devices=config['gpu_num'],
                              default_root_dir=config['model_path'],
-                             # accelerator='cuda',
-
-
-                             # strategy='fsdp',
+                             accelerator='gpu',
+                             precision='bf16',
+                             strategy='deepspeed_stage_3',
                              # plugins=SLURMEnvironment(auto_requeue=False),
                              max_epochs=config['model']['epochs'],
                              callbacks=[checkpoint_callback],

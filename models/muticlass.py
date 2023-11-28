@@ -6,6 +6,7 @@ from transformers import AutoModel, AutoTokenizer
 from typing import Any, Optional
 import numpy as np
 from SciCo_Retrivel.LLaMA_2_7B_32K.LLaMA_model import LlamaMulticlassCrossEncoder
+from SciCo_Retrivel.MistralLite.MistralLite_model import MistarlLightCrossEncoder
 
 from SciCo_Retrivel.gpt_multiclass_model import get_gpt_response
 
@@ -37,7 +38,7 @@ class MulticlassModel:
         if name == 'multiclass':
             if is_gpt:
                 return MulticlassCrossEncoderGPT(config, num_classes=4)
-            return LlamaMulticlassCrossEncoder(config, num_classes=4)
+            return MistarlLightCrossEncoder(config, num_classes=4)
         elif name == 'coref':
             return BinaryCorefCrossEncoder(config)
         elif name == 'hypernym':
