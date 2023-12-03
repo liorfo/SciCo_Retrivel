@@ -17,9 +17,13 @@ from typing import Any, Tuple, Union
 from packaging import version
 from lion_pytorch import Lion
 
-os.environ['CUDA_HOME'] = '/usr/local/nvidia/cuda/11.7'
+# os.environ['CONSUL_HTTP_ADDR'] = ''
+os.environ['BNB_CUDA_VERSION'] = '117'
+os.environ['CUDA_HOME'] = '/cs/labs/tomhope/forer11/cuda117'
+os.environ['LD_LIBRARY_PATH'] = '/cs/labs/tomhope/forer11/cuda117/lib64'
+os.environ['PATH'] = '/cs/labs/tomhope/forer11/cuda117/lib64/bin'
 os.environ['RDMAV_FORK_SAFE'] = '1'
-
+from peft import get_peft_model, LoraConfig, TaskType
 
 # def convert_inputs_into_prompts(inputs):
 #     pass
@@ -46,28 +50,51 @@ os.environ['RDMAV_FORK_SAFE'] = '1'
 #     importlib.metadata.version("flash_attn")))
 # print(torch.cuda.is_available())
 
-prompt = (f'<|prompter|>'
-          'You are given 2 texts below seperated by </s></s>, in each text there is a scientific term inside <m> </m> and a context for said term. please read them carefully and answer the follow up question.\n'
-          '=== BEGIN ===\n'
-          '{sentences}'
-          '\n=== END OF SENTENCES ===\n'
-          'Please define the hierarchy between Term A and Term B using the following levels: '
-          '0 - No relation, no hierarchical connection for example: "Systems Network Architecture" and "AI Network Architecture"'
-          '1 - Same level, co-referring terms (for example: "self-driving cars" and "autonomous vehicles")'
-          '2 - Term A is a parent concept of term B for example: "Information Extraction" is a parent concept of "Definition extraction"'
-          '3 - Term A is a child concept of Term B for example: "image synthesis task" is a child concept of "computer vision"'
-          'answer shortly with only the number of the correct hierarchy level\n'
-          '</s><|assistant|>')
+print(os.environ.get('LD_LIBRARY_PATH'))
 
-
+# prompt = (f'<|prompter|>'
+#           'You are given 2 texts below seperated by </s></s>, in each text there is a scientific term inside <m> </m> and a context for said term. please read them carefully and answer the follow up question.\n'
+#           '=== BEGIN ===\n'
+#           '{sentences}'
+#           '\n=== END OF SENTENCES ===\n'
+#           'Please define the hierarchy between Term A and Term B using the following levels: '
+#           '0 - No relation, no hierarchical connection for example: "Systems Network Architecture" and "AI Network Architecture"'
+#           '1 - Same level, co-referring terms (for example: "self-driving cars" and "autonomous vehicles")'
+#           '2 - Term A is a parent concept of term B for example: "Information Extraction" is a parent concept of "Definition extraction"'
+#           '3 - Term A is a child concept of Term B for example: "image synthesis task" is a child concept of "computer vision"'
+#           'answer shortly with only the number of the correct hierarchy level\n'
+#           '</s><|assistant|>')
+#
 # model_id = "amazon/MistralLite"
 #
 # tokenizer = AutoTokenizer.from_pretrained(model_id)
-# model = AutoModelForCausalLM.from_pretrained(model_id,
-#                                              torch_dtype=torch.bfloat16,
-#                                              use_flash_attention_2=True,
-#                                              device_map="auto",
-#                                              cache_dir='/cs/labs/tomhope/forer11/cache')
+# model = MistralForSequenceClassification.from_pretrained(model_id,
+#                                                          torch_dtype=torch.bfloat16,
+#                                                          use_flash_attention_2=True,
+#                                                          # device_map="auto",
+#                                                          cache_dir='/cs/labs/tomhope/forer11/cache',
+#                                                          output_hidden_states=True,
+#                                                          num_labels=4)
+# peft_config = LoraConfig(
+#     task_type=TaskType.SEQ_CLS,
+#     r=16,  # dimension of the updated matrices
+#     lora_alpha=64,  # parameter for scaling
+#     target_modules=[
+#         "q_proj",
+#         "up_proj",
+#         "o_proj",
+#         "k_proj",
+#         "down_proj",
+#         "gate_proj",
+#         "v_proj",
+#         "score"],
+#     lora_dropout=0.1,  # dropout probability for layers
+#     bias="none",
+# )
+# model = get_peft_model(model.to("cuda"), peft_config)
+# print(model.print_trainable_parameters())
+
+
 # pipeline = transformers.pipeline(
 #     "text-generation",
 #     model=model,
