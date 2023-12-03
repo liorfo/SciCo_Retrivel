@@ -18,53 +18,28 @@ from packaging import version
 from lion_pytorch import Lion
 
 # os.environ['CONSUL_HTTP_ADDR'] = ''
-os.environ['BNB_CUDA_VERSION'] = '117'
-os.environ['CUDA_HOME'] = '/cs/labs/tomhope/forer11/cuda117'
-os.environ['LD_LIBRARY_PATH'] = '/cs/labs/tomhope/forer11/cuda117/lib64'
-os.environ['PATH'] = '/cs/labs/tomhope/forer11/cuda117/lib64/bin'
+# os.environ['BNB_CUDA_VERSION'] = '117'
+# os.environ['CUDA_HOME'] = '/cs/labs/tomhope/forer11/cuda117'
+# os.environ['LD_LIBRARY_PATH'] = '/cs/labs/tomhope/forer11/cuda117/lib64'
+# os.environ['PATH'] = '/cs/labs/tomhope/forer11/cuda117/lib64/bin'
 os.environ['RDMAV_FORK_SAFE'] = '1'
 from peft import get_peft_model, LoraConfig, TaskType
 
-# def convert_inputs_into_prompts(inputs):
-#     pass
+
+prompt = (f'<|prompter|>'
+          'You are given 2 texts below seperated by </s></s>, in each text there is a scientific term inside <m> </m> and a context for said term. please read them carefully and answer the follow up question.\n'
+          '=== BEGIN ===\n'
+          '{sentences}'
+          '\n=== END OF SENTENCES ===\n'
+          'Please define the hierarchy between Term A and Term B using the following levels: '
+          '0 - No relation, no hierarchical connection for example: "Systems Network Architecture" and "AI Network Architecture"'
+          '1 - Same level, co-referring terms (for example: "self-driving cars" and "autonomous vehicles")'
+          '2 - Term A is a parent concept of term B for example: "Information Extraction" is a parent concept of "Definition extraction"'
+          '3 - Term A is a child concept of Term B for example: "image synthesis task" is a child concept of "computer vision"'
+          'answer shortly with only the number of the correct hierarchy level\n'
+          '</s><|assistant|>')
 
 
-# def _is_package_available(pkg_name: str, return_version: bool = False) -> Union[Tuple[bool, str], bool]:
-#     # Check we're not importing a "pkg_name" directory somewhere but the actual library by trying to grab the version
-#     package_exists = importlib.util.find_spec(pkg_name) is not None
-#     package_version = "N/A"
-#     if package_exists:
-#         try:
-#             package_version = importlib.metadata.version(pkg_name)
-#             package_exists = True
-#         except importlib.metadata.PackageNotFoundError:
-#             package_exists = False
-#     if return_version:
-#         return package_exists, package_version
-#     else:
-#         return package_exists
-#
-# print(torch.version.cuda)
-# print(is_flash_attn_2_available())
-# print(_is_package_available("flash_attn") and version.parse(
-#     importlib.metadata.version("flash_attn")))
-# print(torch.cuda.is_available())
-
-print(os.environ.get('LD_LIBRARY_PATH'))
-
-# prompt = (f'<|prompter|>'
-#           'You are given 2 texts below seperated by </s></s>, in each text there is a scientific term inside <m> </m> and a context for said term. please read them carefully and answer the follow up question.\n'
-#           '=== BEGIN ===\n'
-#           '{sentences}'
-#           '\n=== END OF SENTENCES ===\n'
-#           'Please define the hierarchy between Term A and Term B using the following levels: '
-#           '0 - No relation, no hierarchical connection for example: "Systems Network Architecture" and "AI Network Architecture"'
-#           '1 - Same level, co-referring terms (for example: "self-driving cars" and "autonomous vehicles")'
-#           '2 - Term A is a parent concept of term B for example: "Information Extraction" is a parent concept of "Definition extraction"'
-#           '3 - Term A is a child concept of Term B for example: "image synthesis task" is a child concept of "computer vision"'
-#           'answer shortly with only the number of the correct hierarchy level\n'
-#           '</s><|assistant|>')
-#
 # model_id = "amazon/MistralLite"
 #
 # tokenizer = AutoTokenizer.from_pretrained(model_id)
@@ -92,9 +67,9 @@ print(os.environ.get('LD_LIBRARY_PATH'))
 #     bias="none",
 # )
 # model = get_peft_model(model.to("cuda"), peft_config)
-# print(model.print_trainable_parameters())
-
-
+# model.print_trainable_parameters()
+#
+#
 # pipeline = transformers.pipeline(
 #     "text-generation",
 #     model=model,
@@ -137,8 +112,24 @@ class MistarlLightCrossEncoder(pl.LightningModule):
                                                                       cache_dir='/cs/labs/tomhope/forer11/cache',
                                                                       output_hidden_states=True,
                                                                       num_labels=num_classes)
-
-        # self.model = self.model.to('cuda')
+        peft_config = LoraConfig(
+            task_type=TaskType.SEQ_CLS,
+            r=16,  # dimension of the updated matrices
+            lora_alpha=64,  # parameter for scaling
+            target_modules=[
+                "q_proj",
+                "up_proj",
+                "o_proj",
+                "k_proj",
+                "down_proj",
+                "gate_proj",
+                "v_proj",
+                "score"],
+            lora_dropout=0.1,  # dropout probability for layers
+            bias="none",
+        )
+        self.model = get_peft_model(self.model, peft_config)
+        self.model.print_trainable_parameters()
 
         # self.tokenizer = AutoTokenizer.from_pretrained(config["model"]["bert_model"])
         self.tokenizer.add_tokens('<m>', special_tokens=True)
@@ -249,8 +240,8 @@ class MistarlLightCrossEncoder(pl.LightningModule):
         self.log('precision_hyponym', precision_hyponym)
 
     def configure_optimizers(self):
-        return FusedAdam(self.parameters(), lr=self.config['model']['lr'])
-        # return torch.optim.SGD(self.parameters(), lr=self.config['model']['lr'])
+        # return FusedAdam(self.parameters(), lr=self.config['model']['lr'])
+        return torch.optim.AdamW(self.parameters(), lr=0.0001)
         # return Lion(self.parameters(), lr=1e-4, weight_decay=1e-2)
 
     def get_global_attention(self, input_ids):
