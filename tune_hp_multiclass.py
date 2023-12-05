@@ -12,6 +12,7 @@ from tqdm import tqdm
 import numpy as np
 from models.datasets import CrossEncoderDataset
 from models.muticlass import MulticlassCrossEncoder
+from MistralLite.MistralLite_model import MistarlLightCrossEncoder
 from predict import MulticlassInference
 
 from eval.shortest_path import ShortestPath
@@ -47,19 +48,21 @@ if __name__ == '__main__':
         os.makedirs(config['save_path'])
 
     logger.info('loading models')
-    model = MulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+    model = MistarlLightCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
     should_load_definition = config["definition_extraction"]
     dev = CrossEncoderDataset(config["data"]["dev_set"], full_doc=config['full_doc'], multiclass='multiclass',
                               should_load_definition=should_load_definition, data_label='dev')
     dev_loader = data.DataLoader(dev,
-                                 batch_size=config["model"]["batch_size"] * 4,
+                                 batch_size=config["model"]["batch_size"],
                                  shuffle=False,
                                  collate_fn=model.tokenize_batch,
                                  num_workers=16,
                                  pin_memory=True)
 
     pl_logger = CSVLogger(save_dir='logs', name='multiclass_inference')
-    trainer = pl.Trainer(gpus=config['gpu_num'], accelerator='dp')
+    # trainer = pl.Trainer(gpus=config['gpu_num'], accelerator='dp')
+    trainer = pl.Trainer(devices=config['gpu_num'], logger=pl_logger)
+
     results = trainer.predict(model, dataloaders=dev_loader)
     results = torch.cat([torch.tensor(x) for x in results])
     # torch.save(results, os.path.join(config['save_path'], 'dev_results.pt'))

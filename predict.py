@@ -22,6 +22,7 @@ from models.muticlass import MulticlassBiEncoder, MulticlassCrossEncoder, Binary
 from utils.model_utils import get_greedy_relations, get_hypernym_relations
 from LLaMA_2_7B_32K.LLaMA_model import LlamaMulticlassCrossEncoder
 from models.baselines import EntailmentModel
+from MistralLite.MistralLite_model import MistarlLightCrossEncoder
 
 
 class MulticlassInference:
@@ -269,7 +270,7 @@ def predict_multiclass(config, trainer):
         model = MulticlassModel.get_model(model_name, config, True)
     else:
         # TODO change to a dynamic loader
-        model = LlamaMulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+        model = MistarlLightCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
     should_load_definition = config["definition_extraction"]
     test = CrossEncoderDataset(config["data"]["test_set"],
                                full_doc=config['full_doc'],
@@ -277,7 +278,7 @@ def predict_multiclass(config, trainer):
                                is_training=False,
                                should_load_definition=should_load_definition, data_label='test')
     test_loader = data.DataLoader(test,
-                                  batch_size=config["model"]["batch_size"] * 36,
+                                  batch_size=config["model"]["batch_size"],
                                   shuffle=False,
                                   collate_fn=model.tokenize_batch,
                                   num_workers=16,
@@ -300,7 +301,7 @@ def predict_pipeline(config, trainer):
                                      multiclass='coref',
                                      is_training=False)
     test_coref_loader = data.DataLoader(test_coref,
-                                        batch_size=config['model']['batch_size'] * 64 * 4,
+                                        batch_size=config['model']['batch_size'],
                                         shuffle=False,
                                         collate_fn=coref_model.tokenize_batch,
                                         num_workers=16,
@@ -310,10 +311,10 @@ def predict_pipeline(config, trainer):
                                         multiclass='hypernym',
                                         is_training=False)
     test_hypernym_loader = data.DataLoader(test_hypernym,
-                                           batch_size=config['model']['batch_size'] * 64 * 4,
+                                           batch_size=config['model']['batch_size'],
                                            shuffle=False,
                                            collate_fn=hypernym_model.tokenize_batch,
-                                           num_workers=16,
+                                           # num_workers=16,
                                            pin_memory=True)
 
     logger.info('Predicting coreference scores')

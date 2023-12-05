@@ -31,7 +31,7 @@ from_gpt: False
 
 
 # inference
-checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralLite/checkpoints/multiclass/version_0/checkpoints/epoch=0-step=47400.ckpt
+checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralLite/checkpoints/multiclass/version_9/checkpoints/epoch=0-step=47400.ckpt
 checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
