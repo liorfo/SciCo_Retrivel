@@ -98,12 +98,8 @@ class MistarlLightCrossEncoder(pl.LightningModule):
 
     def __init__(self, config, num_classes=4):
         super(MistarlLightCrossEncoder, self).__init__()
-        self.cdlm = 'cdlm' in config["model"]["bert_model"].lower()
-        self.long = True if 'longformer' in config["model"]["bert_model"] or self.cdlm else False
         self.config = config
-
         model_id = "amazon/MistralLite"
-
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = MistralForSequenceClassification.from_pretrained(model_id,
                                                                       torch_dtype=torch.bfloat16,
@@ -123,8 +119,9 @@ class MistarlLightCrossEncoder(pl.LightningModule):
                 "k_proj",
                 "down_proj",
                 "gate_proj",
-                "v_proj",
-                "score"],
+                "v_proj"],
+            modules_to_save=["score"],
+            inference_mode=False,
             lora_dropout=0.1,  # dropout probability for layers
             bias="none",
         )
@@ -134,18 +131,15 @@ class MistarlLightCrossEncoder(pl.LightningModule):
         # self.tokenizer = AutoTokenizer.from_pretrained(config["model"]["bert_model"])
         self.tokenizer.add_tokens('<m>', special_tokens=True)
         self.tokenizer.add_tokens('</m>', special_tokens=True)
-        self.tokenizer.add_tokens('<def>', special_tokens=True)
-        self.tokenizer.add_tokens('</def>', special_tokens=True)
+        # self.tokenizer.add_tokens('<def>', special_tokens=True)
+        # self.tokenizer.add_tokens('</def>', special_tokens=True)
         self.start = self.tokenizer.convert_tokens_to_ids('<m>')
         self.end = self.tokenizer.convert_tokens_to_ids('</m>')
-        self.start_def = self.tokenizer.convert_tokens_to_ids('<def>')
-        self.end_def = self.tokenizer.convert_tokens_to_ids('</def>')
+        # self.start_def = self.tokenizer.convert_tokens_to_ids('<def>')
+        # self.end_def = self.tokenizer.convert_tokens_to_ids('</def>')
         self.sep = self.tokenizer.convert_tokens_to_ids('</s>')
-        self.doc_start = self.tokenizer.convert_tokens_to_ids('<doc-s>') if self.cdlm else None
-        self.doc_end = self.tokenizer.convert_tokens_to_ids('</doc-s>') if self.cdlm else None
-
-        # self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False,
-        #                                        cache_dir='/cs/labs/tomhope/forer11/cache', attention_window=512)
+        self.tokenizer.padding_side = "left"
+        self.model.config.pad_token_id = self.tokenizer.pad_token_id
         self.model.resize_token_embeddings(len(self.tokenizer))
         # self.linear = nn.Linear(self.model.config.hidden_size, num_classes)
         # self.linear = nn.Linear(32004, num_classes)
@@ -173,6 +167,7 @@ class MistarlLightCrossEncoder(pl.LightningModule):
         input_ids, attention_mask = x
         y_hat = self(input_ids, attention_mask)
         loss = self.criterion(y_hat, y)
+        self.log('loss', loss, on_step=True, prog_bar=True, rank_zero_only=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -182,7 +177,7 @@ class MistarlLightCrossEncoder(pl.LightningModule):
         loss = self.criterion(y_hat, y)
         y_hat = torch.softmax(y_hat, dim=1)
         self.compute_metrics(y_hat, y)
-        self.log('val_loss', loss, on_epoch=True, on_step=False)
+        self.log('val_loss', loss, on_step=True, prog_bar=True, rank_zero_only=True)
 
         return loss
 
@@ -225,19 +220,19 @@ class MistarlLightCrossEncoder(pl.LightningModule):
         self.val_precision(y_hat, y)
 
     def log_metrics(self):
-        self.log('acc', self.acc.compute())
+        self.log('acc', self.acc.compute(), on_step=False, prog_bar=True, rank_zero_only=True)
         f1_negative, f1_coref, f1_hypernym, f1_hyponym = self.f1.compute()
         recall_negative, recall_coref, recall_hypernym, recall_hyponym = self.recall.compute()
         precision_negative, precision_coref, precision_hypernym, precision_hyponym = self.val_precision.compute()
-        self.log('f1_coref', f1_coref)
-        self.log('recall_coref', recall_coref)
-        self.log('precision_coref', precision_coref)
-        self.log('f1_hypernym', f1_hypernym)
-        self.log('recall_hypernym', recall_hypernym)
-        self.log('precision_hypernym', precision_hypernym)
-        self.log('f1_hyponym', f1_hyponym)
-        self.log('recall_hyponym', recall_hyponym)
-        self.log('precision_hyponym', precision_hyponym)
+        self.log('f1_coref', f1_coref, on_step=False, prog_bar=True, rank_zero_only=True)
+        self.log('recall_coref', recall_coref, on_step=False, prog_bar=True, rank_zero_only=True)
+        self.log('precision_coref', precision_coref, on_step=False, prog_bar=True, rank_zero_only=True)
+        self.log('f1_hypernym', f1_hypernym, on_step=False, prog_bar=True, rank_zero_only=True)
+        self.log('recall_hypernym', recall_hypernym, on_step=False, prog_bar=True, rank_zero_only=True)
+        self.log('precision_hypernym', precision_hypernym, on_step=False, prog_bar=True, rank_zero_only=True)
+        self.log('f1_hyponym', f1_hyponym, on_step=False, prog_bar=True, rank_zero_only=True)
+        self.log('recall_hyponym', recall_hyponym, on_step=False, prog_bar=True, rank_zero_only=True)
+        self.log('precision_hyponym', precision_hyponym, on_step=False, prog_bar=True, rank_zero_only=True)
 
     def configure_optimizers(self):
         # return FusedAdam(self.parameters(), lr=self.config['model']['lr'])
