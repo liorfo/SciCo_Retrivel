@@ -38,6 +38,7 @@ class MulticlassModel:
         if name == 'multiclass':
             if is_gpt:
                 return MulticlassCrossEncoderGPT(config, num_classes=4)
+            # return LlamaMulticlassCrossEncoder(config, num_classes=4)
             return MistarlLightCrossEncoder(config, num_classes=4)
         elif name == 'coref':
             return BinaryCorefCrossEncoder(config)

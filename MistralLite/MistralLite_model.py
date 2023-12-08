@@ -25,6 +25,47 @@ from lion_pytorch import Lion
 os.environ['RDMAV_FORK_SAFE'] = '1'
 from peft import get_peft_model, LoraConfig, TaskType
 
+# prompt = (f'<|prompter|>'
+#           'You are given 2 texts below seperated by </sent>, in each text there is a scientific term inside <m> </m> and a context for said term\n'
+#           'those are the possible hierarchies between Term A and Term B: '
+#           '0 - No relation, no hierarchical connection for example: "Systems Network Architecture" and "AI Network Architecture"'
+#           '1 - Same level, co-referring terms (for example: "self-driving cars" and "autonomous vehicles")'
+#           '2 - Term A is a parent concept of term B for example: "Information Extraction" is a parent concept of "Definition extraction"'
+#           '3 - Term A is a child concept of Term B for example: "image synthesis task" is a child concept of "computer vision\n"'
+#           # 'with only a 4 index confidence score vector where each index represents a hierarchy level,'
+#           # 'answer shortly like the next example: if 0 is the index of the hierarchy level the model has the most confidence in then the output will be: [0.8,0.1,0.05,0.05]\n'
+#           "here are examples of sentences and the model logits representing the confidence with each hierarchy level:\n"
+#           '=== SENTENCES INPUT ===\n'
+#           "We use ResNet - 50 [ reference ] to implement the <m> CNN regressor </m> . </sent> <m> Artificial "
+#           "neural network Artificial Neural Networks </m> ( ANN ) has the characteristics of adaptive , "
+#           "self-organization and self-learning . </sent>\n"
+#           "===POSSIBLE MODEL OUTPUT ===\n"
+#           "[3.0,0.5,−1.0,−2.0]\n"
+#           '=== SENTENCES INPUT ===\n'
+#           "The selected MFCC features were then used to train several <m> ANN Multi-Layer Perceptron ( MLP </m> ) . "
+#           "</sent> As introduced in section [ reference ] , BaseModel follows the Embedding & <m> MLP architecture "
+#           "</m> and is the base of most of subsequently developed deep networks for CTR modeling . </sent>\n"
+#           "===POSSIBLE MODEL OUTPUT ===\n"
+#           "[−0.5,3.0,0.5,−1.0]\n"
+#           '=== SENTENCES INPUT ===\n'
+#           "A CNN consists of two layers : a convolutional layer , followed by a <m> subsampling layer </m> . </sent> "
+#           "subsection : Results of Hierarchical Subsampling We first demonstrate the results of the <m> hierarchical "
+#           "subsampling recurrent network </m> , which is the key to speed up our experiments . </sent>\n"
+#           "===POSSIBLE MODEL OUTPUT ===\n"
+#           "[−1.5,2.7,3.1,−0.8]\n"
+#           '=== SENTENCES INPUT ===\n'
+#           "Although this approach is the traditional architecture choice for <m> text classification CNNs </m> , "
+#           "it introduces a significant number of parameter in the network . </sent> "
+#           "Authorship attribution may be considered as a <m> text categorization problem </m> . </sent>\n"
+#           "===POSSIBLE MODEL OUTPUT ===\n"
+#           "[−2.0,1.5,−0.7,3.2]\n"
+#           "\n\nnow read the following sentences and generate a confidence logit:\n"
+#           '=== SENTENCES INPUT ===\n'
+#           '{sentences}'
+#           "===POSSIBLE MODEL OUTPUT ===\n"
+#
+#           '</s><|assistant|>')
+
 
 prompt = (f'<|prompter|>'
           'You are given 2 texts below seperated by </s></s>, in each text there is a scientific term inside <m> </m> and a context for said term. please read them carefully and answer the follow up question.\n'
@@ -114,12 +155,13 @@ class MistarlLightCrossEncoder(pl.LightningModule):
             lora_alpha=64,  # parameter for scaling
             target_modules=[
                 "q_proj",
-                "up_proj",
+                # "up_proj",
                 "o_proj",
                 "k_proj",
-                "down_proj",
-                "gate_proj",
-                "v_proj"],
+                # "down_proj",
+                # "gate_proj",
+                "v_proj"
+            ],
             modules_to_save=["score"],
             inference_mode=False,
             lora_dropout=0.1,  # dropout probability for layers
@@ -177,7 +219,7 @@ class MistarlLightCrossEncoder(pl.LightningModule):
         loss = self.criterion(y_hat, y)
         y_hat = torch.softmax(y_hat, dim=1)
         self.compute_metrics(y_hat, y)
-        self.log('val_loss', loss, on_step=True, prog_bar=True, rank_zero_only=True)
+        self.log('val_loss', loss, on_epoch=True, on_step=False)
 
         return loss
 
@@ -220,23 +262,23 @@ class MistarlLightCrossEncoder(pl.LightningModule):
         self.val_precision(y_hat, y)
 
     def log_metrics(self):
-        self.log('acc', self.acc.compute(), on_step=False, prog_bar=True, rank_zero_only=True)
+        self.log('acc', self.acc.compute())
         f1_negative, f1_coref, f1_hypernym, f1_hyponym = self.f1.compute()
         recall_negative, recall_coref, recall_hypernym, recall_hyponym = self.recall.compute()
         precision_negative, precision_coref, precision_hypernym, precision_hyponym = self.val_precision.compute()
-        self.log('f1_coref', f1_coref, on_step=False, prog_bar=True, rank_zero_only=True)
-        self.log('recall_coref', recall_coref, on_step=False, prog_bar=True, rank_zero_only=True)
-        self.log('precision_coref', precision_coref, on_step=False, prog_bar=True, rank_zero_only=True)
-        self.log('f1_hypernym', f1_hypernym, on_step=False, prog_bar=True, rank_zero_only=True)
-        self.log('recall_hypernym', recall_hypernym, on_step=False, prog_bar=True, rank_zero_only=True)
-        self.log('precision_hypernym', precision_hypernym, on_step=False, prog_bar=True, rank_zero_only=True)
-        self.log('f1_hyponym', f1_hyponym, on_step=False, prog_bar=True, rank_zero_only=True)
-        self.log('recall_hyponym', recall_hyponym, on_step=False, prog_bar=True, rank_zero_only=True)
-        self.log('precision_hyponym', precision_hyponym, on_step=False, prog_bar=True, rank_zero_only=True)
+        self.log('f1_coref', f1_coref)
+        self.log('recall_coref', recall_coref)
+        self.log('precision_coref', precision_coref)
+        self.log('f1_hypernym', f1_hypernym)
+        self.log('recall_hypernym', recall_hypernym)
+        self.log('precision_hypernym', precision_hypernym)
+        self.log('f1_hyponym', f1_hyponym)
+        self.log('recall_hyponym', recall_hyponym)
+        self.log('precision_hyponym', precision_hyponym)
 
     def configure_optimizers(self):
         # return FusedAdam(self.parameters(), lr=self.config['model']['lr'])
-        return torch.optim.AdamW(self.parameters(), lr=0.0001)
+        return torch.optim.AdamW(self.parameters(), lr=self.config['model']['lr'])
         # return Lion(self.parameters(), lr=1e-4, weight_decay=1e-2)
 
     def get_global_attention(self, input_ids):

@@ -93,6 +93,7 @@ class LlamaMulticlassCrossEncoder(pl.LightningModule):
         input_ids, attention_mask = x
         y_hat = self(input_ids, attention_mask)
         loss = self.criterion(y_hat, y)
+        self.log('loss', loss, on_step=True, prog_bar=True, rank_zero_only=True)
         return loss
 
     def validation_step(self, batch, batch_idx):

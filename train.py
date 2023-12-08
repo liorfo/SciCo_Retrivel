@@ -138,7 +138,7 @@ if __name__ == '__main__':
         trainer = pl.Trainer(devices=config['gpu_num'],
                              default_root_dir=config['model_path'],
                              accelerator='gpu',
-                             # precision='bf16',
+                             precision='bf16',
                              # strategy='deepspeed_stage_3',
                              # plugins=SLURMEnvironment(auto_requeue=False),
                              max_epochs=config['model']['epochs'],

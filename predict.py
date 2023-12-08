@@ -271,6 +271,7 @@ def predict_multiclass(config, trainer):
     else:
         # TODO change to a dynamic loader
         model = MistarlLightCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+        # model = LlamaMulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
     should_load_definition = config["definition_extraction"]
     test = CrossEncoderDataset(config["data"]["test_set"],
                                full_doc=config['full_doc'],
@@ -281,10 +282,13 @@ def predict_multiclass(config, trainer):
                                   batch_size=config["model"]["batch_size"],
                                   shuffle=False,
                                   collate_fn=model.tokenize_batch,
-                                  num_workers=16,
+                                  # num_workers=16,
                                   pin_memory=True)
     results = trainer.predict(model, dataloaders=test_loader)
     results = torch.cat([torch.tensor(x) for x in results])
+
+    results = results.to(torch.float)
+
     # torch.save(results, os.path.join(config['save_path'], 'test_muticlass_results.pt'))
     # results = torch.load(os.path.join(config['save_path'], 'test_muticlass_results.pt'))
     inference = MulticlassInference(test, results, config['agg_threshold'], config['hypernym_threshold'])

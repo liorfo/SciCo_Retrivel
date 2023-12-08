@@ -31,6 +31,8 @@ class CrossEncoderDataset(data.Dataset):
         with jsonlines.open(data_path, 'r') as f:
             self.data = [topic for topic in f]
 
+        # self.data = self.data[:2]
+
         for i, topic in enumerate(self.data):
             self.data[i]['mention_text'] = np.array([' '.join(topic['flatten_tokens'][start:end + 1])
                                                      for start, end, _ in topic['flatten_mentions']])
