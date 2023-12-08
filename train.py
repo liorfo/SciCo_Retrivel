@@ -62,7 +62,7 @@ def get_train_dev_loader(config):
                                    batch_size=config["model"]["batch_size"],
                                    shuffle=True,
                                    collate_fn=model.tokenize_batch,
-                                   num_workers=16,
+                                   num_workers=8,
                                    pin_memory=True)
     logger.info(f'training size: {len(train)}')
 
@@ -74,7 +74,7 @@ def get_train_dev_loader(config):
                                  batch_size=config["model"]["batch_size"],
                                  shuffle=False,
                                  collate_fn=model.tokenize_batch,
-                                 num_workers=16,
+                                 num_workers=8,
                                  pin_memory=True)
     logger.info(f'Validation size: {len(dev)}')
 

@@ -4,7 +4,7 @@ random_seed: 0
 #model
 model:
   lr: 0.00001
-  batch_size: 4
+  batch_size: 3
   epochs: 1
   bert_model: allenai/longformer-base-4096
   optimizer: adamw
