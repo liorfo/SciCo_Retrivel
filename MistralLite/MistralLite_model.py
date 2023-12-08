@@ -164,7 +164,6 @@ class MistarlLightCrossEncoder(pl.LightningModule):
             modules_to_save=["score"],
             inference_mode=False,
             lora_dropout=0.05,  # dropout probability for layers
-            weight_decay=0.0,
             bias="lora_only",
         )
         self.model = get_peft_model(self.model, peft_config)
