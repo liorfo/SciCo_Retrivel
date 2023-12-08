@@ -147,7 +147,6 @@ class MistarlLightCrossEncoder(pl.LightningModule):
                                                                       use_flash_attention_2=True,
                                                                       # device_map="auto",
                                                                       cache_dir='/cs/labs/tomhope/forer11/cache',
-                                                                      output_hidden_states=True,
                                                                       num_labels=num_classes)
         peft_config = LoraConfig(
             task_type=TaskType.SEQ_CLS,
