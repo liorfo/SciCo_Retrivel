@@ -150,8 +150,8 @@ class MistarlLightCrossEncoder(pl.LightningModule):
                                                                       num_labels=num_classes)
         peft_config = LoraConfig(
             task_type=TaskType.SEQ_CLS,
-            r=16,  # dimension of the updated matrices
-            lora_alpha=64,  # parameter for scaling
+            r=8,  # dimension of the updated matrices
+            lora_alpha=16,  # parameter for scaling
             target_modules=[
                 "q_proj",
                 # "up_proj",
@@ -163,8 +163,9 @@ class MistarlLightCrossEncoder(pl.LightningModule):
             ],
             modules_to_save=["score"],
             inference_mode=False,
-            lora_dropout=0.1,  # dropout probability for layers
-            bias="none",
+            lora_dropout=0.05,  # dropout probability for layers
+            weight_decay=0.0,
+            bias="lora_only",
         )
         self.model = get_peft_model(self.model, peft_config)
         self.model.print_trainable_parameters()
