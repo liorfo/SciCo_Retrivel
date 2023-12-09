@@ -1,15 +1,15 @@
-gpu_num: [0, 1, 2]
+gpu_num: [0]
 random_seed: 0
 
 #model
 model:
   lr: 0.00001
-  batch_size: 3
+  batch_size: 2
   epochs: 1
   bert_model: allenai/longformer-base-4096
   optimizer: adamw
   gradient_clip: 1
-  gradient_accumulation: 4
+  gradient_accumulation: 8
 
 
 # data and model path
@@ -31,7 +31,7 @@ from_gpt: False
 
 
 # inference
-checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralLite/checkpoints/multiclass/version_9/checkpoints/epoch=0-step=47400.ckpt
+checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralLite/checkpoints/multiclass/version_20/checkpoints/epoch=0-step=11850.ckpt
 checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
