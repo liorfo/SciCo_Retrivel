@@ -87,6 +87,8 @@ class MulticlassInference:
         cluster_ids = list(clusters.keys())
         permutations = list(product(range(len(cluster_ids)), repeat=2))
         permutations = [(x, y) for x, y in permutations if x != y]
+        if len(permutations) == 0:
+            return []
         first, second = zip(*permutations)
         info_pairs = pairs[:, 1:].tolist()
         avg_scores = torch.stack(
@@ -289,8 +291,10 @@ def predict_multiclass(config, trainer):
     results = torch.cat([torch.tensor(x) for x in results])
 
     results = results.to(torch.float)
-
-    # torch.save(results, os.path.join(config['save_path'], 'test_muticlass_results.pt'))
+    try:
+        torch.save(results, os.path.join(config['save_path'], 'test_muticlass_results.pt'))
+    except:
+        print('failed to save results')
     # results = torch.load(os.path.join(config['save_path'], 'test_muticlass_results.pt'))
     inference = MulticlassInference(test, results, config['agg_threshold'], config['hypernym_threshold'])
     inference.predict_cluster_relations()

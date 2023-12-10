@@ -73,10 +73,10 @@ prompt = (f'<|prompter|>'
           '{sentences}'
           '\n=== END OF SENTENCES ===\n'
           'Please define the hierarchy between Term A and Term B using the following levels: '
-          '0 - No relation, no hierarchical connection for example: "Systems Network Architecture" and "AI Network Architecture"'
+          '0 - No relation, no hierarchical connection (for example: "Systems Network Architecture" and "AI Network Architecture")'
           '1 - Same level, co-referring terms (for example: "self-driving cars" and "autonomous vehicles")'
-          '2 - Term A is a parent concept of term B for example: "Information Extraction" is a parent concept of "Definition extraction"'
-          '3 - Term A is a child concept of Term B for example: "image synthesis task" is a child concept of "computer vision"'
+          '2 - Term A is a parent concept of term B (for example: "Information Extraction" is a parent concept of "Definition extraction")'
+          '3 - Term A is a child concept of Term B (for example: "image synthesis task" is a child concept of "computer vision")'
           'answer shortly with only the number of the correct hierarchy level\n'
           '</s><|assistant|>')
 
