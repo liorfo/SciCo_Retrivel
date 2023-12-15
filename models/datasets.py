@@ -30,7 +30,7 @@ class CrossEncoderDataset(data.Dataset):
         self.definition_extraction_model = definition_extraction_model
 
         with jsonlines.open(data_path, 'r') as f:
-            if not only_hard_10:
+            if only_hard_10:
                 self.data = [topic for topic in f if topic['hard_10']]
             else:
                 self.data = [topic for topic in f]
