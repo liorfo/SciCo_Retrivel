@@ -1,38 +1,65 @@
-import openai
+from openai import OpenAI
 
 MAX_TOKENS = 10
-API_KEY = 'sk-<your key here>'
+API_KEY = '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'
 
-sent = ('This is similar to a standard <m> machine learning problem of learning </m> from finite samples . '
-        '</s></s>Adding <m> MLP in </m> does not seem to help , yielding slightly worse result than without MLP . </s>')
-label = 0
-
+sent = ('After <m> linear transformation </m> on speech subspace , speech recognizer outperforms by 7.57 % '
+        '( 62.14 % to 69.71 % ) under angry stress condition . </s></s>We conduct extensive experiments that '
+        'demonstrate the proposed non-rigid alignment method is ( 1 ) effective , outperforming both the state-of-the-art '
+        '<m> linear transformation-based methods </m> and node representation based methods , and ( 2 ) efficient , '
+        'with a comparable computational time between the proposed multi-network representation learning component '
+        'and its single-network counterpart . </s>')
+label = 3
+client = OpenAI(
+    # This is the default and can be omitted
+    api_key=API_KEY,
+)
 
 def get_gpt_response(sentences):
-    openai.api_key = API_KEY
     model_id = 'gpt-3.5-turbo'
 
     role1 = {'role': 'system', 'content': f'you will receive two texts. in each text there is a scientific term which '
-                                          f'will be inside <m> </m>. the two texts will be separated by </s></s> '
-                                          f'and the second text ends with </s>'}
+                                          f'will be inside <m> </m>. </s> is indicating the end of a tex.'}
     role2 = {'role': 'system',
-             'content': f'Please define the hierarchy between Term A and Term B using the following levels: '
+             'content': f'define the hierarchy between Term A and Term B using the following levels: '
                         f'0 - No relation, no hierarchical connection'
                         f'1 - Same level, co-referring terms'
-                        f'2 - Term A is a hypernym of term B, A is a more general form of term of B'
-                        f'3 - Term A is a hyponym of Term B, A is a more specific form of term B'}
-    role3 = {'role': 'system', 'content': f'Please output only the number of the correct hierarchy level'}
-    # role2 = {'role': 'system',
-    #          'content': f'with the two texts, you will output the following regarding the connection between the '
-    #                     f'first term and the second term: 0 - no relation, 1 - co-reference, 2 - hypernym, 3 - hyponym'}
-    sentences_query = {'role': 'user', 'content': f'{sentences}'}
+                        f'2 - Term A is a parent concept of term B'
+                        f'3 - Term A is a child concept of Term B'}
+    role3 = {'role': 'system', 'content': f'Please answer with only the correct hierarchy level from the following classes: {0, 1, 2, 3}'}
+    role4 = {'role': 'system',
+             'content': f'here are examples of input and output: \n'
+                        f'input: But this study modified the Random Forest Algorithm along the basis of signal '
+                        f'characteristics and comparatively analyzed the accuracies of modified algorithm with '
+                        f'those of SVM and <m> MLP </m> to prove the ability of modified algorithm . </s></s>'
+                        f'Adding <m> MLP in </m> does not seem to help , '
+                        f'This study employs a <m> multilayer perceptions ( MLP ) neural network </m> with genetic '
+                        f'algorithm ( GA ) to predict the New Taiwan dollar (NTD)/U.S. dollar ( USD ) exchange rate . </s>\n'
+                        f'output: 1'
+                        f'\ninput: But this study modified the Random Forest Algorithm along the basis of signal characteristics '
+                        f'and comparatively analyzed the accuracies of modified algorithm with those of SVM and <m> MLP </m> '
+                        f'to prove the ability of modified algorithm. </s></s> A second project has involved the installation '
+                        f'of 3 Cyclops Coastal Imaging Stations in Durban and Cape Town which use an <m> RGB based MLP neural '
+                        f'network </m> to extract waterlines on a short timescale . </s>\n'
+                        f'output: 2'
+                        f'\ninput: However , it is still in infancy and has not been applied widely in <m> educational '
+                        f'chatbot development </m> . </s></s>These features do not yet exist in the <m> chatbot '
+                        f'application system </m> in other studies . </s>\n'
+                        f'output: 3'
+                        f'\ninput: The <m> reproducing kernel particle method </m> is an efficient mesh free technique '
+                        f'for the numerical solution of partial differential equations . </s></s> The <m> kernel-level '
+                        f'implementation framework </m> of VMDFS is illustrated based on Linux 2.4.22 . </s>\n'
+                        f'output: 0'
+             }
+    sentences_query = {'role': 'user', 'content': f'input: {sentences}\n output: '}
 
-    messages = [role1, role2, role3, sentences_query]
+    messages = [role1, role2, role3, role4, sentences_query]
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model=model_id,
         messages=messages,
         max_tokens=MAX_TOKENS,
+        temperature=0.0,
     )
     return response.choices[0].message.content
 

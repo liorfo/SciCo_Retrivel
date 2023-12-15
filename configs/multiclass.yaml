@@ -27,7 +27,7 @@ log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 definition_extraction: False
 should_save_definition: False
 
-from_gpt: False
+from_gpt: True
 
 
 # inference
@@ -36,4 +36,4 @@ checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
 hypernym_threshold: 0.4 # for hypernym scores
-save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralLite/results
+save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/GPT_tests/gpt3.5_no_def

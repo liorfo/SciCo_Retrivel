@@ -5,15 +5,21 @@ import torch.nn as nn
 from transformers import AutoModel, AutoTokenizer
 from typing import Any, Optional
 import numpy as np
+import torchmetrics as tm
 from SciCo_Retrivel.LLaMA_2_7B_32K.LLaMA_model import LlamaMulticlassCrossEncoder
 from SciCo_Retrivel.MistralLite.MistralLite_model import MistarlLightCrossEncoder
 
 from SciCo_Retrivel.gpt_multiclass_model import get_gpt_response
 
 
-def get_gpt_score(input):
-    ind = int(get_gpt_response(input))
-    l = [0.001, 0.001, 0.001, 0.001]
+def get_gpt_score(input, label):
+    try:
+        ind = int(get_gpt_response(input))
+    except:
+        ind = 0
+    # chance = np.random.uniform(0, 1)
+    # ind = np.random.randint(0, 4) if chance < 0.1 else label
+    l = [0, 0, 0, 0]
     l[ind] = 1
     return l
 
@@ -57,13 +63,13 @@ class MulticlassCrossEncoderGPT(pl.LightningModule):
 
     def __init__(self, config, num_classes=4):
         super(MulticlassCrossEncoderGPT, self).__init__()
-        self.acc = pl.metrics.Accuracy(top_k=1)
-        self.f1 = pl.metrics.F1(num_classes=num_classes, average='none')
-        self.recall = pl.metrics.Recall(num_classes=num_classes, average='none')
-        self.val_precision = pl.metrics.Precision(num_classes=num_classes, average='none')
+        self.acc = tm.Accuracy(top_k=1, task="multiclass", num_classes=num_classes)
+        self.f1 = tm.F1Score(task="multiclass", num_classes=num_classes, average='none')
+        self.recall = tm.Recall(task="multiclass", num_classes=num_classes, average='none')
+        self.val_precision = tm.Precision(task="multiclass", num_classes=num_classes, average='none')
 
-    def forward(self, inputs):
-        scores = [get_gpt_score(inputs[i]) for i in range(len(inputs))]
+    def forward(self, inputs, labels):
+        scores = [get_gpt_score(inputs[i], labels[i]) for i in range(len(inputs))]
         scores = torch.tensor(scores, dtype=torch.float)
         return scores
 
@@ -87,7 +93,7 @@ class MulticlassCrossEncoderGPT(pl.LightningModule):
 
     def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: Optional[int] = None):
         x, y = batch
-        y_hat = self(x)
+        y_hat = self(x, y)
         y_hat = torch.softmax(y_hat, dim=1)
         return y_hat
 

@@ -20,7 +20,8 @@ class CrossEncoderDataset(data.Dataset):
                  definition_extraction_model=None,
                  data_label='train',
                  should_save_definition=False,
-                 should_load_definition=False):
+                 should_load_definition=False,
+                 only_hard_10=False):
         super(CrossEncoderDataset, self).__init__()
         if should_load_definition:
             print(f'Loading definitions from {data_label}')
@@ -29,9 +30,13 @@ class CrossEncoderDataset(data.Dataset):
         self.definition_extraction_model = definition_extraction_model
 
         with jsonlines.open(data_path, 'r') as f:
-            self.data = [topic for topic in f]
+            if not only_hard_10:
+                self.data = [topic for topic in f if topic['hard_10']]
+            else:
+                self.data = [topic for topic in f]
 
         # self.data = self.data[:2]
+        # self.data = [self.data[150]]
 
         for i, topic in enumerate(self.data):
             self.data[i]['mention_text'] = np.array([' '.join(topic['flatten_tokens'][start:end + 1])
@@ -78,7 +83,8 @@ class CrossEncoderDataset(data.Dataset):
 
         if self.multiclass == 'multiclass' or self.multiclass == 'hypernym':
             print('counting pairs len...')
-            total_length = sum(len(pair) for pair in self.pairs)
+            total_length = len(self.pairs)
+            print(f'total pairs length: {total_length}')
             self.labels = torch.tensor(self.labels, dtype=torch.long)
         else:
             self.labels = torch.tensor(self.labels, dtype=torch.float)
