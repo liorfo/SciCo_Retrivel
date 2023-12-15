@@ -1,7 +1,7 @@
 from openai import OpenAI
 
 MAX_TOKENS = 10
-API_KEY = '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'
+API_KEY = '<your key>'
 
 sent = ('After <m> linear transformation </m> on speech subspace , speech recognizer outperforms by 7.57 % '
         '( 62.14 % to 69.71 % ) under angry stress condition . </s></s>We conduct extensive experiments that '
