@@ -1,0 +1,1233 @@
+topic id: 861
+
+num of mentions: 64
+linear transformation
+linearizing transformation
+linear transformation function
+linear transformation process
+linear transformation-based methods
+linear mathematical transformation
+linear transformation of model
+linear transformation operations
+linearization transformation approach
+linear transformation
+linear mapping
+non - linear transformation
+linear transform
+linear or non - linear transformation
+linear view transformation
+affine transformation
+affine transformation function
+affine transformation-based approach
+affine transformation theory
+affine image transformation
+affine transformation operation
+affine transformation process
+affine transforming methods
+usingaffine transformation
+affine transformation
+affine transform
+affine image transforms
+affine projections
+affine - transformation - based one
+linear projection
+linear-projection-based algorithms
+linear projection operator
+linear preserving projection
+linear projection analysis
+linear projection operations
+linear projection principle
+linear projection view
+linear projection
+projection equation
+affine mapping
+Affine Mapping Finder
+affine mapping function
+affine level mappings
+affine linear mapping
+affine mapping based schemes
+affine matrix-valued mapping
+affine transformation mapping
+nonaffine mapping
+linear layers
+Linear Layer Operations
+linear neural layer
+linear combination of linear layers
+linear fully connected layer
+Linear layer ( design ) model
+linear layered model
+linear neuron layer
+single layer linear models
+linear model
+linear layer
+bottleneck linear layer
+fully - connected linear layer
+Layer - Wise Linear Model
+linear Weight Layer
+noisy linear layers
+
+topic id: 873
+
+num of mentions: 52
+subsampling
+subsampling receivers
+subsampling iterative technique
+subsampling with offset
+Anti mutual-information subsampling
+subsampling stochastic gradient descent algorithm
+method of subsampling
+subsampling bootstrap procedure
+view angle spectral subsampling
+subsampling local operators
+subsampling
+subsampling layer
+hierarchical subsampling recurrent network
+subsampling network
+p - norm subsampling
+subsampling operations
+successive pooling and subsampling layers
+user - level subsampling
+spatially subsampling
+downsampling
+downsampling schemes
+data downsampling
+MTF-tailored downsampling
+downsampling expansion
+downsampling high-dimensional input features
+N times downsampling
+convolutional and downsampling operations
+downsampling BTF images
+HFUS downsampling
+reorganizing , downsampling
+bicubic downsampling algorithm
+downsampling technology
+oftask-oriented downsampling
+downsampling of scalar volume data
+audio downsampling
+color component downsampling
+downsampling nodes
+output downsampling filters
+downsampling
+downsampling process
+downsampling operation
+downsampling layers
+downsampling method
+downsampling kernels
+downsampling modules
+intermediate downsampling
+convolution and downsampling layers
+delayed downsampling
+downsampling function
+signal downsampling
+adaptive downsampling
+volumetric downsampling block
+
+topic id: 881
+
+num of mentions: 66
+conversational agents
+conversation agent
+conversational virtual agent
+conversational agent interaction
+conversational agent scenario
+conversational software agent
+conversational agent-based system
+conversational computational agent
+conversational computer agent
+conversation model
+chatbot
+chatbot applications
+chatbot framework
+chatbot platforms
+chatbot architectures
+chatbot concept
+chatbot function
+chatbot platform Eva
+educational chatbot development
+enterprise chatbot solution
+chatbot builder platforms
+analysis of high-level chatbot interaction design
+interactive question answering chatbot
+Arabic chatbot technologies
+entrepreneurial chatbot application
+intelligent chatbot tool
+chatbot application system
+chatbot training
+chatbot evaluation methods
+cancer chatbot
+chatbot
+retrieve - based chatbot
+Siri
+Apple Siri
+stochastic nonautonomous SIRI epidemic systems
+SIRI epidemic systems
+nonautonomous stochastic SIRI epidemic system
+Siri virtual assistant
+SIRI format
+Siri-like device
+intelligent personal assistant Siri
+conversational interface Siri
+Apple Siri
+Alexa
+Alexa Skills Kit
+Alexa tool bar
+Alexa Pro plans
+Alexa.com
+Amazon Alexa usage
+Alexa Controls
+voice controlled Alexa Devices
+Alexa usage
+Alexa service
+Amazon Alexa
+virtual assistant
+virtual assistant application
+virtual assistant architecture
+virtual assistant concept
+Virtual Assistant Designer
+virtual assistant paradigm
+virtual assistant 's technology
+Virtual Assistant software
+Virtual Operative Assistant
+virtual personal assistant systems
+AI assistants
+AI-based legal assistant
+
+topic id: 904
+
+num of mentions: 30
+community detection
+community detection problem
+community detecting algorithm
+community detection process
+community detection analysis
+community detection research
+community detection studies
+community detection results
+community detection
+graph partitioning algorithm
+graph partitioning problem
+graph partitioning formulation
+graph partitioning optimization problem
+graph optimal partitioning problem
+graph partitioning problem formulations
+partitioning problem of graphs
+subgraph partitioning algorithm
+graph partitioning formulation
+graph partitioning
+graph partitioning problem
+graph partition problem
+node partitioning
+node partition method
+partitioning nodes
+distributed node partition algorithm
+node partition problem
+node-partitioning analysis
+node partitioning problem
+node partitioning scheme
+Node Partitions
+
+topic id: 923
+
+num of mentions: 30
+binning
+time binning
+unsupervised binning approaches
+Quantile binning
+NILS binning
+grouping and binning values
+parameter range binning
+scalable pre-assembly binning scheme
+weighted binning
+binning technic
+binning small datasets
+Sub-pixel binning
+multidimensional binning
+mass binning
+sinogram binning
+Marton 's binning technique
+distance binning
+gird and data binning technique
+binning and stacking method
+ZSCORE binning
+bucketing
+bucketing technique
+bucketing approach
+crash bucketing
+bucketing strategy
+bucketing algorithm
+restrictive cost bucketing
+companion bucketing scheme
+volume-based bucketing
+bucketing mode
+
+topic id: 928
+
+num of mentions: 39
+word embeddings approach
+word embeddings
+word embedding representations
+word embedding representations
+word-vector embeddings
+word vector embeddings
+word embeddings based approach
+word embeddings
+GloVe
+GloVe
+GloVe model
+GloVe Models
+pre-trained GloVe embedding model
+Word2Vec CBOW and GloVe methods
+GloVe ’
+GloVe [ 1 ] model
+GloVe methods
+Word2Vec -- Skip-gram and GloVe models
+GloVe pretrained model
+GloVe
+GloVe vectors
+GloVe vectors
+300 dimensional GloVe embeddings
+300 dimensional GloVe embeddings
+GloVe Pennington2014GloveGV
+pretrained GloVe embeddings
+300D GloVe 840B vectors
+GloVe glove
+word vectors GloVe
+GloVe word embeddings
+GloVe embeddings
+GloVe and word2vec embeddings
+GloVe-based word embeddings
+Glove model word embedding
+Glove pre-trained embedding layer
+GloVe embeddings
+GLoVe embeddings
+GloVe embeddings
+GloVe word embeddings
+
+topic id: 932
+
+num of mentions: 70
+word embedding models
+word embedding-based approach
+word embedding representations
+word-vector embedding models
+word-based embedding
+word embedding feature
+word embedding vectors
+word representation embedding
+word embeddings
+Word embedding layer
+word embedding matrix
+word embedding vectors
+word - based embeddings
+word embedding function
+word embedding representation
+word - vector embedding
+Distributed word representations
+Distributed Representations of Words
+Distributed word vector representations
+distributed representations of word features
+distributed representation of the words
+distributed representations of words
+distributed vector representation of words
+distributed bag of words
+distributed word embeddings
+distributed ( output ) word embeddings
+distributed word
+distributed word representation
+embedding representation
+embedded vector representations
+embedding-based representation
+embedding space representation
+embedding vector model
+embedding vector space techniques
+embedding layer
+embedding matrices
+embedding matrix
+embedded representation
+vector embedding
+Embedding vector representation
+embedding representations
+Embedding Dimensionality
+embedding vector
+continuous word representations
+continuous representation of words
+continuous vector representation of words
+continuous word vector representations
+continuous vector space word representations
+continuous valued word representation
+continuous word space representations
+continuous word representations
+continuous bag - of - words
+continuous word vector embeddings
+learning word representations
+word-vector learning model
+Learning representations of words
+learning word vectors
+learning of word vectors
+learning vector representations of words
+Learning vector space representation of words
+learning word vector embeddings
+learning word vector representations
+learning word embeddings
+learning word vectors
+learning word representations
+learned representations of words
+Learning Vector Representation of Words
+representation learning of words
+word vector learning layer
+word vector learning
+
+topic id: 960
+
+num of mentions: 70
+neural networks
+neural networks based techniques
+neural network systems approach
+inneural networks
+neural networks in technology
+neural networks networks
+neural network model
+deep learning
+deep learningbased method
+deep learn-
+deep learning algorithm model
+deep level learning
+learning deep model
+Deep Learning Deep Learning
+deep learning based learning systems
+Learning in deep models
+Deep learning models
+deep learning based methods
+deep learning algorithms
+deep learning architecture
+deep learning literature
+deep learning community
+deep learning field
+deep learning research
+CNN
+CNN
+R 2 CNN - 3
+CNN - based super - resolver
+Fast R - CNN part
+CNN regressor
+CNN and post - processing
+CNN Softmax sub - network
+artificial neural networks
+artificial neural networks-based model
+Artificial neural network Artificial Neural Networks
+Artificial Neural Network neural network
+artificial neural networks ( ANN ) networks
+artificial neural networks (Ann).Neural networks
+Theartificial neural networks
+actions of neural networks
+LSTM
+LSTM
+Conv - LSTM layers
+LSTM variant
+LSTM - LM
+GF - LSTM
+Convolutional - LSTM
+forward and backward LSTM layers
+architecture
+architecture
+supervised architecture
+single - hidden - layer RNNLM architecture
+CPU - GPU architecture
+branched architecture
+attentional architecture
+ResNet101 architecture
+Retrace actor - critic architecture
+neural network architecture
+Neural Network based architecture
+neural network architecture design
+neural network model architecture
+neural network design architecture
+neural network architecture
+Deep CNN
+deep CNN architecture
+deep CNN based method
+CNN - like deep neural architectures
+Deep Bi-LSTM
+deep C-LSTM
+deep bidirectional LSTM
+
+topic id: 970
+
+num of mentions: 68
+predictor
+modified Smith predictor controller
+hardware choice predictor
+predictor
+descriptor predictor
+classifier / predictor
+predictor stage
+fully connected predictor
+dynamics predictor
+translation predictor
+convolutional predictor
+feature
+event-driven feature
+speaker feature learning
+motion feature based key frame extracting method
+sole feature extraction network
+feature map rotations
+feature vector representation
+pairwise frame feature similarity computation
+conv feature pyramid
+feature generation methods
+multi - scale feature maps
+feature extraction procedures
+generic feature extractors
+feature level
+independent random variables
+single variable analysis
+independent variable system
+independent variable analysis
+analysis ofindependent variables
+one variable analysis
+one-variable data analysis
+single random variable case
+Independent variable selection
+covariate adjustment method
+covariate case
+covariate dependent models
+covariate matching RDD
+covariate procedures
+covariate grouping
+time-dependent covariate modelling
+compound covariate method
+covariate imputation approaches
+internal covariate shift
+covariate adjustment
+covariate adjustment methods
+internal covariate shift problem
+covariate shift assumption
+attribute
+directed attribute KG
+fuzzy multiple attribute decision making procedure
+attribute reduction by discernable matrix
+— attribute decision model
+attribute of LSA technique
+key attribute selection
+fast plane attribute calculation
+noncircular attribute evaluation
+updating attribute reducts
+fully trainable attribute - based neural network
+attribute ) detection process
+attribute prediction
+attribute - based Att - LSTM
+attribute transfer task
+reverse attribute transfer models
+Adversarial attribute loss
+attribute ration regularization
+attribute classifiers
+attribute imbalance problem
+
+topic id: 972
+
+num of mentions: 70
+MLP
+main MLP
+MLP processing
+multilayer perceptions ( MLP ) neural network
+back-propagation MLP model
+deep spiking multi-layer perceptron ( MLP )
+MLP combiner
+ANN Multi-Layer Perceptron ( MLP
+MLP merging
+RGB based MLP neural network
+MLP
+MLP layer
+1024D MLP
+MLP architecture
+non - linear MLP
+MLP enized
+MLP predictor
+5×5 MLP
+multihead MLP
+neural network classifier
+neural network based classifier
+Neural network classifying method
+theneural network classifier
+neural network ( ANN ) classifier
+neural network-oriented classifier
+classification network
+neural network classifier
+neural network training
+classifier networks
+classification - trained network
+feed - forward neural network classifier
+network classification
+neural - network discriminator
+Fully Connected Neural Network
+fully-connected feed-forward neural network
+fully connected neural network architecture
+fully-connected neural network layer
+completely-fully connected neural network
+fully connected neural network structure
+fully connected layer
+fully - connected neural network
+full neural network
+fully - connected 2 - layer neural networks
+fully - connected convolutional neural network
+Fully connected deep neural networks
+fully - connected feed forward neural networks
+fully - connected neural nets
+neuron
+processing neuron
+neuron network technique
+single FHN neuron model
+biophysically justified neuron models
+TROIKA neuron
+three layer neuron model
+aggregation computation of process neuron
+systematic evaluation and optimization of neuron models
+neuron targeting
+neuron ’s linear filter
+saturating neuron models
+neuron
+one - neuron case
+neuron models
+light - weight neuron operations
+convolutional neuron network
+algorithm classification
+algorithm-based classifier
+classification deep learning models
+classification deep model
+classification or regression deep models
+deep classification architectures
+
+topic id: 978
+
+num of mentions: 70
+user study
+user-based study
+user study analysis
+user research study
+user empirical study
+user-study based methods
+user study of system
+user study of a technique
+user study research
+user subject study
+user study
+Eye tracking
+eye position tracking
+eye-tracking-based system
+eye tracking tool
+eye motion tracking
+eye-tracking scheme
+eye tracking imaging system
+eye tracking part
+Eye state tracking
+eye-tracking capabilities
+survey
+survey studies of word order
+rapid survey of exposed segments
+regular readers survey system
+digital survey platform
+social survey of reaction
+post-assignment survey
+baseline behavioural survey
+Shape survey
+survey and exploration phase
+travel diary survey
+prompt recall survey
+Travel survey definitions
+Web analytics
+Web analytics software
+web data analytics
+Web-based analytics module
+web analytics solutions
+Web-based data analytics
+web analytics perspective
+web analytics processing
+Web analytics program
+human evaluation
+Human-based evaluation
+human evaluation
+human evaluation studies
+human start evaluation
+focus group approach
+focus group sessions
+focus group conduct
+focus group gathering technique
+focus group use
+prototype
+insole prototype
+textile-based prototype
+integrated DVCO prototype
+prototype Global Assessor tool
+prototype sweep-line library
+surgical simulator prototype
+prototype DC excavator
+prototype rational expectations models
+replacement of prototype of electronic warfare
+prototype estimator
+prototype dictionary
+user experiment
+user-based experiments
+User experiment 1
+user experiment-based evaluation
+A/B/C testing
+
+topic id: 979
+
+num of mentions: 70
+feature learning
+feature based learning approaches
+feature learning part
+feature-driven learning tasks
+Feature learning methods
+feature learning algorithm
+feature learning function
+feature learning problem
+feature learning standpoint
+feature representation learning
+learning of features
+learning of the features
+representation learning
+representation learning problem
+representation learning process
+representation learning-based approach
+representation-based learning
+representation learning paradigm
+fromrepresentation learning
+representation learning formulation
+representation learning
+learning representations
+representation learning network
+representation learning problem
+representation learning algorithm
+representation - learning based algorithms
+representation learning phase
+intermediate layer
+intermediate layer
+intermediate bottleneck layer
+intermediate feature layers
+intermediate layer representations
+hidden layer
+hidden layer architecture
+Hidden Data Layer
+Hidden layer 1
+hidden layer
+hidden layer representations
+dimensional hidden layers
+first hidden layer
+hidden fully connected layers
+hidden layer learning process
+hidden layers learning
+linear hidden layer
+one hidden layer
+DNS implementations
+analysis of DNNs
+processing of DNNs
+DNS representation
+firstlevel DNNs
+hardware implementation of DNNs
+layer-wise hidden representations of DNNs
+S-DNNs
+internal representations of DNNs
+deep learning representation
+deep learning-based representation learning methods
+deep models of representation learning
+deep neural network-based representation learning
+deep neural representation learning
+deep learning method
+deep learning architecture
+deep feature learning
+deep feature representation
+deep learning algorithm
+neural information representation
+neural-based representations
+neural-image representations
+neural-level representation
+neural-like representations
+neural network representations
+
+topic id: 992
+
+num of mentions: 46
+end-to-end training
+end-to-end training process
+end – end training
+end-to-end training and models
+end-to-end training phase
+training end-to-end systems
+end-to-end training of models
+end-to-end training problem
+end-to-end training stage
+to-end training
+End - to - end training
+end - to - end training algorithm
+end training solution
+end training
+end - to - end training strategy
+end - end trainable framework
+end - to - end trained model
+end - to - end training case
+fully end - to - end training
+end training stage
+end-to-end deep neural network
+end-to-end deep neural network architecture
+end-to-end deep learning neural network
+end-to-end deep neural network solution
+end to end deep neural network structure
+deep end-to-end neural network models
+end-to-end deep neural network topology
+end - to - end neural network
+end deep neural networks
+end - to - end convolutional neural network
+end - to - end deep network
+end - to - end deep neural network
+end - to - end neural network architecture
+end - to - end neural network - based models
+end - to - end neural network training
+end - to - end recurrent network
+end trainable deep network
+end-to-end neural framework
+end-to-end neural-based framework
+end-to-end neural generation models
+all-neural end-to-end approaches
+emergent end-to-end neural methods
+end neural model
+end-to-end neural network structure
+end-to-end neural sequence models
+end - to - end neural model
+
+topic id: 994
+
+num of mentions: 41
+Time Series Analysis
+time series approaches
+time series data systems
+time varying time-series systems
+time series counterparts
+time series in algorithm
+time-series ones
+time series or models
+time series representing systems
+Time Series ( TIME ) model
+temporal data model
+temporal data analysis
+temporal data representation
+temporal data collection
+temporal analysis of data
+temporal data domain
+temporal data format
+temporal data set
+temporal data time series
+Temporal Model
+temporal representation
+sequential data analysis
+sequential data processing
+sequential processing of data
+sequential data
+sequential data collection procedures
+sequential data acquisition
+sequential analysis of data
+sequential data based tasks
+sequential data collecting and processing
+sequential models
+sequential data analysis
+temporal sequence processing
+Temporal sequence analysis
+temporal sequence detection
+temporal sequence generation
+temporal event sequence
+temporal sequence representation
+temporal sequence models
+temporal sequence analyzing method
+Temporal Sequence Principle
+
+topic id: 1003
+
+num of mentions: 68
+numerical approach
+numerical analysis
+numerical data processing
+numerical data analysis
+numerical data model
+numerical analysis of data
+Numerical Results
+numerical data source model
+numerical approaches
+numerical calculation
+numerical problems
+Categorical Approaches
+categorical representations
+categorical descriptors
+categorical classifiers
+categorical ones
+categorical feature processing
+Categorical feature selection
+categorical feature vector
+categorical information system
+categorical data analysis technique
+categorical analysis
+categorical data method
+categorical data classification
+categorical statistics
+categorical data representation
+categorical data type approach
+categorical data case
+categorical distribution
+categorical sampling
+categorical parameterization
+categorical algorithms
+Categorical Priors
+numerical descriptors
+numerical feature extraction approach
+numerical feature representation
+numerical characteristics
+numerical feature analysis
+numerical feature representation schemes
+numerical feature-type methods
+numerical representation of the salient features
+numerical representations of features
+numerical value descriptors
+numerical representation
+continuous feature representations
+continuous descriptors
+continuous feature ) models
+continuous feature extraction
+continuous feature maps
+continuous feature-based representations
+continuous feature information analysis
+Continuous feature set
+continuous feature vector representation
+Continuous feature representations
+continuous
+continuous representations
+discrete feature based models
+discrete feature extraction
+discrete feature detectors
+discrete feature representation
+discrete feature method
+discrete feature analysis
+discrete feature detection
+discrete features extraction schemes
+discrete representation of the features
+discrete models
+discrete data generation
+discrete representation
+
+topic id: 1009
+
+num of mentions: 68
+machine learning techniques
+machine learning paradigm
+machine-based learning
+machine learning algorithm model
+ofmachine learning
+Machine learning in
+machine learning of models
+machine learning based learning models
+machine learning approach Learning
+machine machine learning algorithms
+machine learning methods
+machine learning community
+machine learning literature
+machine learning problem of learning
+machine learning theory
+machine learning perspective
+machine learning field
+machine learning problem
+machine learning research
+machine learning solution
+Artificial intelligence
+Artificial Intelligence area
+artificial intelligence discipline
+Artificial Intelligence Artificial intelligence
+Artificial Intelligence system approaches
+artificial computer intelligence
+Artificial Intelligence ( IA ) techniques
+Artificial Intelligence world
+artificial intelligence
+AI
+AI/AS
+AI A * algorithm
+AI/OR methods
+AI-DO
+AI-first components
+AI itself
+AI algorithm model
+AI especially
+AI layer
+AI
+AI algorithms
+ML
+MLM
+ML-based approach
+MLML
+ML ( MML ) algorithm
+ML purposes
+ML with modules
+ADDML
+ML-AKA
+ML part
+MLP
+ML
+ICML
+ITML
+MLK
+MLP in
+AI programs
+AI code
+AI programming languages
+AI oriented programs
+AI-application programs
+AI based programs
+AI computer programs
+AI programmes
+AI-related programs
+AI technology components
+AI technology
+
+topic id: 1010
+
+num of mentions: 70
+filter
+filter weight adaptation
+digital ND filter
+Weiner filter methods
+particle filter stages
+estimation of fast bilateral filter
+hat rhe hesr filter
+2D Log-Gabo filter
+l2 - l∞ filter
+iterative match ide al filter bank
+filter
+2D filter
+filter constancy assumption
+Conv ( ) filter
+filter size configuration
+maximum filter
+linear filter weights
+1 × 1 filter
+interpolation filter
+learnable filter
+kernel
+reproducing kernel particle method
+symmetric kernel h
+variance gamma kernel
+online kernel method
+kernel MPEG encoder circuit
+non-parametric kernel models
+Linear-vertex kernel
+kernel procession
+Mallows ' kernel
+kernel
+kernel classifier
+kernel literature
+geodesic flow kernel
+base kernel
+graphlet kernel
+blur kernel setting
+kernel with dilation
+isotropic stationary kernel
+5×5 kernel
+kernel implementation
+kernel-level implementation framework
+kernel based implementation
+kernel-mode implementation
+kernel implementing technology
+kernel language implementation
+kernel - based approach
+kernel size
+kernel on
+kernel version
+kernelisation
+receptive field model
+receptive-field analysis
+receptive field based algorithms
+receptive field concept
+receptive field characterization methods
+receptive field learning
+ReceptiveField
+volumetric scattering kernel
+volumetric heat kernel
+volumetric kernels
+convolutions with kernels
+highest order Volterra kernel realization
+linear and quadratic Volterra kernel
+linear ( first order Volterra kernel
+multidimensional Volterra kernels
+Volum_shape kernel feature
+convolutions with kernels
+volumetric kernels
+voxels wide kernels
+
+topic id: 1014
+
+num of mentions: 64
+word segmentation
+subword segmentation algorithm
+Subword segmentation
+sub-word unit segmentation
+subword segment models
+subword segmentation tools
+subwordbased word segmenter
+word and subword segmentation approach
+word segmentation sub-module
+word/sub-word segmentation
+subword - level models
+word segmentation
+word segmentation procedure
+word segmentation algorithm
+subword - level
+Subword Units
+word segmentation techniques
+subword segmentation
+BPE subword segmentation
+BPE
+BPE
+BPE methods
+Byte-Pair-Encoding ( BPE
+BPE platform
+bargaining-position-estimation ( BPE ) strategy
+BPE strategy
+phone-based BPE system
+BPE technique
+AST BPE
+BPE patterns
+BPE
+BPE - J90k
+BPE segmentation
+word - based and BPE vocabularies
+BPE encoding
+BPE operations
+Byte-Pair Encoding
+Byte Pair Encoding ( BPE )
+byte encoding
+byte encoding
+byte pair encoder ( BPE )
+byte pair encoding compression algorithm
+byte pair encoding compression algorithm
+byte pair encoding scheme
+byte pair encoding scheme
+byte pair encoding ( BPE ) based encoder
+byte-pair encoding segmentation
+byte - pair - encoding
+byte - pair
+byte pair encoding compression algorithm
+source and target byte - pair encoding
+unigram baseline
+unigram based models
+bigram segmentation
+unigram analysis
+unigram analysis
+multigram segmentation
+unigram classifier
+unigram machine learning approach
+unigram ratio
+unigram word segmentation model
+unigram distribution
+unigram feature
+unigram representation
+
+topic id: 1015
+
+num of mentions: 35
+online marketing
+Online-based marketing technology
+online marketing and technology
+online marketing environment
+online marketing operation
+online marketing perspective
+online marketing purpose
+online marketing site
+online product marketing
+Online Target marketing
+digital advertising
+digital advertising domain
+digital advertising context
+digital advertising design
+targeted ads
+targeting of ads
+delivery of ads
+delivery of targeted ads
+delivery of targeted advertising material
+delivering targeted advertisements
+delivery of advertisements or ads
+delivery of personalized ads
+delivery of relevant ads
+Targeting display ads
+personalized ad targeting
+personalized ads
+personalized ads recommendation method
+personalized recommendations of ads
+creation of personalized ADs
+personalized advertisements
+personalized positioning of ads
+personalized TV ads
+personalizing ads
+personalizing video ads
+campaign creation and monitoring
+
+topic id: 1034
+
+num of mentions: 63
+text classification task
+text classification problem
+text classification problem
+text-based classification
+text-based classification
+text classifying
+text data classification
+text data classification
+text image classification
+Text Image Classification
+text classification analysis
+Text Classification of Methods
+TEXT CLASSIFICATION Text classification
+text classification vector
+text classification problems
+text classification
+text classification tasks
+text categorization
+text categorization
+text classification problems
+text classification and sentiment analysis tasks
+text classification CNNs
+text region classification
+text line classification
+text categorization
+text categorization
+text categorization problem
+text categorization research
+text categorization research
+text categorizing
+text categorizing
+text categorization ( classification
+text categorization ( classification
+text classification/categorization system
+text classification/categorization
+text-based categorization
+Text based categorization
+text categorization purposes
+text categorization purposes
+text information categorization
+multi-label text classification
+multi-label text classification
+multi-label text classification problem
+multi-class , multi-label text classification
+multi-class , multi-label text classification
+multi-class , single-label text categorization
+multi-label text categorization problem
+multi-class , multi-label text categorization
+multi-class single-label text classification
+multi-label multi-class text classification
+multi-label text data classification
+multi - label classification literature
+Multi - label Classification
+Multi - Label Classification
+multi - label classification
+multi - class text classification tasks
+multi - label text classifications
+multi - label categorization
+multi - label classification problem
+supervised text classification problem
+page stream segmentation
+page stream segmentation ( PSS
+jointly page stream segmentation
