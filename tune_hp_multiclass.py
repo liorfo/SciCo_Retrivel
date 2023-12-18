@@ -19,8 +19,8 @@ from eval.shortest_path import ShortestPath
 import gc
 
 if __name__ == '__main__':
-    torch.cuda.empty_cache()
-    gc.collect()
+    # torch.cuda.empty_cache()
+    # gc.collect()
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default='configs/multiclass.yaml')
     parser.add_argument('--full_doc', type=str, default='1')
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     results = trainer.predict(model, dataloaders=dev_loader)
     results = torch.cat([torch.tensor(x) for x in results])
-    # torch.save(results, os.path.join(config['save_path'], 'dev_results.pt'))
+    torch.save(results, os.path.join(config['save_path'], 'dev_results.pt'))
     # results = torch.load('checkpoints/multiclass/dev_results.pt')
     coref_threshold = np.arange(0.4, 0.61, 0.1)
     hypernym_threshold = np.arange(0.4, 0.61, 0.1)
