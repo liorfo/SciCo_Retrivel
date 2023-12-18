@@ -282,12 +282,12 @@ def predict_multiclass(config, trainer):
                                is_training=False,
                                should_load_definition=should_load_definition,
                                data_label='test',
-                               only_hard_10=False)
+                               only_hard_10=True)
     test_loader = data.DataLoader(test,
                                   batch_size=config["model"]["batch_size"],
                                   shuffle=False,
                                   collate_fn=model.tokenize_batch,
-                                  num_workers=16,
+                                  # num_workers=16,
                                   pin_memory=True)
     results = trainer.predict(model, dataloaders=test_loader)
     results = torch.cat([torch.tensor(x) for x in results])

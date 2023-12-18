@@ -4,7 +4,7 @@ random_seed: 0
 #model
 model:
   lr: 0.00001
-  batch_size: 4
+  batch_size: 5
   epochs: 1
   bert_model: allenai/longformer-base-4096
   optimizer: adamw
@@ -24,10 +24,10 @@ model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralLite/checkpoints
 log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 
 # definition extraction
-definition_extraction: True
+definition_extraction: False
 should_save_definition: False
 
-from_gpt: False
+from_gpt: True
 
 
 # inference

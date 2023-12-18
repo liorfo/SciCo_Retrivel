@@ -12,15 +12,16 @@ from SciCo_Retrivel.MistralLite.MistralLite_model import MistarlLightCrossEncode
 from SciCo_Retrivel.gpt_multiclass_model import get_gpt_response
 
 
-def get_gpt_score(input, label):
-    try:
-        ind = int(get_gpt_response(input))
-    except:
-        ind = 0
+def get_gpt_score(inputs, labels):
+    # try:
+    preds = [int(prediction) for prediction in get_gpt_response(inputs).split()]
+    # except:
+    #     ind = 0
     # chance = np.random.uniform(0, 1)
     # ind = np.random.randint(0, 4) if chance < 0.1 else label
-    l = [0, 0, 0, 0]
-    l[ind] = 1
+    l = [[0, 0, 0, 0] for _ in range(len(labels))]
+    for i, pred in enumerate(preds):
+        l[i][pred] = 1
     return l
 
 
@@ -69,7 +70,7 @@ class MulticlassCrossEncoderGPT(pl.LightningModule):
         self.val_precision = tm.Precision(task="multiclass", num_classes=num_classes, average='none')
 
     def forward(self, inputs, labels):
-        scores = [get_gpt_score(inputs[i], labels[i]) for i in range(len(inputs))]
+        scores = get_gpt_score(inputs, labels)
         scores = torch.tensor(scores, dtype=torch.float)
         return scores
 
