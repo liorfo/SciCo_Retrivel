@@ -1,0 +1,14 @@
+gpt3.5 no def
+
+hard_10:
+
+Coref metrics
+mentions   Recall: 99.89  Precision: 76.04  F1: 86.35
+muc        Recall: 90.86  Precision: 63.33  F1: 74.64
+bcub       Recall: 85.09  Precision: 25.82  F1: 39.62
+ceafe      Recall: 16.23  Precision: 34.00  F1: 21.98
+lea        Recall: 81.84  Precision: 23.67  F1: 36.72
+CoNLL score: 45.41
+Hierarchy       Recall: 0.00  Precision: 0.00  F1: 0.00
+Hierarchy 50%   Recall: 0.00  Precision: 0.00  F1: 0.00
+Path Ratio      Micro Average: 32.58 Macro: 33.85
