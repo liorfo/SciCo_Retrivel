@@ -66,7 +66,8 @@ if __name__ == '__main__':
     results = trainer.predict(model, dataloaders=dev_loader)
     results = torch.cat([torch.tensor(x) for x in results])
     torch.save(results, os.path.join(config['save_path'], 'dev_results.pt'))
-    # results = torch.load('checkpoints/multiclass/dev_results.pt')
+    # results = torch.load(os.path.join(config['save_path'], 'dev_results.pt'))
+    results = results.to(torch.float)
     coref_threshold = np.arange(0.4, 0.61, 0.1)
     hypernym_threshold = np.arange(0.4, 0.61, 0.1)
 
