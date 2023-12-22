@@ -13,14 +13,16 @@ from SciCo_Retrivel.gpt_multiclass_model import get_gpt_response
 
 
 def get_gpt_score(inputs, labels):
-    # try:
-    preds = [int(prediction) for prediction in get_gpt_response(inputs).split()]
-    # except:
-    #     ind = 0
+    try:
+        preds = [int(prediction) for prediction in get_gpt_response(inputs).split()]
+    except:
+        preds = [0 for _ in range(len(labels))]
     # chance = np.random.uniform(0, 1)
     # ind = np.random.randint(0, 4) if chance < 0.1 else label
-    l = [[0, 0, 0, 0] for _ in range(len(labels))]
+    l = [[0, 0, 0, 0] for _ in range(len(inputs))]
     for i, pred in enumerate(preds):
+        if pred < 0 or pred > 3:
+            pred = 0
         l[i][pred] = 1
     return l
 
