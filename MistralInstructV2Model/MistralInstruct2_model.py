@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel, MistralForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel, MistralForSequenceClassification, BitsAndBytesConfig
 import transformers
 import os
 import pytorch_lightning as pl
