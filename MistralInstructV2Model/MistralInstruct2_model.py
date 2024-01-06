@@ -110,17 +110,17 @@ class MistralInstruct2CrossEncoder(pl.LightningModule):
         model_id = "mistralai/Mistral-7B-Instruct-v0.2"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
 
-        # bnb_config = BitsAndBytesConfig(
-        #     load_in_4bit=True,
-        #     bnb_4bit_use_double_quant=True,
-        #     bnb_4bit_quant_type="nf4",
-        #     bnb_4bit_compute_dtype=torch.bfloat16
-        # )
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16
+        )
 
         self.model = MistralForSequenceClassification.from_pretrained(model_id,
                                                                       torch_dtype=torch.bfloat16,
                                                                       attn_implementation="flash_attention_2",
-                                                                      # quantization_config=bnb_config,
+                                                                      quantization_config=bnb_config,
                                                                       cache_dir='/cs/labs/tomhope/forer11/cache',
                                                                       num_labels=num_classes)
         peft_config = LoraConfig(
