@@ -6,10 +6,10 @@ from transformers import AutoModel, AutoTokenizer
 from typing import Any, Optional
 import numpy as np
 import torchmetrics as tm
-from SciCo_Retrivel.LLaMA_2_7B_32K.LLaMA_model import LlamaMulticlassCrossEncoder
 from SciCo_Retrivel.MistralLite.MistralLite_model import MistarlLightCrossEncoder
+from SciCo_Retrivel.MistralInstructV2Model.MistralInstruct2_model import MistralInstruct2CrossEncoder
 
-from SciCo_Retrivel.gpt_multiclass_model import get_gpt_response
+from SciCo_Retrivel.gpt_tests.gpt_multiclass_model import get_gpt_response
 
 
 def get_gpt_score(inputs, labels):
@@ -48,7 +48,8 @@ class MulticlassModel:
             if is_gpt:
                 return MulticlassCrossEncoderGPT(config, num_classes=4)
             # return LlamaMulticlassCrossEncoder(config, num_classes=4)
-            return MistarlLightCrossEncoder(config, num_classes=4)
+            # return MistarlLightCrossEncoder(config, num_classes=4)
+            return MistralInstruct2CrossEncoder(config, num_classes=4)
         elif name == 'coref':
             return BinaryCorefCrossEncoder(config)
         elif name == 'hypernym':

@@ -21,13 +21,15 @@ class CrossEncoderDataset(data.Dataset):
                  data_label='train',
                  should_save_definition=False,
                  should_load_definition=False,
-                 only_hard_10=False):
+                 only_hard_10=False,
+                 should_save_term_context=False):
         super(CrossEncoderDataset, self).__init__()
         if should_load_definition:
             print(f'Loading definitions from {data_label}')
         self.should_load_definition = should_load_definition
         self.should_extract_definition = should_save_definition
         self.definition_extraction_model = definition_extraction_model
+        self.should_save_term_context = should_save_term_context
 
         with jsonlines.open(data_path, 'r') as f:
             if only_hard_10:
@@ -54,6 +56,8 @@ class CrossEncoderDataset(data.Dataset):
         self.first, self.second = [], []
         self.info_pairs = []
         self.definitions = {}
+        self.term_context_dict = {}
+
         if should_load_definition:
             with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/def_data/{data_label}_definitions', "rb") as fp:
                 self.definitions = pickle.load(fp)
@@ -159,6 +163,11 @@ class CrossEncoderDataset(data.Dataset):
             definitions[mention_sentence] = definition
         return definitions
 
+    def create_mentions_context_dict(self, mentions):
+        for mention_sentence in mentions:
+            mention = re.search(r'<m>(.*?)</m>', mention_sentence).group(1).strip()
+            self.term_context_dict[(mention, mention_sentence)] = mention_sentence
+
     def get_topic_pairs(self, topic):
         '''
         :param topic:
@@ -176,12 +185,16 @@ class CrossEncoderDataset(data.Dataset):
         if self.should_extract_definition:
             print('getting definitions...')
             definitions = self.get_mentions_definitions(mentions)
+        if self.should_save_term_context:
+            self.create_mentions_context_dict(mentions)
 
         first, second = zip(*[(x, y) for x, y in product(range(len(mentions)), repeat=2) if x != y])
         first, second = np.array(first), np.array(second)
 
-        seps = np.array([self.sep] * len(first))
-        inputs = np.char.add(np.char.add(mentions[first], seps), mentions[second]).tolist()
+        # TODO: check if this is needed
+        # seps = np.array([self.sep] * len(first))
+        # inputs = np.char.add(np.char.add(mentions[first], seps), mentions[second]).tolist()
+        inputs = np.char.add(mentions[first], mentions[second]).tolist()
 
         labels = []
         for x, y in zip(first, second):

@@ -1,10 +1,10 @@
-gpu_num: [0]
+gpu_num: [0, 1]
 random_seed: 0
 
 #model
 model:
   lr: 0.00001
-  batch_size: 5
+  batch_size: 1
   epochs: 1
   bert_model: allenai/longformer-base-4096
   optimizer: adamw
@@ -20,14 +20,14 @@ data:
 
 
 full_doc: true
-model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralLite/checkpoints
+model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralInstrucv2Results/checkpoints
 log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 
 # definition extraction
 definition_extraction: False
 should_save_definition: False
 
-from_gpt: True
+from_gpt: False
 
 
 # inference
