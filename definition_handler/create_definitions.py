@@ -88,7 +88,7 @@ def instruction_format(sys_message: str, query: str):
     return f'<s> [INST] {sys_message} [/INST]\nUser: {query}\nAssistant: definition: '
 
 
-def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_dict, retriever):
+def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_dict, retriever, data_type):
     print('creating terms_definitions with mistral_instruct...')
     model_id = "mistralai/Mistral-7B-Instruct-v0.2"
     tokenizer = AutoTokenizer.from_pretrained(model_id)
@@ -122,10 +122,10 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
     generate_text.tokenizer.pad_token_id = model.config.eos_token_id
     terms_definitions = {}
     print('Processing Prompts...')
-    if os.path.exists('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_prompt_dict.json'):
+    if os.path.exists(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle'):
         print('Loading terms_prompt_dict from pickle file...')
-        with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_prompt_dict.json', 'rb') as file:
-            terms_prompt_dict = json.load(file)
+        with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle', 'rb') as file:
+            terms_prompt_dict = pickle.load(file)
     else:
         print('Creating terms_prompt_dict...')
         terms_prompt_dict = {}
@@ -136,8 +136,8 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
             prompt = instruction_format(sys_msg, query)
             terms_prompt_dict[term[1]] = prompt
 
-        with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_prompt_dict.json', 'w') as file:
-            json.dump(terms_prompt_dict, file)
+        with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle', 'wb') as file:
+            pickle.dump(terms_prompt_dict, file)
 
     data = pd.DataFrame(list(terms_prompt_dict.items()), columns=['Term', 'Prompt'])
     dataset = Dataset.from_pandas(data)
@@ -151,14 +151,14 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
         if i % 100 == 0:
             print(f'Processed {i} terms')
             with open(
-                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_definitions_until_{i}.pickle',
+                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_until_{i}.pickle',
                     'wb') as file:
                 # Dump the dictionary into the file using pickle.dump()
                 pickle.dump(terms_definitions, file)
 
     print('Saving terms_definitions to pickle file...')
     with open(
-            '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_definitions_final.pickle',
+            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_final.pickle',
             'wb') as file:
         # Dump the dictionary into the file using pickle.dump()
         pickle.dump(terms_definitions, file)
@@ -243,7 +243,7 @@ if __name__ == '__main__':
 
     vector_store = embed_and_store()
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})
-    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.dev_dataset.term_context_dict, retriever)
+    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.dev_dataset.term_context_dict, retriever, 'dev')
 
     # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle', 'rb') as file:
     #     yay = pickle.load(file)
