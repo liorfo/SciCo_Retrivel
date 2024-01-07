@@ -1,4 +1,5 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel, MistralForSequenceClassification, BitsAndBytesConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel, MistralForSequenceClassification, \
+    BitsAndBytesConfig
 import transformers
 import os
 import pytorch_lightning as pl
@@ -25,6 +26,7 @@ from lion_pytorch import Lion
 os.environ['RDMAV_FORK_SAFE'] = '1'
 from peft import get_peft_model, LoraConfig, TaskType
 import re
+import pickle
 
 sys_msg = """You are a helpful AI assistant, you are an agent capable of reading and understanding scientific text with terms and defining the hierarchy between them. this is the process you should follow:
 
@@ -55,19 +57,50 @@ Assistant: hierarchy: 0
 Let's get started. The users query is as follows:
 """
 
-def get_terms_and_texts(sentences):
-    matches = re.findall(pattern, sentences)
+def_sys_msg = """You are a helpful AI assistant, you are an agent capable of reading and understanding scientific text with terms and defining the hierarchy between them. this is the process you should follow:
 
-    if len(matches) >= 2:
-        term1, term2 = matches[:2]
-        term1_text = re.search(f'<m>\s*{re.escape(term1)}\s*</m>(.*?)<m>\s*{re.escape(term2)}\s*</m>', sentences,
-                               re.DOTALL).group(1).strip()
-        term2_text = re.search(f'<m>\s*{re.escape(term2)}\s*</m>(.*?)$', sentences, re.DOTALL).group(1).strip()
-        return term1, term2, term1_text, term2_text
+- Read texts: for each of the two mentions there will be a text with some context for the term. the context is from a scientific paper the term was used in.
+
+- Understand the hierarchy: after reading the texts, looks at those possible hierarchies between the two terms:
+0 - No relation, no hierarchical connection (for example the terms: "Systems Network Architecture" and "AI Network Architecture" has no connection)
+1 - Same level, co-referring terms (for example the terms: "self-driving cars" and "autonomous vehicles" are co-referring terms)
+2 - Term A is a parent concept of term B (for example the term "Information Extraction" is a parent concept of the term "Definition extraction")
+3 - Term A is a child concept of Term B (for example the term "image synthesis task" is a child concept of the term "computer vision")
+
+- Classify the hierarchy: after understanding the hierarchy, classify the hierarchy between the two terms using the following classes: {0, 1, 2, 3} like in the examples that follows:
+
+here is an EXAMPLE for a query and a required generated definition:
+
+### START EXAMPLE ###
+
+User: Classify the hierarchy between the terms term A and term B after reading the following texts and definitions for each term:
+
+term1 <m>term A</m> definition: example definition for term A
+
+term 1 <m>term A</m> text: example text where term A is mentioned
+
+term 2 <m>term B</m> definition: example definition for term B
+
+term 2 <m>term B</m> text: example text where term B is mentioned
+
+Assistant: hierarchy: 0
+
+### END EXAMPLE ###
+
+Let's get started. The users query is as follows:
+"""
 
 
 def instructions_query_format(term_a, term_b, term_a_text, term_b_text):
     query = f'Classify the hierarchy between the terms <m>{term_a}</m> and <m>{term_b}</m> after reading the following texts for each term:\n\nterm 1 <m>{term_a}</m> text: {term_a_text}\n\nterm 2 <m>{term_b}</m> text: {term_b_text}\n\n'
+    return query
+
+
+def instructions_for_def_query_format(term_a, term_b, term_a_text, term_b_text, term_a_def, term_b_def):
+    query = (
+        f'Classify the hierarchy between the terms <m>{term_a}</m> and <m>{term_b}</m> after reading the following '
+        f'texts and definitions for each term:\n\nterm 1 <m>{term_a}</m> definition: {term_a_def}\n\nterm 1 <m>{term_a}</m> text: '
+        f'{term_a_text}\n\nterm 2 <m>{term_b}</m> definition: {term_b_def}\n\nterm 2 <m>{term_b}</m> text: {term_b_text}\n\n')
     return query
 
 
@@ -76,13 +109,18 @@ def instruction_format(sys_message, query):
     return f'<s> [INST] {sys_message} [/INST]\nUser: {query}\nAssistant: hierarchy: '
 
 
-def get_prompt(sentences):
+def get_prompt(sentences, should_use_new_definitions, combined_def_dict):
     term1_text, term2_text, _ = sentences.split('</s>')
     term1 = re.search(r'<m>(.*?)</m>', term1_text).group(1)
     term2 = re.search(r'<m>(.*?)</m>', term2_text).group(1)
-    query = instructions_query_format(term1.strip(), term2.strip(), term1_text, term2_text)
-    prompt = instruction_format(sys_msg, query)
-    return prompt
+    if should_use_new_definitions:
+        query = instructions_for_def_query_format(term1.strip(), term2.strip(), term1_text, term2_text, 'term1_def', 'term2_def')
+        prompt = instruction_format(def_sys_msg, query)
+        return prompt
+    else:
+        query = instructions_query_format(term1.strip(), term2.strip(), term1_text, term2_text)
+        prompt = instruction_format(sys_msg, query)
+        return prompt
 
 
 # model_id = "mistralai/Mistral-7B-Instruct-v0.2"
@@ -96,7 +134,7 @@ def get_prompt(sentences):
 # print(model)
 
 class MistralInstruct2CrossEncoder(pl.LightningModule):
-    '''
+    '''dev
     multiclass classification with labels:
     0 not related
     1 coref
@@ -107,20 +145,36 @@ class MistralInstruct2CrossEncoder(pl.LightningModule):
     def __init__(self, config, num_classes=4):
         super(MistralInstruct2CrossEncoder, self).__init__()
         self.config = config
+
+        self.combined_def_dict = {}
+
+        if config['should_use_new_definition']:
+            with open(
+                    '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle',
+                    'rb') as f:
+                train_def = pickle.load(f)
+            with open(
+                    '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_definitions_final.pickle',
+                    'rb') as f:
+                dev_def = pickle.load(f)
+            self.combined_def_dict = {**dev_def, **train_def}
+            # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/test_terms_definitions_final.pickle', 'rb') as f:
+            #     self.test_def = pickle.load(f)
+
         model_id = "mistralai/Mistral-7B-Instruct-v0.2"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
 
-        bnb_config = BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_use_double_quant=True,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.bfloat16
-        )
+        # bnb_config = BitsAndBytesConfig(
+        #     load_in_4bit=True,
+        #     bnb_4bit_use_double_quant=True,
+        #     bnb_4bit_quant_type="nf4",
+        #     bnb_4bit_compute_dtype=torch.bfloat16
+        # )
 
         self.model = MistralForSequenceClassification.from_pretrained(model_id,
                                                                       torch_dtype=torch.bfloat16,
                                                                       attn_implementation="flash_attention_2",
-                                                                      quantization_config=bnb_config,
+                                                                      # quantization_config=bnb_config,
                                                                       cache_dir='/cs/labs/tomhope/forer11/cache',
                                                                       num_labels=num_classes)
         peft_config = LoraConfig(
@@ -245,7 +299,7 @@ class MistralInstruct2CrossEncoder(pl.LightningModule):
 
     def tokenize_batch(self, batch):
         inputs, labels = zip(*batch)
-        inputs = tuple(get_prompt(s) for s in inputs)
+        inputs = tuple(get_prompt(s, self.config['should_use_new_definition'], self.combined_def_dict) for s in inputs)
         tokens = self.tokenizer(list(inputs), padding=True)
         input_ids = torch.tensor(tokens['input_ids'])
         attention_mask = torch.tensor(tokens['attention_mask'])
