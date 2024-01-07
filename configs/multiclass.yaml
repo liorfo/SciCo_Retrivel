@@ -18,6 +18,7 @@ data:
   dev_set: data/dev.jsonl
   test_set: data/test.jsonl
 
+cache_folder: /cs/labs/tomhope/forer11/cache
 
 full_doc: true
 model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralInstrucv2Results/checkpoints

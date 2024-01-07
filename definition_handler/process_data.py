@@ -21,7 +21,7 @@ class DatasetsHandler:
                                                should_save_term_context=True)
 
 
-with open('../configs/multiclass.yaml', 'r') as f:
-    config = yaml.safe_load(f)
-data = DatasetsHandler(config)
-print(data.test_dataset[0])
+# with open('../configs/multiclass.yaml', 'r') as f:
+#     config = yaml.safe_load(f)
+# data = DatasetsHandler(config)
+# print(data.test_dataset[0])
