@@ -122,9 +122,9 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
     generate_text.tokenizer.pad_token_id = model.config.eos_token_id
     terms_definitions = {}
     print('Processing Prompts...')
-    if os.path.exists('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/terms_prompt_dict.json'):
+    if os.path.exists('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_prompt_dict.json'):
         print('Loading terms_prompt_dict from pickle file...')
-        with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/terms_prompt_dict.json', 'rb') as file:
+        with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_prompt_dict.json', 'rb') as file:
             terms_prompt_dict = json.load(file)
     else:
         print('Creating terms_prompt_dict...')
@@ -136,7 +136,7 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
             prompt = instruction_format(sys_msg, query)
             terms_prompt_dict[term[1]] = prompt
 
-        with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/terms_prompt_dict.json', 'w') as file:
+        with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_prompt_dict.json', 'w') as file:
             json.dump(terms_prompt_dict, file)
 
     data = pd.DataFrame(list(terms_prompt_dict.items()), columns=['Term', 'Prompt'])
@@ -151,14 +151,14 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
         if i % 100 == 0:
             print(f'Processed {i} terms')
             with open(
-                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/terms_definitions_until_{i}.pickle',
+                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_definitions_until_{i}.pickle',
                     'wb') as file:
                 # Dump the dictionary into the file using pickle.dump()
                 pickle.dump(terms_definitions, file)
 
     print('Saving terms_definitions to pickle file...')
     with open(
-            '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/terms_definitions_final.pickle',
+            '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_definitions_final.pickle',
             'wb') as file:
         # Dump the dictionary into the file using pickle.dump()
         pickle.dump(terms_definitions, file)
@@ -241,10 +241,12 @@ if __name__ == '__main__':
 
     datasets = DatasetsHandler(config)
 
-    # vector_store = embed_and_store()
-    # retriever = vector_store.as_retriever(search_kwargs={"k": 3})
-    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict, [])
-    print('Creating Embeddings...')
+    vector_store = embed_and_store()
+    retriever = vector_store.as_retriever(search_kwargs={"k": 3})
+    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.dev_dataset.term_context_dict, retriever)
+
+    # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle', 'rb') as file:
+    #     yay = pickle.load(file)
 
     # terms_def = get_def_dict_from_json('/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/data/definitions_v2/v2_terms_definitions.json')
     # print(len(terms_def))
