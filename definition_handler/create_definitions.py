@@ -20,6 +20,8 @@ import pandas as pd
 from transformers.pipelines.pt_utils import KeyDataset
 from datasets import Dataset
 import json
+import re
+import os
 
 from process_data import DatasetsHandler
 
@@ -70,12 +72,14 @@ def save_terms_definitions_from_pickle_to_json(pickle_paths, processed_abstracts
 
 
 def get_abstracts_texts_formatted(text, retriever):
-    docs = retriever.invoke(text, k=3)
-    formatted_query = ''.join([f'ABSTRACT:\n {text}\n' for text in abstracts])
+    docs = retriever.invoke(text)
+    abstracts = [text] + [doc.page_content for doc in docs]
+    formatted_query = ''.join([f'ABSTRACT:\n{text}\n' for text in abstracts])
     return formatted_query
 
-def instructions_query_format(abstracts_string, term):
-    query = f'Please generate a short and concise definition for the term {term} after reading the following abstracts:\n {abstracts_string}'
+def instructions_query_format(abstracts_string, text):
+    term = text[0]
+    query = f'Please generate a short and concise definition for the term {term} after reading the following abstracts:\n{abstracts_string}'
     return query
 
 
@@ -118,13 +122,22 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
     generate_text.tokenizer.pad_token_id = model.config.eos_token_id
     terms_definitions = {}
     print('Processing Prompts...')
-    terms_prompt_dict = {}
-    for term in tqdm(terms_dict):
-        text = terms_dict[term]
-        abstracts = get_abstracts_texts_formatted(text, retriever)
-        query = instructions_query_format(abstracts, term)
-        prompt = instruction_format(sys_msg, query)
-        terms_prompt_dict[term] = prompt
+    if os.path.exists('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/terms_prompt_dict.json'):
+        print('Loading terms_prompt_dict from pickle file...')
+        with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/terms_prompt_dict.json', 'rb') as file:
+            terms_prompt_dict = json.load(file)
+    else:
+        print('Creating terms_prompt_dict...')
+        terms_prompt_dict = {}
+        for term in tqdm(terms_dict):
+            text = terms_dict[term]
+            abstracts = get_abstracts_texts_formatted(text, retriever)
+            query = instructions_query_format(abstracts, term)
+            prompt = instruction_format(sys_msg, query)
+            terms_prompt_dict[term[1]] = prompt
+
+        with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/terms_prompt_dict.json', 'w') as file:
+            json.dump(terms_prompt_dict, file)
 
     data = pd.DataFrame(list(terms_prompt_dict.items()), columns=['Term', 'Prompt'])
     dataset = Dataset.from_pandas(data)
@@ -138,14 +151,14 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
         if i % 100 == 0:
             print(f'Processed {i} terms')
             with open(
-                    f'/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/data/cascader-files/new_v2_terms_definitions_until_{i}.pickle',
+                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/terms_definitions_until_{i}.pickle',
                     'wb') as file:
                 # Dump the dictionary into the file using pickle.dump()
                 pickle.dump(terms_definitions, file)
 
     print('Saving terms_definitions to pickle file...')
     with open(
-            '/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/data/cascader-files/new_v2_terms_definitions_final.pickle',
+            '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/terms_definitions_final.pickle',
             'wb') as file:
         # Dump the dictionary into the file using pickle.dump()
         pickle.dump(terms_definitions, file)
@@ -228,9 +241,9 @@ if __name__ == '__main__':
 
     datasets = DatasetsHandler(config)
 
-    vector_store = embed_and_store()
-    retriever = vector_store.as_retriever(search_kwargs={"k": 3})
-    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict, retriever)
+    # vector_store = embed_and_store()
+    # retriever = vector_store.as_retriever(search_kwargs={"k": 3})
+    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict, [])
     print('Creating Embeddings...')
 
     # terms_def = get_def_dict_from_json('/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/data/definitions_v2/v2_terms_definitions.json')
