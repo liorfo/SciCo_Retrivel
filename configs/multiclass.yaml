@@ -1,10 +1,10 @@
-gpu_num: [0, 1]
+gpu_num: [0]
 random_seed: 0
 
 #model
 model:
   lr: 0.00001
-  batch_size: 1
+  batch_size: 4
   epochs: 1
   bert_model: allenai/longformer-base-4096
   optimizer: adamw
@@ -28,13 +28,15 @@ log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 definition_extraction: False
 should_save_definition: False
 
+should_use_new_definition: False
+
 from_gpt: False
 
 
 # inference
-checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralLite/checkpoints/multiclass/version_2/checkpoints/epoch=0-step=11850.ckpt
+checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralInstrucv2Results/checkpoints/no_def/version_1/checkpoints/epoch=0-step=11850.ckpt
 checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
 hypernym_threshold: 0.4 # for hypernym scores
-save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/GPT_tests/gpt3.5_no_def
+save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralInstrucv2Results/checkpoints/no_def

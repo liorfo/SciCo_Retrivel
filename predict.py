@@ -23,6 +23,7 @@ from utils.model_utils import get_greedy_relations, get_hypernym_relations
 from LLaMA_2_7B_32K.LLaMA_model import LlamaMulticlassCrossEncoder
 from models.baselines import EntailmentModel
 from MistralLite.MistralLite_model import MistarlLightCrossEncoder
+from MistralInstructV2Model.MistralInstruct2_model import MistralInstruct2CrossEncoder
 
 
 class MulticlassInference:
@@ -272,7 +273,8 @@ def predict_multiclass(config, trainer):
         model = MulticlassModel.get_model(model_name, config, True)
     else:
         # TODO change to a dynamic loader
-        model = MistarlLightCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+        model = MistralInstruct2CrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+        # model = MistarlLightCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
         model.eval()
         # model = LlamaMulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
     should_load_definition = config["definition_extraction"]
@@ -282,7 +284,7 @@ def predict_multiclass(config, trainer):
                                is_training=False,
                                should_load_definition=should_load_definition,
                                data_label='test',
-                               only_hard_10=True)
+                               only_hard_10=False)
     test_loader = data.DataLoader(test,
                                   batch_size=config["model"]["batch_size"],
                                   shuffle=False,
