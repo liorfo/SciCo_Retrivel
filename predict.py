@@ -289,7 +289,7 @@ def predict_multiclass(config, trainer):
                                   batch_size=config["model"]["batch_size"],
                                   shuffle=False,
                                   collate_fn=model.tokenize_batch,
-                                  # num_workers=16,
+                                  num_workers=16,
                                   pin_memory=True)
     results = trainer.predict(model, dataloaders=test_loader)
     results = torch.cat([torch.tensor(x) for x in results])
