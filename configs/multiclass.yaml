@@ -1,15 +1,15 @@
-gpu_num: [0]
+gpu_num: [0,1,2]
 random_seed: 0
 
 #model
 model:
   lr: 0.00001
-  batch_size: 4
+  batch_size: 1
   epochs: 1
   bert_model: allenai/longformer-base-4096
   optimizer: adamw
   gradient_clip: 1
-  gradient_accumulation: 8
+  gradient_accumulation: 16
 
 
 # data and model path
@@ -28,7 +28,7 @@ log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 definition_extraction: False
 should_save_definition: False
 
-should_use_new_definition: False
+should_use_new_definition: True
 
 from_gpt: False
 

@@ -114,7 +114,10 @@ def get_prompt(sentences, should_use_new_definitions, combined_def_dict):
     term1 = re.search(r'<m>(.*?)</m>', term1_text).group(1)
     term2 = re.search(r'<m>(.*?)</m>', term2_text).group(1)
     if should_use_new_definitions:
-        query = instructions_for_def_query_format(term1.strip(), term2.strip(), term1_text, term2_text, 'term1_def', 'term2_def')
+        term1_def = combined_def_dict[term1_text + '</s>']
+        term2_def = combined_def_dict[term2_text + '</s>']
+        query = instructions_for_def_query_format(term1.strip(), term2.strip(), term1_text, term2_text, term1_def,
+                                                  term2_def)
         prompt = instruction_format(def_sys_msg, query)
         return prompt
     else:
@@ -157,9 +160,10 @@ class MistralInstruct2CrossEncoder(pl.LightningModule):
                     '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_definitions_final.pickle',
                     'rb') as f:
                 dev_def = pickle.load(f)
-            self.combined_def_dict = {**dev_def, **train_def}
-            # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/test_terms_definitions_final.pickle', 'rb') as f:
-            #     self.test_def = pickle.load(f)
+            with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/test_terms_definitions_final.pickle', 'rb') as f:
+                test_def = pickle.load(f)
+
+            self.combined_def_dict = {**dev_def, **test_def, **train_def}
 
         model_id = "mistralai/Mistral-7B-Instruct-v0.2"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
