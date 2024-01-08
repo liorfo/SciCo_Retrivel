@@ -114,6 +114,7 @@ def get_prompt(sentences, should_use_new_definitions, combined_def_dict):
     term1 = re.search(r'<m>(.*?)</m>', term1_text).group(1)
     term2 = re.search(r'<m>(.*?)</m>', term2_text).group(1)
     if should_use_new_definitions:
+        print('using new definitions')
         term1_def = combined_def_dict[term1_text + '</s>']
         term2_def = combined_def_dict[term2_text + '</s>']
         query = instructions_for_def_query_format(term1.strip(), term2.strip(), term1_text, term2_text, term1_def,
