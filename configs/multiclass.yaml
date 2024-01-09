@@ -30,7 +30,7 @@ should_save_definition: False
 
 should_use_new_definition: True
 
-from_gpt: True
+from_gpt: False
 
 
 # inference
