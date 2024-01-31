@@ -99,6 +99,7 @@ class CrossEncoderDataset(data.Dataset):
             info_pairs = np.concatenate((np.array([i] * pair_nums).reshape(pair_nums, 1),
                                          info_pairs), axis=1)
             self.info_pairs.extend(info_pairs)
+        self.natural_labels = [str(x) for x in self.labels]
         if should_save_definition:
             print(f'saving all definitions for {data_label}...')
             with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/def_data/{data_label}_definitions', 'wb') as f:
@@ -214,7 +215,8 @@ class CrossEncoderDataset(data.Dataset):
         # seps = np.array([self.sep] * len(first))
         # inputs = np.char.add(np.char.add(mentions[first], seps), mentions[second]).tolist()
         inputs = np.char.add(mentions[first], mentions[second]).tolist()
-        inputs = [get_prompt(s, False, self.combined_def_dict) for s in inputs]
+        # TODO: for prompts
+        # inputs = [get_prompt(s, True, self.combined_def_dict) for s in inputs]
 
         labels = []
         for x, y in zip(first, second):

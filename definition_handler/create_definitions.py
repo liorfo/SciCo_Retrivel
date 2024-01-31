@@ -89,7 +89,7 @@ def instruction_format(sys_message: str, query: str):
 
 
 def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_dict, retriever, data_type):
-    print('creating terms_definitions with mistral_instruct...')
+    print(f'creating terms_definitions with mistral_instruct for {data_type}...')
     model_id = "mistralai/Mistral-7B-Instruct-v0.2"
     tokenizer = AutoTokenizer.from_pretrained(model_id)
 
@@ -243,7 +243,7 @@ if __name__ == '__main__':
 
     vector_store = embed_and_store()
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})
-    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.dev_dataset.term_context_dict, retriever, 'dev')
+    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.test_dataset.term_context_dict, retriever, 'test')
 
     # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle', 'rb') as file:
     #     yay = pickle.load(file)
