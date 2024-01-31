@@ -4,7 +4,7 @@ import random
 
 NUM_OF_TRAIN_DATA = 50
 
-OPENAI_API_KEY = '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'
+OPENAI_API_KEY = ''
 
 data = DatasetsHandler(test=True, train=False, dev=False)
 
