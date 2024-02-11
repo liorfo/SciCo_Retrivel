@@ -88,7 +88,7 @@ gpt4T = dspy.OpenAI(model='gpt-4-0125-preview', max_tokens=350, model_type='chat
 
 accuracy = dspy.evaluate.metrics.answer_exact_match
 
-evaluator = Evaluate(devset=test, num_threads=1, display_progress=True, display_table=0, return_outputs=True)
+evaluator = Evaluate(devset=test[:20], num_threads=4, display_progress=True, display_table=0, return_outputs=True)
 
 
 dspy.settings.configure(lm=turbo)
