@@ -7,7 +7,7 @@ import pickle
 
 NUM_OF_TRAIN_DATA = 200
 NUM_OF_DEV_DATA = 60
-OPENAI_API_KEY = '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'
+OPENAI_API_KEY = ''
 
 
 class SCICO(dspy.Signature):
