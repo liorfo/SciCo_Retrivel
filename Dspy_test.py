@@ -7,7 +7,7 @@ import pickle
 
 NUM_OF_TRAIN_DATA = 200
 NUM_OF_DEV_DATA = 60
-OPENAI_API_KEY = ''
+OPENAI_API_KEY = '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'
 
 
 class SCICO(dspy.Signature):
@@ -170,25 +170,41 @@ bootstrap_optimizer = BootstrapFewShotWithRandomSearch(
 # print(turbo.inspect_history(n=1))
 
 
-cot_fewshot = CoTScicoWithDefModule()
-cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/BayesianSignatureOptimizer_program_with_def_2.json")
-
-chunk_size = 1000
-with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/Results/score_results_until_2000.pkl", "rb") as file:
-    loaded_data = pickle.load(file)
-all_answers = loaded_data['answers']
-for i in range(7000, len(test), chunk_size):
-    chunk = test[i:i+chunk_size]
-    print("Evaluating until: ", i + chunk_size)
-    evaluator = Evaluate(devset=chunk, num_threads=4, display_progress=True, display_table=0, return_outputs=True)
-    score, results = evaluator(cot_fewshot, metric=accuracy)
-    anwsers = [result[1].answer for result in results]
-    all_answers.extend(anwsers)
-    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/Results/score_results_until_{i + chunk_size}.pkl', "wb") as file:
-        pickle.dump({'score': score, 'answers': all_answers}, file)
-    print("Processed chunk", i//chunk_size)
-
-# with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/Results/score_results_until_7000.pkl", "rb") as file:
-#     loaded_data = pickle.load(file)
+# cot_fewshot = CoTScicoWithDefModule()
+# cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/BayesianSignatureOptimizer_program_with_def_2.json")
 #
-# print(loaded_data['score'])
+# chunk_size = 1000
+# with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/sorted_results/score_results_until_29000.pkl", "rb") as file:
+#     loaded_data = pickle.load(file)
+# all_answers = loaded_data['answers']
+# # all_answers = []
+# for i in range(29000, len(test), chunk_size):
+#     chunk = test[i:i+chunk_size]
+#     print("Evaluating until: ", i + chunk_size)
+#     is_success = False
+#     while not is_success:
+#         try:
+#             evaluator = Evaluate(devset=chunk, num_threads=4, display_progress=True, display_table=0, return_outputs=True)
+#             score, results = evaluator(cot_fewshot, metric=accuracy)
+#             anwsers = [prediction.answer for _, example, prediction, temp_score in results]
+#             all_answers.extend(anwsers)
+#             is_success = True
+#         except Exception as e:
+#             print(e)
+#             print("Retrying...")
+#     # evaluator = Evaluate(devset=chunk, num_threads=4, display_progress=True, display_table=0, return_outputs=True)
+#     # score, results = evaluator(cot_fewshot, metric=accuracy)
+#     with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/sorted_results/score_results_until_{i + chunk_size}.pkl', "wb") as file:
+#         pickle.dump({'score': score, 'answers': all_answers}, file)
+#     print("Processed chunk", i//chunk_size)
+
+sentences_to_score_dict = {}
+
+with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/sorted_results/score_results_until_70000.pkl", "rb") as file:
+    loaded_data3 = pickle.load(file)
+
+for i, sentences in enumerate(data.test_dataset.pairs):
+    sentences_to_score_dict[sentences] = loaded_data3['answers'][i]
+
+with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/sorted_results/sentences_to_score_dict.pkl", "wb") as file:
+    pickle.dump(sentences_to_score_dict, file)

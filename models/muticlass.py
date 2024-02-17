@@ -6,15 +6,13 @@ from transformers import AutoModel, AutoTokenizer
 from typing import Any, Optional
 import numpy as np
 import torchmetrics as tm
+import pickle
 from SciCo_Retrivel.MistralLite.MistralLite_model import MistarlLightCrossEncoder
 from SciCo_Retrivel.MistralInstructV2Model.MistralInstruct2_model import MistralInstruct2CrossEncoder
 
-from SciCo_Retrivel.gpt_tests.gpt_multiclass_model import get_gpt_response
-
-
-def get_gpt_score(inputs, labels):
+def get_gpt_score(inputs, labels, sentences_to_score):
     try:
-        preds = [int(prediction) for prediction in get_gpt_response(inputs).split()]
+        preds = [int(sentences_to_score[sent]) for sent in inputs]
     except:
         preds = [0 for _ in range(len(labels))]
     # chance = np.random.uniform(0, 1)
@@ -72,8 +70,11 @@ class MulticlassCrossEncoderGPT(pl.LightningModule):
         self.recall = tm.Recall(task="multiclass", num_classes=num_classes, average='none')
         self.val_precision = tm.Precision(task="multiclass", num_classes=num_classes, average='none')
 
+        with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/sorted_results/sentences_to_score_dict.pkl","rb") as file:
+            self.sentences_to_score = pickle.load(file)
+
     def forward(self, inputs, labels):
-        scores = get_gpt_score(inputs, labels)
+        scores = get_gpt_score(inputs, labels, self.sentences_to_score)
         scores = torch.tensor(scores, dtype=torch.float)
         return scores
 
