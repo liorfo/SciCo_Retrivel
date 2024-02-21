@@ -1,0 +1,15 @@
+gpt3.5 dspy
+
+hard_10:
+
+Coref metrics
+mentions   Recall: 85.68  Precision: 87.03  F1: 86.35
+muc        Recall: 75.47  Precision: 66.39  F1: 70.64
+bcub       Recall: 63.36  Precision: 28.82  F1: 39.62
+ceafe      Recall: 16.23  Precision: 34.00  F1: 21.98
+lea        Recall: 46.19  Precision: 30.47  F1: 36.72
+CoNLL score: 45.41
+Hierarchy       Recall: 44.22  Precision: 26.69  F1: 33.28
+Hierarchy 50%   Recall: 3.85  Precision: 26.48  F1: 6.73
+Path Ratio      Micro Average: 32.58 Macro: 33.85
+
