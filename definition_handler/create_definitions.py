@@ -1,16 +1,9 @@
 import yaml
 import argparse
-from langchain.docstore.document import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.embeddings import HuggingFaceInstructEmbeddings
-from langchain_core.embeddings import Embeddings
-from langchain_core.pydantic_v1 import BaseModel, Extra, Field
-from typing import Any, Dict, List, Optional
-# __import__('pysqlite3')
-# import sys
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-from langchain.vectorstores import FAISS, Chroma
+from langchain_community.docstore.document import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import transformers
 import torch
@@ -26,7 +19,6 @@ import os
 from process_data import DatasetsHandler
 
 instructor_persist_directory = '/cs/labs/tomhope/forer11/unarxive_instructor_embeddings/'
-
 
 sys_msg = """You are a helpful AI assistant, you are an agent capable of reading and understanding scientific papers and defining scientific terms. here are the steps you should take to give a proper definition:
 
@@ -57,6 +49,7 @@ Assistant: definition: ML is a subset of AI where computers learn patterns from 
 Let's get started. The users query is as follows:
 """
 
+
 def combine_pickle_files_to_terms_definitions(pickle_paths, processed_abstracts):
     terms_definitions = {}
     for path in pickle_paths:
@@ -67,7 +60,9 @@ def combine_pickle_files_to_terms_definitions(pickle_paths, processed_abstracts)
 
 def save_terms_definitions_from_pickle_to_json(pickle_paths, processed_abstracts):
     terms_definitions = combine_pickle_files_to_terms_definitions(pickle_paths, processed_abstracts)
-    with open('/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/data/definitions_v2/v2_terms_definitions.json', 'w') as file:
+    with open(
+            '/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/data/definitions_v2/v2_terms_definitions.json',
+            'w') as file:
         json.dump(terms_definitions, file)
 
 
@@ -76,6 +71,7 @@ def get_abstracts_texts_formatted(text, retriever):
     abstracts = [text] + [doc.page_content for doc in docs]
     formatted_query = ''.join([f'ABSTRACT:\n{text}\n' for text in abstracts])
     return formatted_query
+
 
 def instructions_query_format(abstracts_string, text):
     term = text[0]
@@ -122,9 +118,12 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
     generate_text.tokenizer.pad_token_id = model.config.eos_token_id
     terms_definitions = {}
     print('Processing Prompts...')
-    if os.path.exists(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle'):
+    if os.path.exists(
+            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle'):
         print('Loading terms_prompt_dict from pickle file...')
-        with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle', 'rb') as file:
+        with open(
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle',
+                'rb') as file:
             terms_prompt_dict = pickle.load(file)
     else:
         print('Creating terms_prompt_dict...')
@@ -136,7 +135,9 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
             prompt = instruction_format(sys_msg, query)
             terms_prompt_dict[term[1]] = prompt
 
-        with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle', 'wb') as file:
+        with open(
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle',
+                'wb') as file:
             pickle.dump(terms_prompt_dict, file)
 
     data = pd.DataFrame(list(terms_prompt_dict.items()), columns=['Term', 'Prompt'])
@@ -164,19 +165,21 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
         pickle.dump(terms_definitions, file)
 
 
-def embed_and_store(texts=[], load=True, embedding_type='instructor', persist_directory=instructor_persist_directory):
-    print('Created Embeddings')
-
-    embedding = get_embeddings_model('hkunlp/instructor-xl', embedding_type, persist_directory)
+def embed_and_store(texts=[], load=True, persist_directory=instructor_persist_directory, hf_model_name=''):
+    embedding = get_embeddings_model(hf_model_name, persist_directory)
 
     if load:
         print(f'loading Vector embeddings from {persist_directory}...')
-        vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
+        # vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
     else:
+        # vectordb = Chroma.from_documents(documents=texts,
+        #                                  embedding=embedding,
+        #                                  persist_directory=persist_directory)
         print(f'creating Vector embeddings to {persist_directory}...')
-        vectordb = Chroma.from_documents(documents=texts,
-                                         embedding=embedding,
-                                         persist_directory=persist_directory)
+        vectordb = FAISS.from_documents(documents=texts,
+                                        embedding=embedding)
+        vectordb.save_local(persist_directory)
+        print('Created Embeddings')
     return vectordb
 
 
@@ -193,41 +196,43 @@ def process_abstracts_to_docs(abstracts):
     return texts
 
 
-def get_embeddings_model(embeddings_model_name, embedding_type, cache_folder):
-    if embedding_type == 'instructor':
-        return get_instructor_embeddings(embeddings_model_name, cache_folder)
-    elif embedding_type == 'HF':
-        return get_huggingface_embeddings(embeddings_model_name, cache_folder)
-    elif embedding_type == 'AnglE':
-        return get_angle_embeddings(embeddings_model_name, cache_folder)
-    else:
-        return None
-
-
-def get_instructor_embeddings(embeddings_model_name, cache_folder):
-    # the default instruction is: 'Represent the document for retrieval:'
-    return HuggingFaceInstructEmbeddings(model_name=embeddings_model_name,
-                                         model_kwargs={"device": "cuda"},
-                                         cache_folder=cache_folder)
+def get_embeddings_model(embeddings_model_name, cache_folder):
+    return get_huggingface_embeddings(embeddings_model_name, cache_folder)
 
 
 def get_huggingface_embeddings(embeddings_model_name, cache_folder):
     # TODO enable multi GPU support
     return HuggingFaceEmbeddings(model_name=embeddings_model_name,
-                                 cache_folder=cache_folder,
-                                 model_kwargs={"device": "cuda"},
-                                 multi_process=True)
+                                         cache_folder=cache_folder,
+                                         model_kwargs={"device": "cuda"},
+                                         multi_process=True,
+                                         show_progress=True)
 
 
-def get_angle_embeddings(embeddings_model_name, cache_folder):
-    return UniversalAnglEEmbeddings(model_name=embeddings_model_name,
-                                    cache_folder=cache_folder,
-                                    model_kwargs={"device": "cuda"})
+def process_arxive_to_docs():
+    formatted_docs = []
+    for root, dirs, files in os.walk("/cs/labs/tomhope/forer11/arXiv_data_handler/"):
+        for file in files:
+            print(f'reading {root + file}...')
+            with open(root + file, "rb") as fp:
+                docs = pickle.load(fp)
+                for doc in docs:
+                    page_content = doc['abstract']['text']
+                    # Create an instance of Document with content and metadata
+                    metadata = {key: value for key, value in doc['metadata'].items() if
+                                isinstance(value, (str, int, float)) and key != 'abstract'}
+                    formatted_docs.append(Document(page_content=page_content, metadata=metadata))
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len,
+                                                   is_separator_regex=False)
+    texts = text_splitter.split_documents(formatted_docs)
+    return texts
+
 
 def get_def_dict_from_json(json_path):
     with open(json_path, 'r') as file:
         terms_definitions = json.load(file)
     return terms_definitions
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -241,9 +246,13 @@ if __name__ == '__main__':
 
     datasets = DatasetsHandler(config)
 
-    vector_store = embed_and_store()
+    print('creating docs...')
+    texts = process_arxive_to_docs()
+
+    vector_store = embed_and_store(texts, False, '/cs/labs/tomhope/forer11/unarxive_feiss_mxbai_embed_large_v1_embeddings',
+                                   'mixedbread-ai/mxbai-embed-large-v1')
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})
-    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.test_dataset.term_context_dict, retriever, 'test')
+    # create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.test_dataset.term_context_dict, retriever, 'test')
 
     # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle', 'rb') as file:
     #     yay = pickle.load(file)

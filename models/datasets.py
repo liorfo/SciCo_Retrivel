@@ -8,7 +8,7 @@ from itertools import product, combinations
 from torch.utils import data
 import pickle
 
-from SciCo_Retrivel.definition_extractor import get_definition
+# from SciCo_Retrivel.definition_extractor import get_definition
 from SciCo_Retrivel.MistralInstructV2Model.MistralInstruct2_model import get_prompt
 
 
@@ -202,9 +202,9 @@ class CrossEncoderDataset(data.Dataset):
             else:
                 mentions.append(self.get_sentence_context(mention, topic['tokens'], topic['sentences']))
         mentions = np.array(mentions)
-        if self.should_extract_definition:
-            print('getting definitions...')
-            definitions = self.get_mentions_definitions(mentions)
+        # if self.should_extract_definition:
+        #     print('getting definitions...')
+        #     definitions = self.get_mentions_definitions(mentions)
         if self.should_save_term_context:
             self.create_mentions_context_dict(mentions)
 
