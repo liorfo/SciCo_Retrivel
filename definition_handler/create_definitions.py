@@ -222,7 +222,7 @@ def process_arxive_to_docs():
                     metadata = {key: value for key, value in doc['metadata'].items() if
                                 isinstance(value, (str, int, float)) and key != 'abstract'}
                     formatted_docs.append(Document(page_content=page_content, metadata=metadata))
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len,
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=100, length_function=len,
                                                    is_separator_regex=False)
     texts = text_splitter.split_documents(formatted_docs)
     return texts
