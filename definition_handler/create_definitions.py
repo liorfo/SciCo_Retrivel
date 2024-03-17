@@ -3,7 +3,7 @@ import argparse
 from langchain_community.docstore.document import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS, Chroma
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import transformers
 import torch
@@ -86,43 +86,43 @@ def instruction_format(sys_message: str, query: str):
 
 def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_dict, retriever, data_type):
     print(f'creating terms_definitions with mistral_instruct for {data_type}...')
-    model_id = "mistralai/Mistral-7B-Instruct-v0.2"
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
-
-    bnb_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_use_double_quant=True,
-        bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.bfloat16
-    )
-
-    model = AutoModelForCausalLM.from_pretrained(model_id,
-                                                 cache_dir='/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/cache',
-                                                 attn_implementation="flash_attention_2",
-                                                 trust_remote_code=True,
-                                                 device_map="auto",
-                                                 # quantization_config=bnb_config,
-                                                 torch_dtype=torch.float16)
-    generate_text = transformers.pipeline(
-        model=model, tokenizer=tokenizer,
-        device_map="auto",
-        return_full_text=False,  # if using langchain set True
-        task="text-generation",
-        # we pass model parameters here too
-        # temperature=0.1,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
-        # top_p=0.15,  # select from top tokens whose probability add up to 15%
-        # top_k=0,  # select from top 0 tokens (because zero, relies on top_p)
-        max_new_tokens=200,  # max number of tokens to generate in the output
-        repetition_penalty=1.1  # if output begins repeating increase
-    )
-    generate_text.tokenizer.pad_token_id = model.config.eos_token_id
+    # model_id = "mistralai/Mistral-7B-Instruct-v0.2"
+    # tokenizer = AutoTokenizer.from_pretrained(model_id)
+    #
+    # bnb_config = BitsAndBytesConfig(
+    #     load_in_4bit=True,
+    #     bnb_4bit_use_double_quant=True,
+    #     bnb_4bit_quant_type="nf4",
+    #     bnb_4bit_compute_dtype=torch.bfloat16
+    # )
+    #
+    # model = AutoModelForCausalLM.from_pretrained(model_id,
+    #                                              cache_dir='/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/cache',
+    #                                              attn_implementation="flash_attention_2",
+    #                                              trust_remote_code=True,
+    #                                              device_map="auto",
+    #                                              # quantization_config=bnb_config,
+    #                                              torch_dtype=torch.float16)
+    # generate_text = transformers.pipeline(
+    #     model=model, tokenizer=tokenizer,
+    #     device_map="auto",
+    #     return_full_text=False,  # if using langchain set True
+    #     task="text-generation",
+    #     # we pass model parameters here too
+    #     # temperature=0.1,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
+    #     # top_p=0.15,  # select from top tokens whose probability add up to 15%
+    #     # top_k=0,  # select from top 0 tokens (because zero, relies on top_p)
+    #     max_new_tokens=200,  # max number of tokens to generate in the output
+    #     repetition_penalty=1.1  # if output begins repeating increase
+    # )
+    # generate_text.tokenizer.pad_token_id = model.config.eos_token_id
     terms_definitions = {}
     print('Processing Prompts...')
     if os.path.exists(
-            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle'):
+            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/faiss/{data_type}_terms_prompt_dict.pickle'):
         print('Loading terms_prompt_dict from pickle file...')
         with open(
-                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle',
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/faiss/{data_type}_terms_prompt_dict.pickle',
                 'rb') as file:
             terms_prompt_dict = pickle.load(file)
     else:
@@ -131,54 +131,55 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
         for term in tqdm(terms_dict):
             text = terms_dict[term]
             abstracts = get_abstracts_texts_formatted(text, retriever)
-            query = instructions_query_format(abstracts, term)
-            prompt = instruction_format(sys_msg, query)
-            terms_prompt_dict[term[1]] = prompt
+            # query = instructions_query_format(abstracts, term)
+            # prompt = instruction_format(sys_msg, query)
+            terms_prompt_dict[term[1]] = abstracts
 
         with open(
-                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_prompt_dict.pickle',
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/faiss/{data_type}_terms_prompt_dict.pickle',
                 'wb') as file:
             pickle.dump(terms_prompt_dict, file)
 
     data = pd.DataFrame(list(terms_prompt_dict.items()), columns=['Term', 'Prompt'])
     dataset = Dataset.from_pandas(data)
 
-    print('Generating definitions...')
-
-    for i, out in tqdm(enumerate(generate_text(KeyDataset(dataset, 'Prompt'), batch_size=4)), total=len(dataset)):
-        term = dataset[i]['Term']
-        definition = out[0]['generated_text'].strip()
-        terms_definitions[term] = definition
-        if i % 100 == 0:
-            print(f'Processed {i} terms')
-            with open(
-                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_until_{i}.pickle',
-                    'wb') as file:
-                # Dump the dictionary into the file using pickle.dump()
-                pickle.dump(terms_definitions, file)
-
-    print('Saving terms_definitions to pickle file...')
-    with open(
-            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_final.pickle',
-            'wb') as file:
-        # Dump the dictionary into the file using pickle.dump()
-        pickle.dump(terms_definitions, file)
+    # print('Generating definitions...')
+    #
+    # for i, out in tqdm(enumerate(generate_text(KeyDataset(dataset, 'Prompt'), batch_size=4)), total=len(dataset)):
+    #     term = dataset[i]['Term']
+    #     definition = out[0]['generated_text'].strip()
+    #     terms_definitions[term] = definition
+    #     if i % 100 == 0:
+    #         print(f'Processed {i} terms')
+    #         with open(
+    #                 f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_until_{i}.pickle',
+    #                 'wb') as file:
+    #             # Dump the dictionary into the file using pickle.dump()
+    #             pickle.dump(terms_definitions, file)
+    #
+    # print('Saving terms_definitions to pickle file...')
+    # with open(
+    #         f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_final.pickle',
+    #         'wb') as file:
+    #     # Dump the dictionary into the file using pickle.dump()
+    #     pickle.dump(terms_definitions, file)
 
 
 def embed_and_store(texts=[], load=True, persist_directory=instructor_persist_directory, hf_model_name=''):
-    embedding = get_embeddings_model(hf_model_name, persist_directory)
+    embedding = get_embeddings_model(hf_model_name, '/cs/labs/tomhope/forer11/cache/')
 
     if load:
         print(f'loading Vector embeddings from {persist_directory}...')
-        # vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
+        # vectordb = FAISS.load_local(folder_path=persist_directory, embeddings=embedding, index_name="unarxive_index")
+        vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
     else:
-        # vectordb = Chroma.from_documents(documents=texts,
-        #                                  embedding=embedding,
-        #                                  persist_directory=persist_directory)
         print(f'creating Vector embeddings to {persist_directory}...')
-        vectordb = FAISS.from_documents(documents=texts,
-                                        embedding=embedding)
-        vectordb.save_local(persist_directory)
+        vectordb = Chroma.from_documents(documents=texts,
+                                         embedding=embedding,
+                                         persist_directory=persist_directory)
+        # vectordb = FAISS.from_documents(documents=texts,
+        #                                 embedding=embedding)
+        # vectordb.save_local(folder_path=persist_directory, index_name='unarxive_index')
         print('Created Embeddings')
     return vectordb
 
@@ -203,10 +204,10 @@ def get_embeddings_model(embeddings_model_name, cache_folder):
 def get_huggingface_embeddings(embeddings_model_name, cache_folder):
     # TODO enable multi GPU support
     return HuggingFaceEmbeddings(model_name=embeddings_model_name,
-                                         cache_folder=cache_folder,
-                                         model_kwargs={"device": "cuda"},
-                                         multi_process=True,
-                                         show_progress=True)
+                                 cache_folder=cache_folder,
+                                 model_kwargs={"device": "cuda"},
+                                 multi_process=True,
+                                 show_progress=True)
 
 
 def process_arxive_to_docs():
@@ -249,10 +250,11 @@ if __name__ == '__main__':
     print('creating docs...')
     texts = process_arxive_to_docs()
 
-    vector_store = embed_and_store(texts, False, '/cs/labs/tomhope/forer11/unarxive_feiss_mxbai_embed_large_v1_embeddings',
+    vector_store = embed_and_store(texts, False, '/cs/labs/tomhope/forer11/unarxive_chroma_gpu_mxbai',
                                    'mixedbread-ai/mxbai-embed-large-v1')
-    retriever = vector_store.as_retriever(search_kwargs={"k": 3})
-    # create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.test_dataset.term_context_dict, retriever, 'test')
+    retriever = vector_store.as_retriever(search_kwargs={"k": 4})
+    # create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict,
+    #                                                                      retriever, 'train')
 
     # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle', 'rb') as file:
     #     yay = pickle.load(file)
