@@ -241,6 +241,8 @@ def process_arxive_to_docs():
                     # create a document for the abstract
                     formatted_docs.append(Document(page_content=page_content, metadata=metadata))
                     for body_text in doc['body_text']:
+                        if len(body_text['text']) < 100:
+                            continue
                         page_content = body_text['text']
                         # Create a Document for the body text
                         formatted_docs.append(Document(page_content=page_content, metadata=metadata))
