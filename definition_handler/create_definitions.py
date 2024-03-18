@@ -1,9 +1,9 @@
 import yaml
 import argparse
-from langchain_community.docstore.document import Document
+from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import FAISS, Chroma
+from langchain_community.embeddings import HuggingFaceEmbeddings, HuggingFaceInstructEmbeddings
+from langchain_community.vectorstores import Chroma
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import transformers
 import torch
@@ -19,6 +19,13 @@ import os
 from process_data import DatasetsHandler
 
 instructor_persist_directory = '/cs/labs/tomhope/forer11/unarxive_instructor_embeddings/'
+instructor_name = 'hkunlp/instructor-xl'
+
+mxbai_persist_directory = '/cs/labs/tomhope/forer11/unarxive_chroma_gpu_mxbai'
+mxbai_name = 'mixedbread-ai/mxbai-embed-large-v1'
+
+sfr_persist_directory = '/cs/labs/tomhope/forer11/unarxive_sfr_chroma'
+sfr_name = 'Salesforce/SFR-Embedding-Mistral'
 
 sys_msg = """You are a helpful AI assistant, you are an agent capable of reading and understanding scientific papers and defining scientific terms. here are the steps you should take to give a proper definition:
 
@@ -165,8 +172,8 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
     #     pickle.dump(terms_definitions, file)
 
 
-def embed_and_store(texts=[], load=True, persist_directory=instructor_persist_directory, hf_model_name=''):
-    embedding = get_embeddings_model(hf_model_name, '/cs/labs/tomhope/forer11/cache/')
+def embed_and_store(texts=[], load=True, persist_directory=instructor_persist_directory, hf_model_name='', is_instructor=False):
+    embedding = get_embeddings_model(hf_model_name, '/cs/labs/tomhope/forer11/cache/', is_instructor)
 
     if load:
         print(f'loading Vector embeddings from {persist_directory}...')
@@ -174,9 +181,7 @@ def embed_and_store(texts=[], load=True, persist_directory=instructor_persist_di
         vectordb = Chroma(persist_directory=persist_directory, embedding_function=embedding)
     else:
         print(f'creating Vector embeddings to {persist_directory}...')
-        vectordb = Chroma.from_documents(documents=texts,
-                                         embedding=embedding,
-                                         persist_directory=persist_directory)
+        vectordb = Chroma.from_documents(texts, embedding, persist_directory=persist_directory)
         # vectordb = FAISS.from_documents(documents=texts,
         #                                 embedding=embedding)
         # vectordb.save_local(folder_path=persist_directory, index_name='unarxive_index')
@@ -197,17 +202,26 @@ def process_abstracts_to_docs(abstracts):
     return texts
 
 
-def get_embeddings_model(embeddings_model_name, cache_folder):
-    return get_huggingface_embeddings(embeddings_model_name, cache_folder)
+def get_embeddings_model(embeddings_model_name, cache_folder, is_instructor):
+    if is_instructor:
+        return get_instructor_embeddings(embeddings_model_name, cache_folder)
+    else:
+        return get_huggingface_embeddings(embeddings_model_name, cache_folder)
 
 
 def get_huggingface_embeddings(embeddings_model_name, cache_folder):
-    # TODO enable multi GPU support
     return HuggingFaceEmbeddings(model_name=embeddings_model_name,
                                  cache_folder=cache_folder,
                                  model_kwargs={"device": "cuda"},
-                                 multi_process=True,
+                                 # multi_process=True,
                                  show_progress=True)
+
+def get_instructor_embeddings(embeddings_model_name, cache_folder):
+    # the default instruction is: 'Represent the document for retrieval:'
+    return HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl",
+                                         model_kwargs={"device": "cuda"},
+                                         cache_folder=cache_folder)
+
 
 
 def process_arxive_to_docs():
@@ -223,11 +237,10 @@ def process_arxive_to_docs():
                     metadata = {key: value for key, value in doc['metadata'].items() if
                                 isinstance(value, (str, int, float)) and key != 'abstract'}
                     formatted_docs.append(Document(page_content=page_content, metadata=metadata))
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=100, length_function=len,
-                                                   is_separator_regex=False)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+
     texts = text_splitter.split_documents(formatted_docs)
     return texts
-
 
 def get_def_dict_from_json(json_path):
     with open(json_path, 'r') as file:
@@ -250,8 +263,7 @@ if __name__ == '__main__':
     print('creating docs...')
     texts = process_arxive_to_docs()
 
-    vector_store = embed_and_store(texts, False, '/cs/labs/tomhope/forer11/unarxive_chroma_gpu_mxbai',
-                                   'mixedbread-ai/mxbai-embed-large-v1')
+    vector_store = embed_and_store(texts, False, mxbai_persist_directory, mxbai_name)
     retriever = vector_store.as_retriever(search_kwargs={"k": 4})
     # create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict,
     #                                                                      retriever, 'train')
@@ -261,5 +273,5 @@ if __name__ == '__main__':
 
     # terms_def = get_def_dict_from_json('/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/data/definitions_v2/v2_terms_definitions.json')
     # print(len(terms_def))
-
+    x = vector_store.similarity_search_with_score('what is an mlp')
     print('Done!')
