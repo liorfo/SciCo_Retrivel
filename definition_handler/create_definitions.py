@@ -22,6 +22,7 @@ instructor_persist_directory = '/cs/labs/tomhope/forer11/unarxive_instructor_emb
 instructor_name = 'hkunlp/instructor-xl'
 
 mxbai_persist_directory = '/cs/labs/tomhope/forer11/unarxive_chroma_gpu_mxbai'
+mxbai_full_persist_directory = '/cs/labs/tomhope/forer11/unarxive_full_mxbai_chroma'
 mxbai_name = 'mixedbread-ai/mxbai-embed-large-v1'
 
 sfr_persist_directory = '/cs/labs/tomhope/forer11/unarxive_sfr_chroma'
@@ -236,10 +237,17 @@ def process_arxive_to_docs():
                     # Create an instance of Document with content and metadata
                     metadata = {key: value for key, value in doc['metadata'].items() if
                                 isinstance(value, (str, int, float)) and key != 'abstract'}
+                    metadata['discipline'] = doc['discipline']
+                    # create a document for the abstract
                     formatted_docs.append(Document(page_content=page_content, metadata=metadata))
+                    for body_text in doc['body_text']:
+                        page_content = body_text['text']
+                        # Create a Document for the body text
+                        formatted_docs.append(Document(page_content=page_content, metadata=metadata))
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 
     texts = text_splitter.split_documents(formatted_docs)
+    print(f'Processed {len(texts)} documents')
     return texts
 
 def get_def_dict_from_json(json_path):
@@ -263,7 +271,7 @@ if __name__ == '__main__':
     print('creating docs...')
     texts = process_arxive_to_docs()
 
-    vector_store = embed_and_store(texts, False, mxbai_persist_directory, mxbai_name)
+    vector_store = embed_and_store(texts, False, mxbai_full_persist_directory, mxbai_name)
     retriever = vector_store.as_retriever(search_kwargs={"k": 4})
     # create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict,
     #                                                                      retriever, 'train')
@@ -274,4 +282,5 @@ if __name__ == '__main__':
     # terms_def = get_def_dict_from_json('/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/data/definitions_v2/v2_terms_definitions.json')
     # print(len(terms_def))
     x = vector_store.similarity_search_with_score('what is an mlp')
+    print(x)
     print('Done!')
