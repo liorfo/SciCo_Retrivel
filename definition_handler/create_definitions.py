@@ -4,6 +4,7 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings, HuggingFaceInstructEmbeddings
 from langchain_community.vectorstores import Chroma
+from sentence_transformers import CrossEncoder
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import transformers
 import torch
@@ -74,9 +75,19 @@ def save_terms_definitions_from_pickle_to_json(pickle_paths, processed_abstracts
         json.dump(terms_definitions, file)
 
 
-def get_abstracts_texts_formatted(text, retriever):
-    docs = retriever.invoke(text)
-    abstracts = [text] + [doc.page_content for doc in docs]
+def get_retrieval_query(term, text):
+    return f'define the term {term} with this context: {text}'
+
+
+def get_abstracts_texts_formatted(term, text, retriever_abstracts, retriever_all, reranker):
+    retrieval_query = get_retrieval_query(term, text)
+    docs_from_all = retriever_all.invoke(retrieval_query)
+    docs_from_all = [doc.page_content for doc in docs_from_all]
+    docs_from_abstracts = retriever_abstracts.invoke(retrieval_query)
+    docs_from_abstracts = [doc.page_content for doc in docs_from_abstracts]
+
+    reranked_docs = reranker.rank(retrieval_query, docs_from_all + docs_from_abstracts, return_documents=True, top_k=5)
+    abstracts = [text] + [doc['text'] for doc in reranked_docs]
     formatted_query = ''.join([f'ABSTRACT:\n{text}\n' for text in abstracts])
     return formatted_query
 
@@ -92,7 +103,8 @@ def instruction_format(sys_message: str, query: str):
     return f'<s> [INST] {sys_message} [/INST]\nUser: {query}\nAssistant: definition: '
 
 
-def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_dict, retriever, data_type):
+def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_dict, retriever_abstracts, retriever_all,
+                                                                         data_type):
     print(f'creating terms_definitions with mistral_instruct for {data_type}...')
     # model_id = "mistralai/Mistral-7B-Instruct-v0.2"
     # tokenizer = AutoTokenizer.from_pretrained(model_id)
@@ -126,6 +138,7 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
     # generate_text.tokenizer.pad_token_id = model.config.eos_token_id
     terms_definitions = {}
     print('Processing Prompts...')
+    reranker = CrossEncoder("mixedbread-ai/mxbai-rerank-large-v1")
     if os.path.exists(
             f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/faiss/{data_type}_terms_prompt_dict.pickle'):
         print('Loading terms_prompt_dict from pickle file...')
@@ -138,7 +151,7 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
         terms_prompt_dict = {}
         for term in tqdm(terms_dict):
             text = terms_dict[term]
-            abstracts = get_abstracts_texts_formatted(text, retriever)
+            abstracts = get_abstracts_texts_formatted(term[0], text, retriever_abstracts, retriever_all, reranker)
             # query = instructions_query_format(abstracts, term)
             # prompt = instruction_format(sys_msg, query)
             terms_prompt_dict[term[1]] = abstracts
@@ -173,7 +186,8 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
     #     pickle.dump(terms_definitions, file)
 
 
-def embed_and_store(texts=[], load=True, persist_directory=instructor_persist_directory, hf_model_name='', is_instructor=False):
+def embed_and_store(texts=[], load=True, persist_directory=instructor_persist_directory, hf_model_name='',
+                    is_instructor=False):
     embedding = get_embeddings_model(hf_model_name, '/cs/labs/tomhope/forer11/cache/', is_instructor)
 
     if load:
@@ -213,16 +227,17 @@ def get_embeddings_model(embeddings_model_name, cache_folder, is_instructor):
 def get_huggingface_embeddings(embeddings_model_name, cache_folder):
     return HuggingFaceEmbeddings(model_name=embeddings_model_name,
                                  cache_folder=cache_folder,
-                                 model_kwargs={"device": "cuda"},
+                                 model_kwargs={"device": "cuda"}
                                  # multi_process=True,
-                                 show_progress=True)
+                                 # show_progress=True
+                                 )
+
 
 def get_instructor_embeddings(embeddings_model_name, cache_folder):
     # the default instruction is: 'Represent the document for retrieval:'
     return HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl",
                                          model_kwargs={"device": "cuda"},
                                          cache_folder=cache_folder)
-
 
 
 def process_arxive_to_docs():
@@ -252,6 +267,7 @@ def process_arxive_to_docs():
     print(f'Processed {len(texts)} documents')
     return texts
 
+
 def get_def_dict_from_json(json_path):
     with open(json_path, 'r') as file:
         terms_definitions = json.load(file)
@@ -270,19 +286,29 @@ if __name__ == '__main__':
 
     datasets = DatasetsHandler(config)
 
-    print('creating docs...')
-    texts = process_arxive_to_docs()
+    # print('creating docs...')
+    # texts = process_arxive_to_docs()
 
-    vector_store = embed_and_store(texts, False, mxbai_full_persist_directory, mxbai_name)
-    retriever = vector_store.as_retriever(search_kwargs={"k": 4})
-    # create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict,
-    #                                                                      retriever, 'train')
+    vector_store = embed_and_store([], True, mxbai_full_persist_directory, mxbai_name)
+    retriever_all = vector_store.as_retriever(search_kwargs={"k": 12})
+    vector_store = embed_and_store([], True, mxbai_persist_directory, mxbai_name)
+    retriever_abstracts = vector_store.as_retriever(search_kwargs={"k": 12})
+    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict,
+                                                                         retriever_abstracts, retriever_all, 'train')
 
     # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle', 'rb') as file:
     #     yay = pickle.load(file)
 
     # terms_def = get_def_dict_from_json('/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/data/definitions_v2/v2_terms_definitions.json')
     # print(len(terms_def))
-    x = vector_store.similarity_search_with_score('what is an mlp')
-    print(x)
+
+    # print('searching...')
+    # x = retriever.invoke('define the term MLP layer with this context: We apply dropout ( p = 0.5 ) on the output of the word embedding layer and the input and the output of the <m> MLP layer </m> .')
+    # y = retriever.invoke('define the term numerical feature representation schemes with this context: Here , we present iFeature , a versatile Python‐based toolkit for generating various <m> numerical feature representation schemes </m> for both protein and peptide sequences .')
+    # z = retriever.invoke('define the term text categorization problem with this context: Authorship attribution may be considered as a <m> text categorization problem </m> .')
+    #
+    # x2 = retriever2.invoke('define the term MLP layer with this context: We apply dropout ( p = 0.5 ) on the output of the word embedding layer and the input and the output of the <m> MLP layer </m> .')
+    # y2 = retriever2.invoke('define the term numerical feature representation schemes with this context: Here , we present iFeature , a versatile Python‐based toolkit for generating various <m> numerical feature representation schemes </m> for both protein and peptide sequences .')
+    # z2 = retriever2.invoke('define the term text categorization problem with this context: Authorship attribution may be considered as a <m> text categorization problem </m> .')
+
     print('Done!')
