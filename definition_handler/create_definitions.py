@@ -31,7 +31,7 @@ sfr_name = 'Salesforce/SFR-Embedding-Mistral'
 
 sys_msg = """You are a helpful AI assistant, you are an agent capable of reading and understanding scientific papers and defining scientific terms. here are the steps you should take to give a proper definition:
 
-- Read abstracts: given scientific papers abstracts, please read them carefully with the user's query term in mind but do not mention them in the definition itself.
+- Read abstracts: given scientific papers abstracts, please read them carefully with the user's query term in mind but do not mention them in the definition itself. the first abstract is the term context.
 - Understand abstracts: after reading the abstracts, please understand them and try to extract the most important information from them regarding the user's query term, not all the information is relevant to the definition
 - Generate definition: after reading the abstracts, please generate a short definition for the user's query term.
 
@@ -92,8 +92,11 @@ def get_abstracts_texts_formatted(term, text, retriever_abstracts, retriever_all
     return formatted_query
 
 
+def extract_term(text):
+    return re.search(r'<m>(.*?)</m>', text).group(1)
+
 def instructions_query_format(abstracts_string, text):
-    term = text[0]
+    term = extract_term(text)
     query = f'Please generate a short and concise definition for the term {term} after reading the following abstracts:\n{abstracts_string}'
     return query
 
@@ -102,43 +105,42 @@ def instruction_format(sys_message: str, query: str):
     # note, don't "</s>" to the end
     return f'<s> [INST] {sys_message} [/INST]\nUser: {query}\nAssistant: definition: '
 
-
 def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_dict, retriever_abstracts, retriever_all,
                                                                          data_type):
     print(f'creating terms_definitions with mistral_instruct for {data_type}...')
     # model_id = "mistralai/Mistral-7B-Instruct-v0.2"
-    # tokenizer = AutoTokenizer.from_pretrained(model_id)
-    #
-    # bnb_config = BitsAndBytesConfig(
-    #     load_in_4bit=True,
-    #     bnb_4bit_use_double_quant=True,
-    #     bnb_4bit_quant_type="nf4",
-    #     bnb_4bit_compute_dtype=torch.bfloat16
-    # )
-    #
-    # model = AutoModelForCausalLM.from_pretrained(model_id,
-    #                                              cache_dir='/cs/labs/tomhope/forer11/Retrieval-augmented-defenition-extractor/cache',
-    #                                              attn_implementation="flash_attention_2",
-    #                                              trust_remote_code=True,
-    #                                              device_map="auto",
-    #                                              # quantization_config=bnb_config,
-    #                                              torch_dtype=torch.float16)
-    # generate_text = transformers.pipeline(
-    #     model=model, tokenizer=tokenizer,
-    #     device_map="auto",
-    #     return_full_text=False,  # if using langchain set True
-    #     task="text-generation",
-    #     # we pass model parameters here too
-    #     # temperature=0.1,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
-    #     # top_p=0.15,  # select from top tokens whose probability add up to 15%
-    #     # top_k=0,  # select from top 0 tokens (because zero, relies on top_p)
-    #     max_new_tokens=200,  # max number of tokens to generate in the output
-    #     repetition_penalty=1.1  # if output begins repeating increase
-    # )
-    # generate_text.tokenizer.pad_token_id = model.config.eos_token_id
+    model_id = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+    bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        # bnb_4bit_use_double_quant=True,
+        # bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.bfloat16
+    )
+
+    model = AutoModelForCausalLM.from_pretrained(model_id,
+                                                 cache_dir='/cs/labs/tomhope/forer11/cache',
+                                                 attn_implementation="flash_attention_2",
+                                                 trust_remote_code=True,
+                                                 device_map="auto",
+                                                 quantization_config=bnb_config,
+                                                 torch_dtype=torch.float16)
+    generate_text = transformers.pipeline(
+        model=model, tokenizer=tokenizer,
+        device_map="auto",
+        return_full_text=False,  # if using langchain set True
+        task="text-generation",
+        # we pass model parameters here too
+        # temperature=0.1,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
+        # top_p=0.15,  # select from top tokens whose probability add up to 15%
+        # top_k=0,  # select from top 0 tokens (because zero, relies on top_p)
+        max_new_tokens=200,  # max number of tokens to generate in the output
+        repetition_penalty=1.1  # if output begins repeating increase
+    )
+    generate_text.tokenizer.pad_token_id = model.config.eos_token_id
     terms_definitions = {}
     print('Processing Prompts...')
-    reranker = CrossEncoder("mixedbread-ai/mxbai-rerank-large-v1")
     if os.path.exists(
             f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/faiss/{data_type}_terms_prompt_dict.pickle'):
         print('Loading terms_prompt_dict from pickle file...')
@@ -147,13 +149,12 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
                 'rb') as file:
             terms_prompt_dict = pickle.load(file)
     else:
+        reranker = CrossEncoder("mixedbread-ai/mxbai-rerank-large-v1")
         print('Creating terms_prompt_dict...')
         terms_prompt_dict = {}
         for term in tqdm(terms_dict):
             text = terms_dict[term]
             abstracts = get_abstracts_texts_formatted(term[0], text, retriever_abstracts, retriever_all, reranker)
-            # query = instructions_query_format(abstracts, term)
-            # prompt = instruction_format(sys_msg, query)
             terms_prompt_dict[term[1]] = abstracts
 
         with open(
@@ -161,29 +162,38 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
                 'wb') as file:
             pickle.dump(terms_prompt_dict, file)
 
+    # creat prompts from abstracts
+    # query = instructions_query_format(abstracts, term)
+    # prompt = instruction_format(sys_msg, query)
+    terms_prompt_dict = {
+        term: instruction_format(
+            sys_msg, instructions_query_format(abstracts, term)
+        ) for term, abstracts in terms_prompt_dict.items()
+    }
+
     data = pd.DataFrame(list(terms_prompt_dict.items()), columns=['Term', 'Prompt'])
     dataset = Dataset.from_pandas(data)
 
-    # print('Generating definitions...')
-    #
-    # for i, out in tqdm(enumerate(generate_text(KeyDataset(dataset, 'Prompt'), batch_size=4)), total=len(dataset)):
-    #     term = dataset[i]['Term']
-    #     definition = out[0]['generated_text'].strip()
-    #     terms_definitions[term] = definition
-    #     if i % 100 == 0:
-    #         print(f'Processed {i} terms')
-    #         with open(
-    #                 f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_until_{i}.pickle',
-    #                 'wb') as file:
-    #             # Dump the dictionary into the file using pickle.dump()
-    #             pickle.dump(terms_definitions, file)
-    #
-    # print('Saving terms_definitions to pickle file...')
-    # with open(
-    #         f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_final.pickle',
-    #         'wb') as file:
-    #     # Dump the dictionary into the file using pickle.dump()
-    #     pickle.dump(terms_definitions, file)
+    print('Generating definitions...')
+
+    for i, out in tqdm(enumerate(generate_text(KeyDataset(dataset, 'Prompt'), batch_size=4)), total=len(dataset)):
+        term = dataset[i]['Term']
+        definition = out[0]['generated_text'].strip()
+        terms_definitions[term] = definition
+        if i % 100 == 0:
+            print(f'Processed {i} terms')
+            with open(
+                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_until_{i}.pickle',
+                    'wb') as file:
+                # Dump the dictionary into the file using pickle.dump()
+                pickle.dump(terms_definitions, file)
+
+    print('Saving terms_definitions to pickle file...')
+    with open(
+            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_final.pickle',
+            'wb') as file:
+        # Dump the dictionary into the file using pickle.dump()
+        pickle.dump(terms_definitions, file)
 
 
 def embed_and_store(texts=[], load=True, persist_directory=instructor_persist_directory, hf_model_name='',
@@ -289,12 +299,12 @@ if __name__ == '__main__':
     # print('creating docs...')
     # texts = process_arxive_to_docs()
 
-    vector_store = embed_and_store([], True, mxbai_full_persist_directory, mxbai_name)
-    retriever_all = vector_store.as_retriever(search_kwargs={"k": 12})
-    vector_store = embed_and_store([], True, mxbai_persist_directory, mxbai_name)
-    retriever_abstracts = vector_store.as_retriever(search_kwargs={"k": 12})
+    # vector_store = embed_and_store([], True, mxbai_full_persist_directory, mxbai_name)
+    # retriever_all = vector_store.as_retriever(search_kwargs={"k": 12})
+    # vector_store = embed_and_store([], True, mxbai_persist_directory, mxbai_name)
+    # retriever_abstracts = vector_store.as_retriever(search_kwargs={"k": 12})
     create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict,
-                                                                         retriever_abstracts, retriever_all, 'train')
+                                                                         [], [], 'train')
 
     # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle', 'rb') as file:
     #     yay = pickle.load(file)
