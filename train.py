@@ -12,9 +12,6 @@ import logging
 import gc
 import torch
 
-
-
-from SciCo_Retrivel.definition_extractor import get_definition_retrieval_model
 from utils.utils import *
 from models.datasets import CrossEncoderDataset
 from models.muticlass import MulticlassModel
@@ -46,17 +43,11 @@ def get_sep_tokens(bert_model):
 def get_train_dev_loader(config):
     logger.info('Loading data')
     sep_token = get_sep_tokens(config['model']['bert_model'])
-    should_save_definition = config["should_save_definition"]
-    should_load_definition = config["definition_extraction"] and not should_save_definition
+    should_load_definition = config["should_load_definition"]
     cdlm = 'cdlm' in config['model']['bert_model'].lower()
-    # add definition extraction
-    def_extraction_model = None
-    if should_save_definition:
-        def_extraction_model = get_definition_retrieval_model()
 
     train = CrossEncoderDataset(config["data"]["training_set"], full_doc=config['full_doc'], multiclass=model_name,
-                                cdlm=cdlm, sep_token=sep_token, definition_extraction_model=def_extraction_model,
-                                should_save_definition=should_save_definition,
+                                cdlm=cdlm, sep_token=sep_token,
                                 should_load_definition=should_load_definition)
     train_loader = data.DataLoader(train,
                                    batch_size=config["model"]["batch_size"],
@@ -67,8 +58,7 @@ def get_train_dev_loader(config):
     logger.info(f'training size: {len(train)}')
 
     dev = CrossEncoderDataset(config["data"]["dev_set"], full_doc=config['full_doc'], multiclass=model_name, cdlm=cdlm,
-                              sep_token=sep_token, definition_extraction_model=def_extraction_model,
-                              should_save_definition=should_save_definition,
+                              sep_token=sep_token,
                               should_load_definition=should_load_definition, data_label='dev')
     dev_loader = data.DataLoader(dev,
                                  batch_size=config["model"]["batch_size"],
@@ -138,7 +128,7 @@ if __name__ == '__main__':
         trainer = pl.Trainer(devices=config['gpu_num'],
                              default_root_dir=config['model_path'],
                              accelerator='gpu',
-                             precision='bf16-mixed',
+                             # precision='bf16-mixed',
                              # strategy='deepspeed_stage_3',
                              # plugins=SLURMEnvironment(auto_requeue=False),
                              max_epochs=config['model']['epochs'],

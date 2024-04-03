@@ -47,7 +47,8 @@ class MulticlassModel:
                 return MulticlassCrossEncoderGPT(config, num_classes=4)
             # return LlamaMulticlassCrossEncoder(config, num_classes=4)
             # return MistarlLightCrossEncoder(config, num_classes=4)
-            return MistralInstruct2CrossEncoder(config, num_classes=4)
+            # return MistralInstruct2CrossEncoder(config, num_classes=4)
+            return MulticlassCrossEncoder(config, num_classes=4)
         elif name == 'coref':
             return BinaryCorefCrossEncoder(config)
         elif name == 'hypernym':
@@ -162,15 +163,16 @@ class MulticlassCrossEncoder(pl.LightningModule):
         self.doc_end = self.tokenizer.convert_tokens_to_ids('</doc-s>') if self.cdlm else None
 
         self.model = AutoModel.from_pretrained(config["model"]["bert_model"], add_pooling_layer=False,
-                                               cache_dir='/cs/labs/tomhope/forer11/cache', attention_window=512)
+                                               attention_window=768,
+                                               cache_dir='/cs/labs/tomhope/forer11/cache')
         self.model.resize_token_embeddings(len(self.tokenizer))
         self.linear = nn.Linear(self.model.config.hidden_size, num_classes)
         self.criterion = torch.nn.CrossEntropyLoss()
 
-        self.acc = pl.metrics.Accuracy(top_k=1)
-        self.f1 = pl.metrics.F1(num_classes=num_classes, average='none')
-        self.recall = pl.metrics.Recall(num_classes=num_classes, average='none')
-        self.val_precision = pl.metrics.Precision(num_classes=num_classes, average='none')
+        self.acc = tm.Accuracy(top_k=1, task="multiclass", num_classes=num_classes)
+        self.f1 = tm.F1Score(task="multiclass", num_classes=num_classes, average='none')
+        self.recall = tm.Recall(task="multiclass", num_classes=num_classes, average='none')
+        self.val_precision = tm.Precision(task="multiclass", num_classes=num_classes, average='none')
 
     def forward(self, input_ids, attention_mask, global_attention_mask):
         output = self.model(input_ids, attention_mask=attention_mask,
@@ -184,6 +186,7 @@ class MulticlassCrossEncoder(pl.LightningModule):
         input_ids, attention_mask, global_attention_mask = x
         y_hat = self(input_ids, attention_mask, global_attention_mask)
         loss = self.criterion(y_hat, y)
+        # self.log('loss', loss, on_step=True, prog_bar=True, rank_zero_only=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -197,7 +200,7 @@ class MulticlassCrossEncoder(pl.LightningModule):
 
         return loss
 
-    def validation_epoch_end(self, outputs):
+    def on_validation_epoch_end(self):
         self.log_metrics()
 
     def test_step(self, batch, batch_idx):

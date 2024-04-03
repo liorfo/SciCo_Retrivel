@@ -312,7 +312,7 @@ if __name__ == '__main__':
     # vector_store = embed_and_store([], True, mxbai_persist_directory, mxbai_name)
     # retriever_abstracts = vector_store.as_retriever(search_kwargs={"k": 12})
 
-    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.dev_dataset.term_context_dict, [], [], 'dev')
+    # create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.dev_dataset.term_context_dict, [], [], 'dev')
 
     # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle', 'rb') as file:
     #     yay = pickle.load(file)

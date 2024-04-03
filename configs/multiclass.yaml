@@ -1,15 +1,15 @@
-gpu_num: [0]
+gpu_num: [0, 1, 2]
 random_seed: 0
 
 #model
 model:
   lr: 0.00001
-  batch_size: 2
+  batch_size: 4
   epochs: 1
   bert_model: allenai/longformer-base-4096
   optimizer: adamw
   gradient_clip: 1
-  gradient_accumulation: 16
+  gradient_accumulation: 4
 
 
 # data and model path
@@ -21,15 +21,15 @@ data:
 cache_folder: /cs/labs/tomhope/forer11/cache
 
 full_doc: true
-model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/MistralInstrucv2Results/checkpoints
+model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/Longformer_new_def
 log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 
 # definition extraction
 definition_extraction: False
 should_save_definition: False
 
-should_use_new_definition: True
-
+should_use_new_definition: False
+should_load_definition: True
 from_gpt: False
 
 
