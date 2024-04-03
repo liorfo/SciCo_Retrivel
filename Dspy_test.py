@@ -138,7 +138,8 @@ data = DatasetsHandler(test=True, train=True, dev=True, only_hard_10=True)
 train = get_dspy_example(data.train_dataset, NUM_OF_TRAIN_DATA, with_def=False)
 dev = get_dspy_example(data.dev_dataset, NUM_OF_DEV_DATA, with_def=False)
 test = get_dspy_example(data.test_dataset, len(data.test_dataset), shuffle=False, all_data=True, with_def=False)
-test_for_print_def, test_for_print = get_dspy_example(data.test_dataset, 20, shuffle=True, all_data=False, with_def=True)
+test_for_print_def, test_for_print = get_dspy_example(data.test_dataset, 20, shuffle=True, all_data=False,
+                                                      with_def=True)
 
 print(
     f"For this dataset, training examples have input keys {train[0].inputs().keys()} and label keys {train[0].labels().keys()}")
@@ -237,7 +238,8 @@ cot_fewshot = CoTSCICOModule()
 cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/BayesianSignatureOptimizer_program_2.json")
 
 cot_fewshot_with_def = CoTScicoWithDefModule()
-cot_fewshot_with_def.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/BayesianSignatureOptimizer_program_with_def_2.json")
+cot_fewshot_with_def.load(
+    "/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/BayesianSignatureOptimizer_program_with_def_2.json")
 
 for i in range(20):
     cot_fewshot(**test_for_print[i].inputs())
