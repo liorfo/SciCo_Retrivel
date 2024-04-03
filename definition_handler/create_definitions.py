@@ -105,6 +105,12 @@ def instruction_format(sys_message: str, query: str):
     # note, don't "</s>" to the end
     return f'<s> [INST] {sys_message} [/INST]\nUser: {query}\nAssistant: definition: '
 
+def get_missing_terms(terms_prompt_dict):
+    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_until_10800.pickle', 'rb') as file:
+        terms_definitions = pickle.load(file)
+
+    return {term: prompt for term, prompt in terms_prompt_dict.items() if term not in terms_definitions}, terms_definitions
+
 def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_dict, retriever_abstracts, retriever_all,
                                                                          data_type):
     print(f'creating terms_definitions with mistral_instruct for {data_type}...')
@@ -142,10 +148,10 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
     terms_definitions = {}
     print('Processing Prompts...')
     if os.path.exists(
-            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/faiss/{data_type}_terms_prompt_dict.pickle'):
+            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/chroma_mixed_bread/{data_type}_terms_prompt_dict.pickle'):
         print('Loading terms_prompt_dict from pickle file...')
         with open(
-                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/faiss/{data_type}_terms_prompt_dict.pickle',
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/chroma_mixed_bread/{data_type}_terms_prompt_dict.pickle',
                 'rb') as file:
             terms_prompt_dict = pickle.load(file)
     else:
@@ -158,7 +164,7 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
             terms_prompt_dict[term[1]] = abstracts
 
         with open(
-                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/faiss/{data_type}_terms_prompt_dict.pickle',
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/chroma_mixed_bread/{data_type}_terms_prompt_dict.pickle',
                 'wb') as file:
             pickle.dump(terms_prompt_dict, file)
 
@@ -171,19 +177,21 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
         ) for term, abstracts in terms_prompt_dict.items()
     }
 
+    # terms_prompt_dict, terms_definitions = get_missing_terms(terms_prompt_dict)
+
     data = pd.DataFrame(list(terms_prompt_dict.items()), columns=['Term', 'Prompt'])
     dataset = Dataset.from_pandas(data)
 
     print('Generating definitions...')
 
-    for i, out in tqdm(enumerate(generate_text(KeyDataset(dataset, 'Prompt'), batch_size=4)), total=len(dataset)):
+    for i, out in tqdm(enumerate(generate_text(KeyDataset(dataset, 'Prompt'), batch_size=8)), total=len(dataset)):
         term = dataset[i]['Term']
         definition = out[0]['generated_text'].strip()
         terms_definitions[term] = definition
         if i % 100 == 0:
             print(f'Processed {i} terms')
             with open(
-                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_until_{i}.pickle',
+                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_missing_terms_definitions_until_{i}.pickle',
                     'wb') as file:
                 # Dump the dictionary into the file using pickle.dump()
                 pickle.dump(terms_definitions, file)
@@ -303,8 +311,8 @@ if __name__ == '__main__':
     # retriever_all = vector_store.as_retriever(search_kwargs={"k": 12})
     # vector_store = embed_and_store([], True, mxbai_persist_directory, mxbai_name)
     # retriever_abstracts = vector_store.as_retriever(search_kwargs={"k": 12})
-    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict,
-                                                                         [], [], 'train')
+
+    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.dev_dataset.term_context_dict, [], [], 'dev')
 
     # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle', 'rb') as file:
     #     yay = pickle.load(file)

@@ -34,21 +34,21 @@ class CrossEncoderDataset(data.Dataset):
         self.should_save_term_context = should_save_term_context
 
         # TODO - change to the correct logic
-        if True:
-            with open(
-                    '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle',
-                    'rb') as f:
-                train_def = pickle.load(f)
-            with open(
-                    '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_definitions_final.pickle',
-                    'rb') as f:
-                dev_def = pickle.load(f)
-            with open(
-                    '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/test_terms_definitions_final.pickle',
-                    'rb') as f:
-                test_def = pickle.load(f)
-
-            self.combined_def_dict = {**dev_def, **test_def, **train_def}
+        # if True:
+        #     with open(
+        #             '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle',
+        #             'rb') as f:
+        #         train_def = pickle.load(f)
+        #     with open(
+        #             '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_definitions_final.pickle',
+        #             'rb') as f:
+        #         dev_def = pickle.load(f)
+        #     with open(
+        #             '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/test_terms_definitions_final.pickle',
+        #             'rb') as f:
+        #         test_def = pickle.load(f)
+        #
+        #     self.combined_def_dict = {**dev_def, **test_def, **train_def}
 
         with jsonlines.open(data_path, 'r') as f:
             if only_hard_10:
