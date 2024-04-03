@@ -9,7 +9,7 @@ from torch.utils import data
 import pickle
 
 # from SciCo_Retrivel.definition_extractor import get_definition
-from SciCo_Retrivel.MistralInstructV2Model.MistralInstruct2_model import get_prompt
+# from SciCo_Retrivel.MistralInstructV2Model.MistralInstruct2_model import get_prompt
 
 
 class CrossEncoderDataset(data.Dataset):
