@@ -273,11 +273,12 @@ def predict_multiclass(config, trainer):
         model = MulticlassModel.get_model(model_name, config, True)
     else:
         # TODO change to a dynamic loader
-        model = MistralInstruct2CrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+        model = MulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+        # model = MistralInstruct2CrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
         # model = MistarlLightCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
-        model.eval()
+        # model.eval()
         # model = LlamaMulticlassCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
-    should_load_definition = config["definition_extraction"]
+    should_load_definition = config["should_load_definition"]
     test = CrossEncoderDataset(config["data"]["test_set"],
                                full_doc=config['full_doc'],
                                multiclass=model_name,
