@@ -35,7 +35,7 @@ class MulticlassInference:
         self.hypernym_threshold = hypernym_threshold
 
         self.clustering = AgglomerativeClustering(n_clusters=None,
-                                                  affinity='precomputed',
+                                                  metric='precomputed',
                                                   linkage='average',
                                                   distance_threshold=self.coref_threshold)
 

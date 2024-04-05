@@ -1,4 +1,4 @@
-gpu_num: [0]
+gpu_num: [0, 1, 2]
 random_seed: 0
 
 #model
@@ -21,7 +21,7 @@ data:
 cache_folder: /cs/labs/tomhope/forer11/cache
 
 full_doc: true
-model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/Longformer_new_def
+model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/Longformer_new_def/without_def
 log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 
 # definition extraction
@@ -29,7 +29,7 @@ definition_extraction: False
 should_save_definition: False
 
 should_use_new_definition: False
-should_load_definition: True
+should_load_definition: False
 from_gpt: False
 
 

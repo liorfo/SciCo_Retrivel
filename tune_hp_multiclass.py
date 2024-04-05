@@ -12,15 +12,11 @@ from tqdm import tqdm
 import numpy as np
 from models.datasets import CrossEncoderDataset
 from models.muticlass import MulticlassCrossEncoder
-from MistralLite.MistralLite_model import MistarlLightCrossEncoder
 from predict import MulticlassInference
 
 from eval.shortest_path import ShortestPath
-import gc
 
 if __name__ == '__main__':
-    # torch.cuda.empty_cache()
-    # gc.collect()
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default='configs/multiclass.yaml')
     parser.add_argument('--full_doc', type=str, default='1')
@@ -48,26 +44,36 @@ if __name__ == '__main__':
         os.makedirs(config['save_path'])
 
     logger.info('loading models')
-    model = MistarlLightCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
+    # model = MistarlLightCrossEncoder.load_from_checkpoint(config['checkpoint_multiclass'], config=config)
     should_load_definition = config["definition_extraction"]
-    dev = CrossEncoderDataset(config["data"]["dev_set"], full_doc=config['full_doc'], multiclass='multiclass',
-                              should_load_definition=should_load_definition, data_label='dev')
-    dev_loader = data.DataLoader(dev,
-                                 batch_size=config["model"]["batch_size"],
-                                 shuffle=False,
-                                 collate_fn=model.tokenize_batch,
-                                 num_workers=16,
-                                 pin_memory=True)
+    # dev = CrossEncoderDataset(config["data"]["dev_set"], full_doc=config['full_doc'], multiclass='multiclass',
+    #                           should_load_definition=should_load_definition, data_label='dev')\
 
-    pl_logger = CSVLogger(save_dir='logs', name='multiclass_inference')
-    # trainer = pl.Trainer(gpus=config['gpu_num'], accelerator='dp')
-    trainer = pl.Trainer(devices=config['gpu_num'], logger=pl_logger)
+    dev = CrossEncoderDataset(config["data"]["test_set"],
+                               full_doc=config['full_doc'],
+                               multiclass='multiclass',
+                               is_training=False,
+                               should_load_definition=should_load_definition,
+                               data_label='test',
+                               only_hard_10=False)
 
-    results = trainer.predict(model, dataloaders=dev_loader)
-    results = torch.cat([torch.tensor(x) for x in results])
-    torch.save(results, os.path.join(config['save_path'], 'dev_results.pt'))
-    # results = torch.load(os.path.join(config['save_path'], 'dev_results.pt'))
-    results = results.to(torch.float)
+
+    # dev_loader = data.DataLoader(dev,
+    #                              batch_size=config["model"]["batch_size"],
+    #                              shuffle=False,
+    #                              collate_fn=model.tokenize_batch,
+    #                              num_workers=16,
+    #                              pin_memory=True)
+    #
+    # pl_logger = CSVLogger(save_dir='logs', name='multiclass_inference')
+    # # trainer = pl.Trainer(gpus=config['gpu_num'], accelerator='dp')
+    # trainer = pl.Trainer(devices=config['gpu_num'], logger=pl_logger)
+    #
+    # results = trainer.predict(model, dataloaders=dev_loader)
+    # results = torch.cat([torch.tensor(x) for x in results])
+    # torch.save(results, os.path.join(config['save_path'], 'dev_results.pt'))
+    results = torch.load(os.path.join(config['save_path'], 'test_muticlass_results.pt'))
+    # results = results.to(torch.float)
     coref_threshold = np.arange(0.4, 0.61, 0.1)
     hypernym_threshold = np.arange(0.4, 0.61, 0.1)
 
