@@ -1,4 +1,4 @@
-gpu_num: [0, 1, 2]
+gpu_num: [0]
 random_seed: 0
 
 #model

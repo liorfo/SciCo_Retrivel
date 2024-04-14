@@ -3,14 +3,15 @@ import yaml
 
 
 class DatasetsHandler:
-    def __init__(self, test=True, train=True, dev=True, only_hard_10=False):
+    def __init__(self, test=True, train=True, dev=True, only_hard_10=False, should_load_definition=False):
         if test:
             self.test_dataset = CrossEncoderDataset('/cs/labs/tomhope/forer11/SciCo_Retrivel/data/test.jsonl',
                                                     full_doc=False,
                                                     is_training=False,
+                                                    multiclass='multiclass',
                                                     data_label='test',
                                                     should_save_term_context=True,
-                                                    should_load_definition=False,
+                                                    should_load_definition=should_load_definition,
                                                     only_hard_10=only_hard_10)
 
         if train:
@@ -18,7 +19,7 @@ class DatasetsHandler:
                                                      full_doc=False,
                                                      multiclass='multiclass',
                                                      should_save_term_context=True,
-                                                     should_load_definition=False,
+                                                     should_load_definition=should_load_definition,
                                                      only_hard_10=only_hard_10)
         if dev:
             self.dev_dataset = CrossEncoderDataset('/cs/labs/tomhope/forer11/SciCo_Retrivel/data/dev.jsonl',
@@ -27,7 +28,7 @@ class DatasetsHandler:
                                                    data_label='dev',
                                                    is_training=False,
                                                    should_save_term_context=True,
-                                                   should_load_definition=False,
+                                                   should_load_definition=should_load_definition,
                                                    only_hard_10=only_hard_10)
 
 
