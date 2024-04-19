@@ -9,12 +9,13 @@ NUM_OF_TRAIN_DATA = 200
 NUM_OF_DEV_DATA = 60
 OPENAI_API_KEY = ''
 
+# TODO remove tags!!!! and add the terms as data
 
 class SCICO(dspy.Signature):
     (
-        """You are given 2 texts, each one is a context for a scientific concept inside <m></m> tags, for example: <m>example concept</m>."""
-        """ You must decide the correct hierarchical relation between the two concepts from the next options
-        0 - No relation, no hierarchical connection
+        """You are given 2 texts, each one is a context for a scientific concept"""
+        """ You must decide the correct relationship between the two concepts from the next options
+        0 - No relation, none of the following relations are appropriate
         1 - Same level, co-referring concepts
         2 - Term A is a parent concept of concept B
         3 - Term A is a child concept of concept B """)
@@ -22,15 +23,14 @@ class SCICO(dspy.Signature):
     text_1 = dspy.InputField()
     text_2 = dspy.InputField()
     answer = dspy.OutputField(
-        desc="The correct hierarchical relation between the two concepts from the next options: 0, 1, 2, 3.")
+        desc="The correct relationship between the two concepts from the next options: 0, 1, 2, 3.")
 
 
 class ScicoWithDef(dspy.Signature):
     (
-        """You are given 2 texts, each one is a context for a scientific concept inside <m></m> tags, for example: <m>example concept</m>."""
-        """ you also get a definition for each concept."""
-        """You must decide the correct hierarchical relation between the two concepts from the next options
-        0 - No relation, no hierarchical connection
+        """You are given 2 texts, each one is a context for a scientific concept, and a definition for each concept"""
+        """You must decide the correct relationship between the two concepts from the next options
+        0 - No relation, none of the following relations are appropriate
         1 - Same level, co-referring concepts
         2 - Term A is a parent concept of concept B
         3 - Term A is a child concept of concept B """)

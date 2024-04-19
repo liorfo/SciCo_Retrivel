@@ -7,7 +7,6 @@ from transformers import (
     AutoTokenizer,
     BitsAndBytesConfig,
     TrainingArguments,
-    pipeline,
 )
 from peft import LoraConfig, PeftModel, prepare_model_for_kbit_training, TaskType
 from trl import SFTTrainer
@@ -98,11 +97,11 @@ device_map = "auto"
 ################################################################################
 
 task_msg = """### Task: 
-Each of the following scientific texts in the ### Input section has a term surrounded by a relevant context. read the terms with their context and define the correct relationship between the two terms as follows:
-0 - No relation, none of the following relations are appropriate
-1 - Same level, co-referring terms
+Each of the following scientific texts in the ### Input section has a term surrounded by a relevant context. Read the terms with their context and define the correct relationship between the two terms as follows:
+1 - Term A and term B are co-referring terms
 2 - Term A is a parent concept of term B
-3 - Term A is a child concept of Term B
+3 - Term A is a child concept of term B
+0 - None of the above relations are appropriate
 """
 
 input_msg = """### Input: 

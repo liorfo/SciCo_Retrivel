@@ -38,16 +38,18 @@ def get_couple_class_tag(couple, relations):
         return 'no relation'
 
 
-def get_sentences(first_to_second, no_relation, same_class, second_to_first):
+def get_sentences(first_to_second, no_relation, same_class, second_to_first, test_def):
     first_sentence, first_mention = get_sentence_context(gold_couple[0], gold[topic_index]['tokens'],
                                                          gold[topic_index]['sentences'])
     second_sentence, second_mention = get_sentence_context(gold_couple[1], gold[topic_index]['tokens'],
                                                            gold[topic_index]['sentences'])
+    first_def = test_def[first_sentence + ' </s>']
+    second_def = test_def[second_sentence + ' </s>']
     mentions[first_mention] = first_mention
     mentions[second_mention] = second_mention
-    sentences_string = f'class: {gold_couple_class}, base class: {system_couple_class}, ' \
-                       f'new model class: {new_model_couple_class}\n' \
-                       f'first:\n{first_sentence}\nsecond:\n{second_sentence}\n\n\n'
+    sentences_string = f'class: {gold_couple_class}, base model class: {system_couple_class}, ' \
+                       f'definition model class: {new_model_couple_class}\n' \
+                       f'first:\n{first_sentence}\nsecond:\n{second_sentence}\nfirst def:\n{first_def}\nsecond def:\n{second_def}\n\n\n'
     if gold_couple_class == 'same cluster':
         same_class += sentences_string
     elif gold_couple_class == 'first -> second':
@@ -60,12 +62,10 @@ def get_sentences(first_to_second, no_relation, same_class, second_to_first):
 
 
 if __name__ == '__main__':
-    gold_path = sys.argv[1]
-    sys_path = sys.argv[2]
-    new_model_path = sys.argv[3]
-    hard = sys.argv[4] if len(sys.argv) > 4 else None
-    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/data/test_definitions', "rb") as fp:
-        definitions = pickle.load(fp)
+    gold_path = '/cs/labs/tomhope/forer11/SciCo_Retrivel/data/test.jsonl'
+    no_def_model = '/cs/labs/tomhope/forer11/SciCo/res_no_def/system_0.6_0.4.jsonl'
+    with_def_model = '/cs/labs/tomhope/forer11/SciCo/res_with_def/system_0.6_0.4.jsonl'
+    hard = False
 
     same_class, first_to_second, second_to_first, no_relation = '', '', '', ''
     wrong_same_class, wrong_first_to_second, wrong_second_to_first, wrong_no_relation = '', '', '', ''
@@ -76,15 +76,20 @@ if __name__ == '__main__':
     with jsonlines.open(gold_path, 'r') as f:
         gold = [line for line in f]
 
-    with jsonlines.open(sys_path, 'r') as f:
+    with jsonlines.open(no_def_model, 'r') as f:
         system = [line for line in f]
 
-    with jsonlines.open(new_model_path, 'r') as f:
+    with jsonlines.open(with_def_model, 'r') as f:
         new_model = [line for line in f]
     if hard:
         gold = [topic for topic in gold if topic[hard] == True]
         system = [topic for topic in system if topic['id'] in [x['id'] for x in gold]]
         new_model = [topic for topic in new_model if topic['id'] in [x['id'] for x in gold]]
+
+    with open(
+            '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/test_terms_definitions_final.pickle',
+            'rb') as f:
+        test_def = pickle.load(f)
 
     for topic_index in range(len(gold)):
         all_gold_couples, all_system_couples, all_new_model_couples = generate_mention_couples(
@@ -104,33 +109,35 @@ if __name__ == '__main__':
             system_couple_class = get_couple_class_tag(system_couple, system_relations)
             new_model_couple_class = get_couple_class_tag(new_model_couple, new_model_relations)
 
-            if gold_couple_class == new_model_couple_class and gold_couple_class != system_couple_class:
+            if gold_couple_class == new_model_couple_class and new_model_couple_class != system_couple_class:
                 first_to_second, no_relation, same_class, second_to_first, _sent_len = get_sentences(first_to_second,
                                                                                                      no_relation,
                                                                                                      same_class,
-                                                                                                     second_to_first)
-            elif gold_couple_class != new_model_couple_class and gold_couple_class != system_couple_class:
+                                                                                                     second_to_first,
+                                                                                                     test_def)
+            elif gold_couple_class != new_model_couple_class and gold_couple_class == system_couple_class:
                 wrong_first_to_second, wrong_no_relation, wrong_same_class, wrong_second_to_first, sent_len = get_sentences(
                     wrong_first_to_second, wrong_no_relation,
-                    wrong_same_class, wrong_second_to_first)
+                    wrong_same_class, wrong_second_to_first, test_def)
+    print(num_samples)
 
-    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/same_class.txt', 'w') as f:
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/New_results/longformer_def_vs_no_def/same_class.txt', 'w') as f:
         f.write(same_class)
-    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/first_to_second.txt', 'w') as f:
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/New_results/longformer_def_vs_no_def/first_to_second.txt', 'w') as f:
         f.write(first_to_second)
-    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/second_to_first.txt', 'w') as f:
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/New_results/longformer_def_vs_no_def/second_to_first.txt', 'w') as f:
         f.write(second_to_first)
-    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/no_relation.txt', 'w') as f:
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/New_results/longformer_def_vs_no_def/no_relation.txt', 'w') as f:
         f.write(no_relation)
-    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/wrong_same_class.txt', 'w') as f:
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/New_results/longformer_def_vs_no_def/wrong_same_class.txt', 'w') as f:
         f.write(wrong_same_class)
-    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/wrong_first_to_second.txt', 'w') as f:
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/New_results/longformer_def_vs_no_def/wrong_first_to_second.txt', 'w') as f:
         f.write(wrong_first_to_second)
-    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/wrong_second_to_first.txt', 'w') as f:
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/New_results/longformer_def_vs_no_def/wrong_second_to_first.txt', 'w') as f:
         f.write(wrong_second_to_first)
-    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/wrong_no_relation.txt', 'w') as f:
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/New_results/longformer_def_vs_no_def/wrong_no_relation.txt', 'w') as f:
         f.write(wrong_no_relation)
 
-    mentions_file_string = '\n'.join([mention for mention in mentions])
-    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/mentions_{hard}.txt', 'w') as f:
-        f.write(mentions_file_string)
+    # mentions_file_string = '\n'.join([mention for mention in mentions])
+    # with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/mentions_{hard}.txt', 'w') as f:
+    #     f.write(mentions_file_string)
