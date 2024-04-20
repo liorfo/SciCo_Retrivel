@@ -30,7 +30,7 @@ should_save_definition: False
 
 should_use_new_definition: False
 should_load_definition: False
-from_gpt: False
+from_gpt: True
 
 
 # inference
@@ -39,4 +39,4 @@ checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
 hypernym_threshold: 0.4 # for hypernym scores
-save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/Longformer_new_def/without_def
+save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/results

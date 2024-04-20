@@ -28,24 +28,6 @@ class CrossEncoderDataset(data.Dataset):
             print(f'Loading definitions from {data_label}')
         self.should_load_definition = should_load_definition
         self.should_save_term_context = should_save_term_context
-
-        # TODO - change to the correct logic
-        if True:
-            with open(
-                    '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle',
-                    'rb') as f:
-                train_def = pickle.load(f)
-            with open(
-                    '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/dev_terms_definitions_final.pickle',
-                    'rb') as f:
-                dev_def = pickle.load(f)
-            with open(
-                    '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/test_terms_definitions_final.pickle',
-                    'rb') as f:
-                test_def = pickle.load(f)
-
-            self.combined_def_dict = {**dev_def, **test_def, **train_def}
-
         with jsonlines.open(data_path, 'r') as f:
             if only_hard_10:
                 self.data = [topic for topic in f if topic['hard_10']]
@@ -244,9 +226,9 @@ class CrossEncoderDataset(data.Dataset):
         mention_rep += tokens[doc_id][start:end + 1] + ['</m>']
         mention_rep_with_sep = mention_rep + tokens[doc_id][end + 1:sent_end] + [self.sep]
 
-        if self.should_load_definition:
-            mention_definition = self.definitions[' '.join(mention_rep_with_sep)]
-            return ' '.join(mention_rep + tokens[doc_id][end + 1:sent_end]) + '<def> ' + mention_definition + ' </def>' + self.sep
+        # if self.should_load_definition:
+        #     mention_definition = self.definitions[' '.join(mention_rep_with_sep)]
+        #     return ' '.join(mention_rep + tokens[doc_id][end + 1:sent_end]) + '<def> ' + mention_definition + ' </def>' + self.sep
 
 
 

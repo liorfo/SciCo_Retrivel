@@ -71,7 +71,7 @@ class MulticlassCrossEncoderGPT(pl.LightningModule):
         self.recall = tm.Recall(task="multiclass", num_classes=num_classes, average='none')
         self.val_precision = tm.Precision(task="multiclass", num_classes=num_classes, average='none')
 
-        with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/no_def_second_try/sentences_to_score_dict.pkl","rb") as file:
+        with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/results/final_results.pickle","rb") as file:
             self.sentences_to_score = pickle.load(file)
 
     def forward(self, inputs, labels):
