@@ -24,6 +24,10 @@ class CrossEncoderDataset(data.Dataset):
                  only_hard_10=False,
                  should_save_term_context=False):
         super(CrossEncoderDataset, self).__init__()
+        if full_doc:
+            print('Using full doc')
+        else:
+            print('Using sentence context')
         if should_load_definition:
             print(f'Loading definitions from {data_label}')
         self.should_load_definition = should_load_definition

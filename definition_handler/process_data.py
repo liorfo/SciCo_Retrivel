@@ -3,10 +3,10 @@ import yaml
 
 
 class DatasetsHandler:
-    def __init__(self, test=True, train=True, dev=True, only_hard_10=False, should_load_definition=False):
+    def __init__(self, test=True, train=True, dev=True, only_hard_10=False, should_load_definition=False, full_doc=False):
         if test:
             self.test_dataset = CrossEncoderDataset('/cs/labs/tomhope/forer11/SciCo_Retrivel/data/test.jsonl',
-                                                    full_doc=False,
+                                                    full_doc=full_doc,
                                                     is_training=False,
                                                     multiclass='multiclass',
                                                     data_label='test',
@@ -16,14 +16,14 @@ class DatasetsHandler:
 
         if train:
             self.train_dataset = CrossEncoderDataset('/cs/labs/tomhope/forer11/SciCo_Retrivel/data/train.jsonl',
-                                                     full_doc=False,
+                                                     full_doc=full_doc,
                                                      multiclass='multiclass',
                                                      should_save_term_context=True,
                                                      should_load_definition=should_load_definition,
                                                      only_hard_10=only_hard_10)
         if dev:
             self.dev_dataset = CrossEncoderDataset('/cs/labs/tomhope/forer11/SciCo_Retrivel/data/dev.jsonl',
-                                                   full_doc=False,
+                                                   full_doc=full_doc,
                                                    multiclass='multiclass',
                                                    data_label='dev',
                                                    is_training=False,

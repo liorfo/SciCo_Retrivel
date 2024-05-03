@@ -4,6 +4,7 @@ import torch
 from datasets import load_dataset
 from transformers import (
     AutoModelForSequenceClassification,
+    Phi3ForSequenceClassification,
     AutoTokenizer,
     BitsAndBytesConfig,
     TrainingArguments,
@@ -150,7 +151,8 @@ def format_prompts_fn(example):
 
 base_model = "microsoft/Phi-3-mini-4k-instruct"
 
-data = DatasetsHandler(test=False, train=True, dev=True)
+data = DatasetsHandler(test=False, train=True, dev=True, full_doc=True)
+data2 = DatasetsHandler(test=False, train=True, dev=True)
 
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=use_4bit,  # Activates 4-bit precision loading
@@ -159,7 +161,7 @@ bnb_config = BitsAndBytesConfig(
     bnb_4bit_use_double_quant=use_nested_quant,  # False
 )
 
-model = AutoModelForSequenceClassification.from_pretrained(
+model = Phi3ForSequenceClassification.from_pretrained(
     base_model,
     quantization_config=bnb_config,
     cache_dir='/cs/labs/tomhope/forer11/cache',

@@ -20,9 +20,9 @@ from datasets import Dataset, load_dataset
 ################################################################################
 # LoRA attention dimension
 # lora_r = 64
-lora_r = 32
+lora_r = qq
 # Alpha parameter for LoRA scaling
-lora_alpha = 64
+lora_alpha = 32
 # Dropout probability for LoRA layers
 lora_dropout = 0.05
 
@@ -42,14 +42,14 @@ use_nested_quant = False
 # TrainingArguments parameters
 ################################################################################
 # Output directory where the model predictions and checkpoints will be stored
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/model'
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/full_docs_model'
 # Number of training epochs
 num_train_epochs = 1
 # Enable fp16/bf16 training (set bf16 to True with an A100)
 fp16 = False
-bf16 = False
+bf16 = True
 # Batch size per GPU for training
-per_device_train_batch_size = 4
+per_device_train_batch_size = 2
 # Batch size per GPU for evaluation
 per_device_eval_batch_size = 4
 # Number of update steps to accumulate the gradients for
@@ -64,7 +64,7 @@ learning_rate = 2e-4
 # Weight decay to apply to all layers except bias/LayerNorm weights
 weight_decay = 0.001
 # Optimizer to use
-optim = 'paged_adamw_32bit'
+optim = 'paged_adamw_8bit'
 # Learning rate schedule (constant a bit better than cosine)
 lr_scheduler_type = "cosine"
 # Number of training steps (overrides num_train_epochs)
@@ -88,7 +88,8 @@ max_seq_length = 1024  # None
 packing = True  # False
 # Load the entire model on the GPU 0
 # device_map = {"": 0}
-device_map = "auto"
+# device_map = "auto"
+device_map = "cuda"
 
 ################################################################################
 # start of training
@@ -114,19 +115,21 @@ out_prompt = """### Output:
 {label}"""
 
 
-phi3_instruct_prompt = """<|system|>
+phi3_instruct_prompt = """<|user|>
 You are a helpful AI assistant. you will get two scientific texts that has a term surrounded by a relevant context. Read the terms with their context and define the correct relationship between the two terms as follows:
-1 - Term A and term B are co-referring terms
-2 - Term A is a parent concept of term B
-3 - Term A is a child concept of term B
-0 - None of the above relations are appropriate<|end|>
-<|user|>
-define the relationship between the two terms with the following data:
+1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
+2 - Parent concept: Term1 represents a broader category or concept that encompasses term2.
+3 - Child concept: Term1 is a specific instance or subset of the broader concept represented by term2.
+0 - None of the above: There is no clear relationship between term1 and term2 based on the provided contexts.
+
+here are the terms and their context:
 first term: {term1} 
 first term context: {term1_text}
 
 second term: {term2}
 second term context: {term2_text}<|end|>
+
+please select the correct relationship between the two terms from the options above.
 <|assistant|>
 {label}"""
 
@@ -180,7 +183,7 @@ base_model = "microsoft/Phi-3-mini-4k-instruct"
 # base_model = "mistralai/Mistral-7B-v0.1"
 
 
-data = DatasetsHandler(test=False, train=True, dev=True)
+data = DatasetsHandler(test=False, train=True, dev=True, full_doc=True)
 
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=use_4bit,  # Activates 4-bit precision loading
@@ -191,8 +194,9 @@ bnb_config = BitsAndBytesConfig(
 
 model = AutoModelForCausalLM.from_pretrained(
     base_model,
-    quantization_config=bnb_config,
+    # quantization_config=bnb_config,
     cache_dir='/cs/labs/tomhope/forer11/cache',
+    torch_dtype=torch.bfloat16,
     trust_remote_code=True,
     attn_implementation="flash_attention_2",
     device_map=device_map
@@ -268,4 +272,5 @@ trainer = SFTTrainer(
 # trainer.train(resume_from_checkpoint='/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/model/checkpoint-10')
 trainer.train()
 trainer.model.save_pretrained(output_dir)
+tokenizer.save_pretrained(output_dir)
 wandb.finish()

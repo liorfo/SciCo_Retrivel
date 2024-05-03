@@ -15,8 +15,12 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from tqdm import tqdm
 import pickle
 
-model_name = "alpindale/Mistral-7B-v0.2-hf"
-model_dir = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/merged_model"
+# model_name = "alpindale/Mistral-7B-v0.2-hf"
+# model_dir = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/merged_model"
+
+model_name = "microsoft/Phi-3-mini-4k-instruct"
+model_dir = "/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/merged_model"
+
 batch_size = 5
 
 # ===========================================================================================================================================
@@ -84,14 +88,44 @@ def get_format_prompt(pair, with_def = False, def_dict= None):
 def format_prompts_fn(example):
     return example['text']
 
+phi3_instruct_prompt = """<|user|>
+You are a helpful AI assistant. you will get two scientific texts that has a term surrounded by a relevant context. Read the terms with their context and define the correct relationship between the two terms as follows:
+1 - Term A and term B are co-referring terms
+2 - Term A is a parent concept of term B
+3 - Term A is a child concept of term B
+0 - None of the above relations are appropriate<|end|>
+
+here are the terms and their context:
+first term: {term1} 
+first term context: {term1_text}
+
+second term: {term2}
+second term context: {term2_text}<|end|>
+
+please select the correct relationship between the two terms from the options above.
+<|assistant|>
+{label}"""
+
+def get_phi3_instruct_prompt(pair):
+    term1_text, term2_text, _ = pair.split('</s>')
+    term1 = re.search(r'<m>(.*?)</m>', term1_text).group(1).strip()
+    term2 = re.search(r'<m>(.*?)</m>', term2_text).group(1).strip()
+    term1_text, term2_text = term1_text.replace('<m> ', '').replace(' </m>', ''), term2_text.replace('<m> ','').replace(' </m>', '')
+    return phi3_instruct_prompt.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
+
+
 
 # ===========================================================================================================================================
 
 
 def save_merged_model():
     #Load the base model with default precision
-    adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/model"
-    model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir='/cs/labs/tomhope/forer11/cache')
+    adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/model"
+    model = AutoModelForCausalLM.from_pretrained(model_name,
+                                                 cache_dir='/cs/labs/tomhope/forer11/cache',
+                                                 torch_dtype=torch.bfloat16,
+                                                 trust_remote_code=True,
+                                                 attn_implementation="flash_attention_2")
 
     #Load and activate the adapter on top of the base model
     model = PeftModel.from_pretrained(model, adapter)
@@ -120,7 +154,15 @@ def save_merged_model():
 # tokenizer.pad_token = tokenizer.eos_token
 # tokenizer.padding_side = "right" # Fix weird overflow issue with fp16 training
 
-data = DatasetsHandler(test=True, train=False, dev=False, should_load_definition=True)
+# tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+# tokenizer.pad_token = tokenizer.unk_token  # use unk rather than eos token to prevent endless generation
+# tokenizer.pad_token_id = tokenizer.convert_tokens_to_ids(tokenizer.pad_token)
+# tokenizer.padding_side = 'right'
+# tokenizer.save_pretrained(model_dir, safe_serialization=True)
+
+data = DatasetsHandler(test=True, train=False, dev=False, should_load_definition=False)
+
+# save_merged_model()
 
 # xxx = [x for x in range(len(data.test_dataset)) if data.test_dataset.natural_labels[x] == '3']
 # input_text = get_format_prompt(data.test_dataset.pairs[xxx[777]])
@@ -169,6 +211,10 @@ cache = ExLlamaV2Cache(model, lazy = True, batch_size = batch_size)
 model.load_autosplit(cache)
 tokenizer = ExLlamaV2Tokenizer(config)
 
+tokenizer.pad_token = tokenizer.unk_token  # use unk rather than eos token to prevent endless generation
+tokenizer.pad_token_id = tokenizer.extended_piece_to_id[tokenizer.unk_token]
+tokenizer.padding_side = 'right'
+
 # Initialize generator
 
 generator = ExLlamaV2BaseGenerator(model, cache, tokenizer)
@@ -179,14 +225,14 @@ settings = ExLlamaV2Sampler.Settings()
 settings.temperature = 0.3
 settings.top_k = 0
 settings.top_p = 0.15
-# settings.token_repetition_penalty = 1.01
+settings.token_repetition_penalty = 1.01
 settings.disallow_tokens(tokenizer, [tokenizer.eos_token_id])
 
 # prompt = input_text
 
-max_new_tokens = 2
+max_new_tokens = 1
 
-prompts = [(data.test_dataset.pairs[i], get_format_prompt(data.test_dataset.pairs[i], True, data.test_dataset.definitions)) for i in range(len(data.test_dataset))]
+prompts = [(data.test_dataset.pairs[i], get_phi3_instruct_prompt(data.test_dataset.pairs[i])) for i in range(len(data.test_dataset))]
 f_prompts = sorted(prompts, key = len)
 
 batches = [f_prompts[i:i + batch_size] for i in range(0, len(f_prompts), batch_size)]
@@ -212,14 +258,14 @@ with tqdm(total=len(batches)) as pbar:
         if b % 5000 == 0:
             print(f'Processed {b} batches')
             with open(
-                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/results_with_def_context/results_after_{b}_batches.pickle',
+                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/results/results_after_{b}_batches.pickle',
                     'wb') as file:
                 pickle.dump(collected_outputs, file)
         pbar.update(1)
 
 
 print(f'Processed all batches')
-with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/results_with_def_context/final_results.pickle', 'wb') as file:
+with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/results/final_results.pickle', 'wb') as file:
     pickle.dump(collected_outputs, file)
 time_end = time.time()
 time_total = time_end - time_begin

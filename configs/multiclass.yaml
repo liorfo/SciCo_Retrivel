@@ -39,4 +39,4 @@ checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
 hypernym_threshold: 0.4 # for hypernym scores
-save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/results_with_def_context
+save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/results
