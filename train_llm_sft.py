@@ -20,7 +20,7 @@ from datasets import Dataset, load_dataset
 ################################################################################
 # LoRA attention dimension
 # lora_r = 64
-lora_r = qq
+lora_r = 16
 # Alpha parameter for LoRA scaling
 lora_alpha = 32
 # Dropout probability for LoRA layers
@@ -118,18 +118,18 @@ out_prompt = """### Output:
 phi3_instruct_prompt = """<|user|>
 You are a helpful AI assistant. you will get two scientific texts that has a term surrounded by a relevant context. Read the terms with their context and define the correct relationship between the two terms as follows:
 1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
-2 - Parent concept: Term1 represents a broader category or concept that encompasses term2.
-3 - Child concept: Term1 is a specific instance or subset of the broader concept represented by term2.
-0 - None of the above: There is no clear relationship between term1 and term2 based on the provided contexts.
+2 - Parent concept: Term1 represents a broader category or concept that encompasses term2, such that mentioning term1 implicitly invokes term2.
+3 - Child concept: The inverse of a parent concept relation. Term1 is a specific instance or subset of the broader concept represented by term2, such that mentioning term2 implicitly invokes term1.
+0 - None of the above: Term1 and term2 are not co-referring, and do not have a parent-child or child-parent relation.
 
 here are the terms and their context:
 first term: {term1} 
 first term context: {term1_text}
 
 second term: {term2}
-second term context: {term2_text}<|end|>
+second term context: {term2_text}
 
-please select the correct relationship between the two terms from the options above.
+please select the correct relationship between the two terms from the options above.<|end|>
 <|assistant|>
 {label}"""
 

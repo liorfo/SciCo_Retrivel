@@ -19,7 +19,7 @@ import pickle
 # model_dir = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/merged_model"
 
 model_name = "microsoft/Phi-3-mini-4k-instruct"
-model_dir = "/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/merged_model"
+model_dir = "/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/full_docs_model"
 
 batch_size = 5
 
@@ -90,21 +90,21 @@ def format_prompts_fn(example):
 
 phi3_instruct_prompt = """<|user|>
 You are a helpful AI assistant. you will get two scientific texts that has a term surrounded by a relevant context. Read the terms with their context and define the correct relationship between the two terms as follows:
-1 - Term A and term B are co-referring terms
-2 - Term A is a parent concept of term B
-3 - Term A is a child concept of term B
-0 - None of the above relations are appropriate<|end|>
+1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
+2 - Parent concept: Term1 represents a broader category or concept that encompasses term2.
+3 - Child concept: Term1 is a specific instance or subset of the broader concept represented by term2.
+0 - None of the above: There is no clear relationship between term1 and term2 based on the provided contexts.
 
 here are the terms and their context:
 first term: {term1} 
 first term context: {term1_text}
 
 second term: {term2}
-second term context: {term2_text}<|end|>
+second term context: {term2_text}
 
-please select the correct relationship between the two terms from the options above.
+please select the correct relationship between the two terms from the options above.<|end|>
 <|assistant|>
-{label}"""
+"""
 
 def get_phi3_instruct_prompt(pair):
     term1_text, term2_text, _ = pair.split('</s>')
@@ -120,7 +120,7 @@ def get_phi3_instruct_prompt(pair):
 
 def save_merged_model():
     #Load the base model with default precision
-    adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/model"
+    adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/full_docs_model"
     model = AutoModelForCausalLM.from_pretrained(model_name,
                                                  cache_dir='/cs/labs/tomhope/forer11/cache',
                                                  torch_dtype=torch.bfloat16,
@@ -160,9 +160,11 @@ def save_merged_model():
 # tokenizer.padding_side = 'right'
 # tokenizer.save_pretrained(model_dir, safe_serialization=True)
 
-data = DatasetsHandler(test=True, train=False, dev=False, should_load_definition=False)
+data = DatasetsHandler(test=True, train=False, dev=False, should_load_definition=False, full_doc=True)
 
 # save_merged_model()
+
+# print('model saved')
 
 # xxx = [x for x in range(len(data.test_dataset)) if data.test_dataset.natural_labels[x] == '3']
 # input_text = get_format_prompt(data.test_dataset.pairs[xxx[777]])
@@ -224,7 +226,7 @@ generator = ExLlamaV2BaseGenerator(model, cache, tokenizer)
 settings = ExLlamaV2Sampler.Settings()
 settings.temperature = 0.3
 settings.top_k = 0
-settings.top_p = 0.15
+settings.top_p = 0.2
 settings.token_repetition_penalty = 1.01
 settings.disallow_tokens(tokenizer, [tokenizer.eos_token_id])
 
@@ -232,7 +234,7 @@ settings.disallow_tokens(tokenizer, [tokenizer.eos_token_id])
 
 max_new_tokens = 1
 
-prompts = [(data.test_dataset.pairs[i], get_phi3_instruct_prompt(data.test_dataset.pairs[i])) for i in range(len(data.test_dataset))]
+prompts = [(data.test_dataset.pairs[i], get_phi3_instruct_prompt(data.test_dataset.pairs[i])) for i in range(len(data.test_dataset)) if data.test_dataset.natural_labels[i] == '2']
 f_prompts = sorted(prompts, key = len)
 
 batches = [f_prompts[i:i + batch_size] for i in range(0, len(f_prompts), batch_size)]
@@ -258,14 +260,14 @@ with tqdm(total=len(batches)) as pbar:
         if b % 5000 == 0:
             print(f'Processed {b} batches')
             with open(
-                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/results/results_after_{b}_batches.pickle',
+                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/full_docs_model/results/results_{b}_batches.pickle',
                     'wb') as file:
                 pickle.dump(collected_outputs, file)
         pbar.update(1)
 
 
 print(f'Processed all batches')
-with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/results/final_results.pickle', 'wb') as file:
+with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/full_docs_model/results/final_results.pickle', 'wb') as file:
     pickle.dump(collected_outputs, file)
 time_end = time.time()
 time_total = time_end - time_begin
