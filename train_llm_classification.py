@@ -208,7 +208,6 @@ def get_format_prompt(pair, label, with_def=False):
 def format_prompts_fn(example):
     return example['text']
 
-
 wandb.login(key='8b5bf778b37dfdd547cbb6f4c1340c3b08ddab75')
 
 base_model = "microsoft/Phi-3-mini-4k-instruct"
