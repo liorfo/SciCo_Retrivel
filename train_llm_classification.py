@@ -78,7 +78,7 @@ use_nested_quant = False
 # TrainingArguments parameters
 ################################################################################
 # Output directory where the model predictions and checkpoints will be stored
-output_dir = '/cs/labs/tomhope/forer11/phi3_classification/no_def/model'
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/model'
 # Number of training epochs
 num_train_epochs = 1
 # Enable fp16/bf16 training (set bf16 to True with an A100)
@@ -311,8 +311,8 @@ trainer = WeightedCELossTrainer(
 # trainer.train(resume_from_checkpoint='/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/model/checkpoint-10')
 trainer.train()
 trainer.model.save_pretrained(output_dir)
-model.save_pretrained('/cs/labs/tomhope/forer11/phi3_classification/no_def/model_with_lora_save')
+model.save_pretrained('/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/model_with_lora_save')
 tokenizer.save_pretrained(output_dir)
-tokenizer.save_pretrained('/cs/labs/tomhope/forer11/phi3_classification/no_def/model_with_lora_save')
+tokenizer.save_pretrained('/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/model_with_lora_save')
 
 wandb.finish()
