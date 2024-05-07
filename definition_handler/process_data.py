@@ -1,6 +1,4 @@
-from SciCo_Retrivel.models.datasets import CrossEncoderDataset
-import yaml
-
+from ..models.datasets import CrossEncoderDataset
 
 class DatasetsHandler:
     def __init__(self, test=True, train=True, dev=True, only_hard_10=False, should_load_definition=False, full_doc=False):
