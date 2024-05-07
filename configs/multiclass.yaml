@@ -4,7 +4,7 @@ random_seed: 0
 #model
 model:
   lr: 0.00001
-  batch_size: 4
+  batch_size: 1
   epochs: 1
   bert_model: allenai/longformer-base-4096
   optimizer: adamw
@@ -20,7 +20,7 @@ data:
 
 cache_folder: /cs/labs/tomhope/forer11/cache
 
-full_doc: true
+full_doc: True
 model_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/Longformer_new_def/without_def
 log: /cs/labs/tomhope/forer11/SciCo_Retrivel/logs
 
@@ -39,4 +39,4 @@ checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
 agg_threshold: 0.6  # for agglomerative clustering
 hypernym_threshold: 0.4 # for hypernym scores
-save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/results
+save_path: /cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/results

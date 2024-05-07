@@ -1,5 +1,3 @@
-import yaml
-import argparse
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings, HuggingFaceInstructEmbeddings
@@ -130,7 +128,7 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
                                                  attn_implementation="flash_attention_2",
                                                  trust_remote_code=True,
                                                  device_map="auto",
-                                                 quantization_config=bnb_config,
+                                                 # quantization_config=bnb_config,
                                                  torch_dtype=torch.float16)
     generate_text = transformers.pipeline(
         model=model, tokenizer=tokenizer,
@@ -141,17 +139,17 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
         # temperature=0.1,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
         # top_p=0.15,  # select from top tokens whose probability add up to 15%
         # top_k=0,  # select from top 0 tokens (because zero, relies on top_p)
-        max_new_tokens=200,  # max number of tokens to generate in the output
+        max_new_tokens=250,  # max number of tokens to generate in the output
         repetition_penalty=1.1  # if output begins repeating increase
     )
     generate_text.tokenizer.pad_token_id = model.config.eos_token_id
     terms_definitions = {}
     print('Processing Prompts...')
     if os.path.exists(
-            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/chroma_mixed_bread/{data_type}_terms_prompt_dict.pickle'):
+            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/full_texts/{data_type}_terms_prompt_dict.pickle'):
         print('Loading terms_prompt_dict from pickle file...')
         with open(
-                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/chroma_mixed_bread/{data_type}_terms_prompt_dict.pickle',
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/full_texts/{data_type}_terms_prompt_dict.pickle',
                 'rb') as file:
             terms_prompt_dict = pickle.load(file)
     else:
@@ -164,7 +162,7 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
             terms_prompt_dict[term[1]] = abstracts
 
         with open(
-                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/chroma_mixed_bread/{data_type}_terms_prompt_dict.pickle',
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/full_texts/{data_type}_terms_prompt_dict.pickle',
                 'wb') as file:
             pickle.dump(terms_prompt_dict, file)
 
@@ -191,14 +189,14 @@ def create_mentions_definitions_from_existing_docs_with_mistral_instruct(terms_d
         if i % 100 == 0:
             print(f'Processed {i} terms')
             with open(
-                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_missing_terms_definitions_until_{i}.pickle',
+                    f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/full_texts/{data_type}_missing_terms_definitions_until_{i}.pickle',
                     'wb') as file:
                 # Dump the dictionary into the file using pickle.dump()
                 pickle.dump(terms_definitions, file)
 
     print('Saving terms_definitions to pickle file...')
     with open(
-            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_type}_terms_definitions_final.pickle',
+            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/full_texts/{data_type}_terms_definitions_final.pickle',
             'wb') as file:
         # Dump the dictionary into the file using pickle.dump()
         pickle.dump(terms_definitions, file)
@@ -293,26 +291,17 @@ def get_def_dict_from_json(json_path):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--config', type=str, default='../configs/multiclass.yaml')
-    parser.add_argument('--cache_folder', type=str, default='')
-    args = parser.parse_args()
-    with open(args.config, 'r') as f:
-        config = yaml.safe_load(f)
-
-    cache_folder = args.cache_folder if args.cache_folder != '' else config['cache_folder']
-
-    datasets = DatasetsHandler(config)
+    datasets = DatasetsHandler(test=False, train=True, dev=True, full_doc=True)
 
     # print('creating docs...')
     # texts = process_arxive_to_docs()
 
-    # vector_store = embed_and_store([], True, mxbai_full_persist_directory, mxbai_name)
-    # retriever_all = vector_store.as_retriever(search_kwargs={"k": 12})
-    # vector_store = embed_and_store([], True, mxbai_persist_directory, mxbai_name)
-    # retriever_abstracts = vector_store.as_retriever(search_kwargs={"k": 12})
+    vector_store = embed_and_store([], True, mxbai_full_persist_directory, mxbai_name)
+    retriever_all = vector_store.as_retriever(search_kwargs={"k": 12})
+    vector_store = embed_and_store([], True, mxbai_persist_directory, mxbai_name)
+    retriever_abstracts = vector_store.as_retriever(search_kwargs={"k": 12})
 
-    # create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.dev_dataset.term_context_dict, [], [], 'dev')
+    create_mentions_definitions_from_existing_docs_with_mistral_instruct(datasets.train_dataset.term_context_dict, retriever_abstracts, retriever_all, 'train')
 
     # with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_final.pickle', 'rb') as file:
     #     yay = pickle.load(file)

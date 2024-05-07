@@ -24,6 +24,12 @@ def get_gpt_score(inputs, labels, sentences_to_score):
         l[i][pred] = 100
     return l
 
+def get_classification_score(inputs, labels, sentences_to_score):
+    # only works with batch size of 1 for now
+    scores = sentences_to_score[inputs[0]]
+    # batch_response = torch.cat([tensor.unsqueeze(0) for tensor in scores], dim=0)
+    return scores
+
 
 def get_global_attention(input_ids, start_token, end_token):
     global_attention_mask = torch.zeros(input_ids.shape)
@@ -71,12 +77,13 @@ class MulticlassCrossEncoderGPT(pl.LightningModule):
         self.recall = tm.Recall(task="multiclass", num_classes=num_classes, average='none')
         self.val_precision = tm.Precision(task="multiclass", num_classes=num_classes, average='none')
 
-        with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_4k_sft/no_def/results/final_results.pickle","rb") as file:
+        with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/results/final_results.pickle","rb") as file:
             self.sentences_to_score = pickle.load(file)
 
     def forward(self, inputs, labels):
-        scores = get_gpt_score(inputs, labels, self.sentences_to_score)
-        scores = torch.tensor(scores, dtype=torch.float)
+        # scores = get_gpt_score(inputs, labels, self.sentences_to_score)
+        scores = get_classification_score(inputs, labels, self.sentences_to_score)
+        # scores = torch.tensor(scores, dtype=torch.float)
         return scores
 
     def training_step(self, batch, batch_idx):

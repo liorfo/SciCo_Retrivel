@@ -374,7 +374,7 @@ if __name__ == '__main__':
 
     config['save_path'] = args.save_path if args.save_path != '' else config['save_path']
     config['model']['bert_model'] = args.bert_model if args.bert_model != '' else config['model']['bert_model']
-    config['full_doc'] = False if args.full_doc == '0' else True
+    # config['full_doc'] = False if args.full_doc == '0' else True
 
     if model_name not in {'pipeline', 'multiclass'}:
         raise ValueError(f"The multiclass value needs to be in (multiclass, pipeline), got {model_name}.")
