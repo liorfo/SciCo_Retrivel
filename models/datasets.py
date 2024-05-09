@@ -28,8 +28,6 @@ class CrossEncoderDataset(data.Dataset):
             print('Using full doc')
         else:
             print('Using sentence context')
-        if should_load_definition:
-            print(f'Loading definitions from {data_label}')
         self.should_load_definition = should_load_definition
         self.should_save_term_context = should_save_term_context
         with jsonlines.open(data_path, 'r') as f:
@@ -60,9 +58,13 @@ class CrossEncoderDataset(data.Dataset):
         self.term_context_dict = {}
 
         if should_load_definition:
-            with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_label}_terms_definitions_final.pickle', "rb") as fp:
-                self.definitions = pickle.load(fp)
-        all_definitions = {}
+            print(f'Loading definitions from {data_label}')
+            if self.full_doc:
+                with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/full_texts/{data_label}_terms_definitions_final.pickle', "rb") as fp:
+                    self.definitions = pickle.load(fp)
+            else:
+                with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_label}_terms_definitions_final.pickle', "rb") as fp:
+                    self.definitions = pickle.load(fp)
         for i, topic in enumerate(self.data):
             if self.multiclass == 'multiclass':
                 inputs, labels, info_pairs, definitions = self.get_topic_pairs(topic)

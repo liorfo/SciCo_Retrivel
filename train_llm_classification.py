@@ -78,7 +78,7 @@ use_nested_quant = False
 # TrainingArguments parameters
 ################################################################################
 # Output directory where the model predictions and checkpoints will be stored
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/model'
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/model'
 # Number of training epochs
 num_train_epochs = 1
 # Enable fp16/bf16 training (set bf16 to True with an A100)
@@ -117,7 +117,7 @@ logging_steps = 10
 # SFT parameters
 ################################################################################
 # Maximum sequence length to use
-max_seq_length = 1024  # None
+max_seq_length = 2048  # None
 # Pack multiple short examples in the same input sequence to increase efficiency
 packing = True  # False
 # Load the entire model on the GPU 0
@@ -166,14 +166,40 @@ please select the correct relationship between the two terms from the options ab
 <|assistant|>
 """
 
+phi3_instruct_prompt_with_def = """<|user|>
+You are a helpful AI assistant. you will get two scientific texts that has a term surrounded by a relevant context and a definition of those terms that was generated in regard for the context. Read the terms with their context and definitions and define the correct relationship between the two terms as follows:
+1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
+2 - Parent concept: Term1 represents a broader category or concept that encompasses term2, such that mentioning term1 implicitly invokes term2.
+3 - Child concept: The inverse of a parent concept relation. Term1 is a specific instance or subset of the broader concept represented by term2, such that mentioning term2 implicitly invokes term1.
+0 - None of the above: Term1 and term2 are not co-referring, and do not have a parent-child or child-parent relation.
 
-def get_phi3_instruct_prompt(pair):
+here are the terms and their context:
+first term: {term1}
+first term definition: {term1_def}
+first term context: {term1_text}
+
+second term: {term2}
+second term definition: {term2_def}
+second term context: {term2_text}
+
+please select the correct relationship between the two terms from the options above.<|end|>
+<|assistant|>
+"""
+
+
+def get_phi3_instruct_prompt(pair, with_def = False, def_dict = None):
     term1_text, term2_text, _ = pair.split('</s>')
     term1 = re.search(r'<m>(.*?)</m>', term1_text).group(1).strip()
     term2 = re.search(r'<m>(.*?)</m>', term2_text).group(1).strip()
     term1_text, term2_text = term1_text.replace('<m> ', '').replace(' </m>', ''), term2_text.replace('<m> ',
                                                                                                      '').replace(
         ' </m>', '')
+
+    if with_def:
+        term1_def, term2_def = def_dict[pair.split('</s>')[0] + '</s>'], def_dict[pair.split('</s>')[1] + '</s>']
+        return phi3_instruct_prompt_with_def.format(term1=term1, term1_text=term1_text, term2=term2,
+                                                    term2_text=term2_text, term1_def=term1_def, term2_def=term2_def)
+
     return phi3_instruct_prompt.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
 
 
@@ -212,8 +238,7 @@ wandb.login(key='8b5bf778b37dfdd547cbb6f4c1340c3b08ddab75')
 
 base_model = "microsoft/Phi-3-mini-4k-instruct"
 
-data = DatasetsHandler(test=False, train=True, dev=True, full_doc=True)
-data2 = DatasetsHandler(test=False, train=True, dev=True)
+data = DatasetsHandler(test=False, train=True, dev=True, full_doc=True, should_load_definition=True)
 
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=use_4bit,  # Activates 4-bit precision loading
@@ -277,8 +302,8 @@ training_arguments = TrainingArguments(
 # Load the dataset
 print("Loading dataset")
 
-train_prompts = [{'text': get_phi3_instruct_prompt(data.train_dataset.pairs[i]), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
-val_prompts = [{'text': get_phi3_instruct_prompt(data.dev_dataset.pairs[i]), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
+train_prompts = [{'text': get_phi3_instruct_prompt(data.train_dataset.pairs[i], True, data.train_dataset.definitions), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
+val_prompts = [{'text': get_phi3_instruct_prompt(data.dev_dataset.pairs[i], True, data.dev_dataset.definitions), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
 
 # tolkenize the dataset
 print("Tokenizing dataset")
@@ -311,8 +336,8 @@ trainer = WeightedCELossTrainer(
 # trainer.train(resume_from_checkpoint='/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/model/checkpoint-10')
 trainer.train()
 trainer.model.save_pretrained(output_dir)
-model.save_pretrained('/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/model_with_lora_save')
+model.save_pretrained('/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/model_with_lora_save')
 tokenizer.save_pretrained(output_dir)
-tokenizer.save_pretrained('/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/model_with_lora_save')
+tokenizer.save_pretrained('/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/model_with_lora_save')
 
 wandb.finish()

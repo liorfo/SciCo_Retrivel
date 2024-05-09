@@ -9,7 +9,7 @@ import pickle
 base_model = "microsoft/Phi-3-mini-4k-instruct"
 adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/model"
 device_map = 'auto'
-max_seq_length = 1024  # None
+max_seq_length = 2048  # None
 output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/results'
 
 phi3_instruct_prompt = """<|user|>
@@ -30,14 +30,38 @@ please select the correct relationship between the two terms from the options ab
 <|assistant|>
 """
 
+phi3_instruct_prompt_with_def = """<|user|>
+You are a helpful AI assistant. you will get two scientific texts that has a term surrounded by a relevant context and a definition of those terms that was generated in regard for the context. Read the terms with their context and definitions and define the correct relationship between the two terms as follows:
+1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
+2 - Parent concept: Term1 represents a broader category or concept that encompasses term2, such that mentioning term1 implicitly invokes term2.
+3 - Child concept: The inverse of a parent concept relation. Term1 is a specific instance or subset of the broader concept represented by term2, such that mentioning term2 implicitly invokes term1.
+0 - None of the above: Term1 and term2 are not co-referring, and do not have a parent-child or child-parent relation.
 
-def get_phi3_instruct_prompt(pair):
+here are the terms and their context:
+first term: {term1}
+first term definition: {term1_def}
+first term context: {term1_text}
+
+second term: {term2}
+second term definition: {term2_def}
+second term context: {term2_text}
+
+please select the correct relationship between the two terms from the options above.<|end|>
+<|assistant|>
+"""
+
+
+def get_phi3_instruct_prompt(pair, with_def = False, def_dict = None):
     term1_text, term2_text, _ = pair.split('</s>')
     term1 = re.search(r'<m>(.*?)</m>', term1_text).group(1).strip()
     term2 = re.search(r'<m>(.*?)</m>', term2_text).group(1).strip()
     term1_text, term2_text = term1_text.replace('<m> ', '').replace(' </m>', ''), term2_text.replace('<m> ',
                                                                                                      '').replace(
         ' </m>', '')
+    if with_def:
+        term1_def, term2_def = def_dict[pair[0] + '</s>'], def_dict[pair[1] + '</s>']
+        return phi3_instruct_prompt_with_def.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text, term1_def=term1_def, term2_def=term2_def)
+
     return phi3_instruct_prompt.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
 
 data = DatasetsHandler(test=True, train=False, dev=False, full_doc=True)
