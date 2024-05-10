@@ -7,10 +7,10 @@ from tqdm import tqdm
 import pickle
 
 base_model = "microsoft/Phi-3-mini-4k-instruct"
-adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/model"
+adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/model"
 device_map = 'auto'
-max_seq_length = 2048  # None
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/no_def/results'
+max_seq_length = 1536  # None
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/results'
 
 phi3_instruct_prompt = """<|user|>
 You are a helpful AI assistant. you will get two scientific texts that has a term surrounded by a relevant context. Read the terms with their context and define the correct relationship between the two terms as follows:
@@ -59,12 +59,13 @@ def get_phi3_instruct_prompt(pair, with_def = False, def_dict = None):
                                                                                                      '').replace(
         ' </m>', '')
     if with_def:
-        term1_def, term2_def = def_dict[pair[0] + '</s>'], def_dict[pair[1] + '</s>']
-        return phi3_instruct_prompt_with_def.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text, term1_def=term1_def, term2_def=term2_def)
+        term1_def, term2_def = def_dict[pair.split('</s>')[0] + '</s>'], def_dict[pair.split('</s>')[1] + '</s>']
+        return phi3_instruct_prompt_with_def.format(term1=term1, term1_text=term1_text, term2=term2,
+                                                    term2_text=term2_text, term1_def=term1_def, term2_def=term2_def)
 
     return phi3_instruct_prompt.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
 
-data = DatasetsHandler(test=True, train=False, dev=False, full_doc=True)
+data = DatasetsHandler(test=True, train=False, dev=False, full_doc=True, should_load_definition=True)
 
 model = Phi3ForSequenceClassification.from_pretrained(
     base_model,
@@ -89,7 +90,7 @@ tokenizer.pad_token_id = tokenizer.convert_tokens_to_ids(tokenizer.pad_token)
 tokenizer.padding_side = 'left'
 
 
-test_prompts = [{'text': get_phi3_instruct_prompt(data.test_dataset.pairs[i]), 'label': data.test_dataset.labels[i]} for i in range(len(data.test_dataset.pairs))]
+test_prompts = [{'text': get_phi3_instruct_prompt(data.test_dataset.pairs[i], True, data.test_dataset.definitions), 'label': data.test_dataset.labels[i]} for i in range(len(data.test_dataset.pairs))]
 
 results = {}
 
