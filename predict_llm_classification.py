@@ -5,10 +5,12 @@ from definition_handler.process_data import DatasetsHandler
 import re
 from tqdm import tqdm
 import pickle
+from accelerate import Accelerator
+from accelerate.utils import gather_object
 
 base_model = "microsoft/Phi-3-mini-4k-instruct"
 adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/model"
-device_map = 'auto'
+# device_map = 'auto'
 max_seq_length = 1536  # None
 output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/results'
 
@@ -50,8 +52,7 @@ please select the correct relationship between the two terms from the options ab
 <|assistant|>
 """
 
-
-def get_phi3_instruct_prompt(pair, with_def = False, def_dict = None):
+def get_phi3_instruct_prompt(pair, with_def=False, def_dict=None):
     term1_text, term2_text, _ = pair.split('</s>')
     term1 = re.search(r'<m>(.*?)</m>', term1_text).group(1).strip()
     term2 = re.search(r'<m>(.*?)</m>', term2_text).group(1).strip()
@@ -65,7 +66,11 @@ def get_phi3_instruct_prompt(pair, with_def = False, def_dict = None):
 
     return phi3_instruct_prompt.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
 
+
 data = DatasetsHandler(test=True, train=False, dev=False, full_doc=True, should_load_definition=True)
+
+accelerator = Accelerator()
+device_map = {"": accelerator.process_index}
 
 model = Phi3ForSequenceClassification.from_pretrained(
     base_model,
@@ -89,22 +94,34 @@ tokenizer.pad_token = tokenizer.unk_token  # use unk rather than eos token to pr
 tokenizer.pad_token_id = tokenizer.convert_tokens_to_ids(tokenizer.pad_token)
 tokenizer.padding_side = 'left'
 
+test_prompts = [{'text': get_phi3_instruct_prompt(data.test_dataset.pairs[i], True, data.test_dataset.definitions),
+                 'label': data.test_dataset.labels[i], "pair": data.test_dataset.pairs[i]} for i in range(len(data.test_dataset.pairs))]
+# sync GPUs and start the timer
+accelerator.wait_for_everyone()
 
-test_prompts = [{'text': get_phi3_instruct_prompt(data.test_dataset.pairs[i], True, data.test_dataset.definitions), 'label': data.test_dataset.labels[i]} for i in range(len(data.test_dataset.pairs))]
+# divide the prompt list onto the available GPUs
+with accelerator.split_between_processes(test_prompts) as prompts:
+    results = {}
+    with torch.no_grad():
+        for i, example in enumerate(tqdm(prompts, disable=not accelerator.is_local_main_process)):
+            input = tokenizer(example['text'], return_tensors="pt", truncation=True, padding=True,
+                              max_length=max_seq_length).to('cuda')
+            output = model.forward(**input).logits
+            text, label, pair = example['text'], example['label'], example['pair']
+            results[pair] = output
+            if i % 15000 == 0:
+                print(f'Processed {i} examples in process {accelerator.process_index}')
+                with open(f'{output_dir}/results_{i}_process_{accelerator.process_index}_batches.pickle', 'wb') as file:
+                    pickle.dump(results, file)
 
-results = {}
+        results = [results]  # transform to list, otherwise gather_object() will not collect correctly
 
-with torch.no_grad():
-    for i, example in enumerate(tqdm(test_prompts)):
-        input = tokenizer(example['text'], return_tensors="pt", truncation=True, padding=True, max_length=max_seq_length).to('cuda')
-        output = model.forward(**input).logits
-        text, label = example['text'], example['label']
-        results[data.test_dataset.pairs[i]] = output
-        if i % 15000 == 0:
-            print(f'Processed {i} examples')
-            with open(f'{output_dir}/results_{i}_batches.pickle', 'wb') as file:
-                pickle.dump(results, file)
+results_gathered = gather_object(results)
 
-print(f'Processed all examples')
-with open(f'{output_dir}/final_results.pickle', 'wb') as file:
-    pickle.dump(results, file)
+if accelerator.is_main_process:
+    print(f'Processed all examples')
+    with open(f'{output_dir}/final_results.pickle', 'wb') as file:
+        pickle.dump(results_gathered, file)
+    merged_results = {k: v for d in results_gathered for k, v in d.items()}
+    with open(f'{output_dir}/merged_final_results.pickle', 'wb') as file:
+        pickle.dump(merged_results, file)
