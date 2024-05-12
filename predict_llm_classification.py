@@ -66,6 +66,36 @@ def get_phi3_instruct_prompt(pair, with_def=False, def_dict=None):
 
     return phi3_instruct_prompt.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
 
+def combine_results_and_get_remaining_data(test_prompts):
+    try:
+        with open(
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/results/results_180000_process_0_batches.pickle',
+                'rb') as file:
+            process0 = pickle.load(file)
+        with open(
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/results/results_180000_process_1_batches.pickle',
+                'rb') as file:
+            process1 = pickle.load(file)
+        with open(
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/results/results_180000_process_2_batches.pickle',
+                'rb') as file:
+            process2 = pickle.load(file)
+
+        combined_results = {**process0, **process1, **process2}
+        remaining_data = [x for x in test_prompts if x['pair'] not in combined_results]
+        return combined_results, remaining_data
+    except FileNotFoundError:
+        print("File not found. Check the path and try again.")
+        return {}, test_prompts
+    except IOError as e:
+        print(f"An IO error occurred: {e}")
+        return {}, test_prompts
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return {}, test_prompts
+
+
+
 
 data = DatasetsHandler(test=True, train=False, dev=False, full_doc=True, should_load_definition=True)
 
@@ -96,12 +126,13 @@ tokenizer.padding_side = 'left'
 
 test_prompts = [{'text': get_phi3_instruct_prompt(data.test_dataset.pairs[i], True, data.test_dataset.definitions),
                  'label': data.test_dataset.labels[i], "pair": data.test_dataset.pairs[i]} for i in range(len(data.test_dataset.pairs))]
+results, test_prompts = combine_results_and_get_remaining_data(test_prompts)
 # sync GPUs and start the timer
 accelerator.wait_for_everyone()
 
 # divide the prompt list onto the available GPUs
 with accelerator.split_between_processes(test_prompts) as prompts:
-    results = {}
+    # results = {}
     with torch.no_grad():
         for i, example in enumerate(tqdm(prompts, disable=not accelerator.is_local_main_process)):
             input = tokenizer(example['text'], return_tensors="pt", truncation=True, padding=True,
@@ -125,3 +156,5 @@ if accelerator.is_main_process:
     merged_results = {k: v for d in results_gathered for k, v in d.items()}
     with open(f'{output_dir}/merged_final_results.pickle', 'wb') as file:
         pickle.dump(merged_results, file)
+
+# check https://github.com/ultralytics/ultralytics/issues/1439 and also look here https://github.com/huggingface/accelerate/issues/314

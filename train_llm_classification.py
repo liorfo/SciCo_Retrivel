@@ -95,8 +95,8 @@ gradient_checkpointing = True
 # Maximum gradient normal (gradient clipping)
 max_grad_norm = 0.3
 # Initial learning rate (AdamW optimizer)
-# learning_rate = 2e-4
-learning_rate = 2e-5
+learning_rate = 2e-4
+# learning_rate = 2e-5
 # Weight decay to apply to all layers except bias/LayerNorm weights
 weight_decay = 0.001
 # Learning rate schedule (constant a bit better than cosine)
@@ -117,7 +117,7 @@ logging_steps = 10
 # SFT parameters
 ################################################################################
 # Maximum sequence length to use
-max_seq_length = 2048  # None
+max_seq_length = 1536  # None
 # Pack multiple short examples in the same input sequence to increase efficiency
 packing = True  # False
 # Load the entire model on the GPU 0
@@ -126,27 +126,52 @@ packing = True  # False
 device_map = "cuda"
 
 ################################################################################
-# start of training
+# methods
 ################################################################################
 
-task_msg = """### Task: 
-Each of the following scientific texts in the ### Input section has a term surrounded by a relevant context. Read the terms with their context and define the correct relationship between the two terms as follows:
-1 - Term A and term B are co-referring terms
-2 - Term A is a parent concept of term B
-3 - Term A is a child concept of term B
-0 - None of the above relations are appropriate
-"""
-
-input_msg = """### Input: 
+orca_template = """<|im_start|>system
+You are MistralOrca, a large language model trained by Alignment Lab AI. 
+You will get two scientific texts that has a term surrounded by a relevant context. Read the terms with their context and define the correct relationship between the two terms as follows:
+1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
+2 - Parent concept: Term1 represents a broader category or concept that encompasses term2, such that mentioning term1 implicitly invokes term2.
+3 - Child concept: The inverse of a parent concept relation. Term1 is a specific instance or subset of the broader concept represented by term2, such that mentioning term2 implicitly invokes term1.
+0 - None of the above: Term1 and term2 are not co-referring, and do not have a parent-child or child-parent relation.
+when answering the following question, please consider the context of the terms and write out your reasoning step-by-step to be sure you get the right answers!
+<|im_end|>
+<|im_start|>user
+here are the terms and their context:
 first term: {term1} 
 first term context: {term1_text}
 
 second term: {term2}
 second term context: {term2_text}
+
+please select the correct relationship between the two terms from the options above.<|im_end|>
+<|im_start|>assistant
 """
 
-out_prompt = """### Output:
-{label}"""
+orca_template_with_def = """<|im_start|>system
+You are MistralOrca, a large language model trained by Alignment Lab AI. 
+You will get two scientific texts that has a term surrounded by a relevant context and a definition of those terms that was generated in regard for the context. Read the terms with their context and definitions and define the correct relationship between the two terms as follows:
+1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
+2 - Parent concept: Term1 represents a broader category or concept that encompasses term2, such that mentioning term1 implicitly invokes term2.
+3 - Child concept: The inverse of a parent concept relation. Term1 is a specific instance or subset of the broader concept represented by term2, such that mentioning term2 implicitly invokes term1.
+0 - None of the above: Term1 and term2 are not co-referring, and do not have a parent-child or child-parent relation.
+when answering the following question, please consider the context of the terms and their definitions and write out your reasoning step-by-step to be sure you get the right answers!
+<|im_end|>
+<|im_start|>user
+here are the terms and their context:
+first term: {term1}
+first term definition: {term1_def}
+first term context: {term1_text}
+
+second term: {term2}
+second term definition: {term2_def}
+second term context: {term2_text}
+
+please select the correct relationship between the two terms from the options above.<|im_end|>
+<|im_start|>assistant
+"""
 
 phi3_instruct_prompt = """<|user|>
 You are a helpful AI assistant. you will get two scientific texts that has a term surrounded by a relevant context. Read the terms with their context and define the correct relationship between the two terms as follows:
@@ -186,7 +211,6 @@ please select the correct relationship between the two terms from the options ab
 <|assistant|>
 """
 
-
 def get_phi3_instruct_prompt(pair, with_def = False, def_dict = None):
     term1_text, term2_text, _ = pair.split('</s>')
     term1 = re.search(r'<m>(.*?)</m>', term1_text).group(1).strip()
@@ -202,43 +226,108 @@ def get_phi3_instruct_prompt(pair, with_def = False, def_dict = None):
 
     return phi3_instruct_prompt.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
 
-
-def get_task_prompt(with_def=False):
-    if with_def:
-        # TODO return def appropriate task prompt
-        return task_msg
-    return task_msg
-
-
-def get_input_prompt(pair, with_def=False):
+def get_orca_format_prompt(pair, with_def=False, def_dict = None):
     term1_text, term2_text, _ = pair.split('</s>')
     term1 = re.search(r'<m>(.*?)</m>', term1_text).group(1).strip()
     term2 = re.search(r'<m>(.*?)</m>', term2_text).group(1).strip()
     term1_text, term2_text = term1_text.replace('<m> ', '').replace(' </m>', ''), term2_text.replace('<m> ',
                                                                                                      '').replace(
         ' </m>', '')
-    if with_def:
-        # TODO return def appropriate input prompt
-        return input_msg
-    return input_msg.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
+
+    # if with_def:
+    #     term1_def, term2_def = def_dict[pair.split('</s>')[0] + '</s>'], def_dict[pair.split('</s>')[1] + '</s>']
+    #     return phi3_instruct_prompt_with_def.format(term1=term1, term1_text=term1_text, term2=term2,
+    #                                                 term2_text=term2_text, term1_def=term1_def, term2_def=term2_def)
+
+    return orca_template.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
 
 
-def get_output_prompt(label):
-    return out_prompt.format(label=label)
+def get_classification_lora_config(target_modules=["o_proj", "qkv_proj", "gate_up_proj", "down_proj"]):
+    # Load LoRA configuration
+    return LoraConfig(
+        lora_alpha=lora_alpha,
+        lora_dropout=lora_dropout,
+        r=lora_r,
+        bias="none",
+        task_type=TaskType.SEQ_CLS,
+        target_modules=target_modules,
+        inference_mode=False,
+        modules_to_save=["score"],
+    )
 
 
-def get_format_prompt(pair, label, with_def=False):
-    return get_task_prompt(with_def) + '\n' + get_input_prompt(pair, with_def) + '\n' + get_output_prompt(label)
+def get_phi3_model_and_tokenizer(base_model, bnb_config):
+    model = Phi3ForSequenceClassification.from_pretrained(
+        base_model,
+        # quantization_config=bnb_config,
+        cache_dir='/cs/labs/tomhope/forer11/cache',
+        device_map=device_map,
+        attn_implementation="flash_attention_2",
+        trust_remote_code=True,
+        num_labels=4,
+        torch_dtype=torch.bfloat16,
+        # use_cache = False
+    )
+
+    model = get_peft_model(model, get_classification_lora_config())
+    model.print_trainable_parameters()
+
+    tokenizer = AutoTokenizer.from_pretrained(base_model, trust_remote_code=True, add_prefix_space=True)
+    tokenizer.pad_token = tokenizer.unk_token  # use unk rather than eos token to prevent endless generation
+    tokenizer.pad_token_id = tokenizer.convert_tokens_to_ids(tokenizer.pad_token)
+    tokenizer.padding_side = 'left'
+
+    return model, tokenizer
 
 
-def format_prompts_fn(example):
-    return example['text']
+def get_model_and_tokenizer(base_model, bnb_config):
+    print(f'Loading model and tokenizer from {base_model}')
+    if "Phi-3" in base_model:
+        return get_phi3_model_and_tokenizer(base_model, bnb_config)
+    else:
+        # for now orca model
+        model = AutoModelForSequenceClassification.from_pretrained(
+            base_model,
+            # quantization_config=bnb_config,
+            cache_dir='/cs/labs/tomhope/forer11/cache',
+            device_map=device_map,
+            attn_implementation="flash_attention_2",
+            trust_remote_code=True,
+            num_labels=4,
+            torch_dtype=torch.bfloat16,
+            # use_cache = False
+        )
 
-wandb.login(key='8b5bf778b37dfdd547cbb6f4c1340c3b08ddab75')
+        lora_config = get_classification_lora_config(["q_proj", "up_proj", "o_proj", "k_proj", "down_proj", "gate_proj", "v_proj"])
 
-base_model = "microsoft/Phi-3-mini-4k-instruct"
+        model = get_peft_model(model, lora_config)
+        model.print_trainable_parameters()
 
-data = DatasetsHandler(test=False, train=True, dev=True, full_doc=True, should_load_definition=True)
+        tokenizer = AutoTokenizer.from_pretrained(base_model, trust_remote_code=True, add_prefix_space=True)
+        tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.pad_token_id = tokenizer.eos_token_id
+        tokenizer.padding_side = 'left'
+        model.config.pad_token_id = model.config.eos_token_id
+        return model, tokenizer
+
+def get_prompt_formatter(base_model):
+    if "Phi-3" in base_model:
+        return get_phi3_instruct_prompt
+    else:
+        return get_orca_format_prompt
+
+
+################################################################################
+# start of training
+################################################################################
+
+# wandb.login(key='8b5bf778b37dfdd547cbb6f4c1340c3b08ddab75')
+
+# base_model = "microsoft/Phi-3-mini-4k-instruct"
+
+base_model = "Open-Orca/Mistral-7B-OpenOrca"
+
+data = DatasetsHandler(test=False, train=True, dev=True, full_doc=True, should_load_definition=False)
 
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=use_4bit,  # Activates 4-bit precision loading
@@ -247,37 +336,7 @@ bnb_config = BitsAndBytesConfig(
     bnb_4bit_use_double_quant=use_nested_quant,  # False
 )
 
-# Load LoRA configuration
-peft_config = LoraConfig(
-    lora_alpha=lora_alpha,
-    lora_dropout=lora_dropout,
-    r=lora_r,
-    bias="none",
-    task_type=TaskType.SEQ_CLS,
-    target_modules=["o_proj", "qkv_proj", "gate_up_proj", "down_proj"],
-    inference_mode=False,
-    modules_to_save=["score"],
-)
-
-model = Phi3ForSequenceClassification.from_pretrained(
-    base_model,
-    # quantization_config=bnb_config,
-    cache_dir='/cs/labs/tomhope/forer11/cache',
-    device_map=device_map,
-    attn_implementation="flash_attention_2",
-    trust_remote_code=True,
-    num_labels=4,
-    torch_dtype=torch.bfloat16,
-    # use_cache = False
-)
-
-model = get_peft_model(model, peft_config)
-model.print_trainable_parameters()
-
-tokenizer = AutoTokenizer.from_pretrained(base_model, trust_remote_code=True, add_prefix_space=True)
-tokenizer.pad_token = tokenizer.unk_token  # use unk rather than eos token to prevent endless generation
-tokenizer.pad_token_id = tokenizer.convert_tokens_to_ids(tokenizer.pad_token)
-tokenizer.padding_side = 'left'
+model, tokenizer = get_model_and_tokenizer(base_model, bnb_config)
 
 # Set training parameters
 training_arguments = TrainingArguments(
@@ -302,8 +361,13 @@ training_arguments = TrainingArguments(
 # Load the dataset
 print("Loading dataset")
 
-train_prompts = [{'text': get_phi3_instruct_prompt(data.train_dataset.pairs[i], True, data.train_dataset.definitions), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
-val_prompts = [{'text': get_phi3_instruct_prompt(data.dev_dataset.pairs[i], True, data.dev_dataset.definitions), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
+prompt_format_fn = get_prompt_formatter(base_model)
+
+# train_prompts = [{'text': prompt_format_fn(data.train_dataset.pairs[i], True, data.train_dataset.definitions), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
+# val_prompts = [{'text': prompt_format_fn(data.dev_dataset.pairs[i], True, data.dev_dataset.definitions), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
+
+train_prompts = [{'text': prompt_format_fn(data.train_dataset.pairs[i]), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
+val_prompts = [{'text': prompt_format_fn(data.dev_dataset.pairs[i]), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
 
 # tolkenize the dataset
 print("Tokenizing dataset")
@@ -336,8 +400,6 @@ trainer = WeightedCELossTrainer(
 # trainer.train(resume_from_checkpoint='/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_v2_sfttrainer/no_def/model/checkpoint-10')
 trainer.train()
 trainer.model.save_pretrained(output_dir)
-model.save_pretrained('/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/model_with_lora_save')
 tokenizer.save_pretrained(output_dir)
-tokenizer.save_pretrained('/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/model_with_lora_save')
 
 wandb.finish()
