@@ -120,7 +120,8 @@ logging_steps = 10
 # SFT parameters
 ################################################################################
 # Maximum sequence length to use
-max_seq_length = 1536  # None
+# max_seq_length = 1536  # None
+max_seq_length = 1664
 # Pack multiple short examples in the same input sequence to increase efficiency
 packing = True  # False
 # Load the entire model on the GPU 0
@@ -135,7 +136,7 @@ device_map = {"": device_index}
 ################################################################################
 
 orca_template = """<|im_start|>system
-You are MistralOrca, a large language model trained by Alignment Lab AI. 
+You are MistralScico, a large language model trained by Tom Hope AI Lab. 
 You will get two scientific texts that has a term surrounded by a relevant context. Read the terms with their context and define the correct relationship between the two terms as follows:
 1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
 2 - Parent concept: Term1 represents a broader category or concept that encompasses term2, such that mentioning term1 implicitly invokes term2.
@@ -156,8 +157,8 @@ please select the correct relationship between the two terms from the options ab
 """
 
 orca_template_with_def = """<|im_start|>system
-You are MistralOrca, a large language model trained by Alignment Lab AI. 
-You will get two scientific texts that has a term surrounded by a relevant context and a definition of those terms that was generated in regard for the context. Read the terms with their context and definitions and define the correct relationship between the two terms as follows:
+You are MistralScico, a large language model trained by Tom Hope AI Lab. 
+You will get two scientific texts that has a term surrounded by a relevant context and a definition of those terms that was generated with the context in mind. Read the terms with their context and definitions and define the correct relationship between the two terms as follows:
 1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
 2 - Parent concept: Term1 represents a broader category or concept that encompasses term2, such that mentioning term1 implicitly invokes term2.
 3 - Child concept: The inverse of a parent concept relation. Term1 is a specific instance or subset of the broader concept represented by term2, such that mentioning term2 implicitly invokes term1.
@@ -239,10 +240,10 @@ def get_orca_format_prompt(pair, with_def=False, def_dict = None):
                                                                                                      '').replace(
         ' </m>', '')
 
-    # if with_def:
-    #     term1_def, term2_def = def_dict[pair.split('</s>')[0] + '</s>'], def_dict[pair.split('</s>')[1] + '</s>']
-    #     return phi3_instruct_prompt_with_def.format(term1=term1, term1_text=term1_text, term2=term2,
-    #                                                 term2_text=term2_text, term1_def=term1_def, term2_def=term2_def)
+    if with_def:
+        term1_def, term2_def = def_dict[pair.split('</s>')[0] + '</s>'], def_dict[pair.split('</s>')[1] + '</s>']
+        return orca_template_with_def.format(term1=term1, term1_text=term1_text, term2=term2,
+                                                    term2_text=term2_text, term1_def=term1_def, term2_def=term2_def)
 
     return orca_template.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
 
@@ -333,7 +334,7 @@ wandb.login(key='8b5bf778b37dfdd547cbb6f4c1340c3b08ddab75')
 base_model = "mistralai/Mistral-7B-v0.1"
 # base_model = "Open-Orca/Mistral-7B-OpenOrca"
 
-data = DatasetsHandler(test=False, train=True, dev=True, full_doc=True, should_load_definition=False)
+data = DatasetsHandler(test=False, train=True, dev=True, full_doc=True, should_load_definition=True)
 
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=use_4bit,  # Activates 4-bit precision loading
@@ -372,8 +373,8 @@ prompt_format_fn = get_prompt_formatter(base_model)
 # train_prompts = [{'text': prompt_format_fn(data.train_dataset.pairs[i], True, data.train_dataset.definitions), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
 # val_prompts = [{'text': prompt_format_fn(data.dev_dataset.pairs[i], True, data.dev_dataset.definitions), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
 
-train_prompts = [{'text': prompt_format_fn(data.train_dataset.pairs[i]), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
-val_prompts = [{'text': prompt_format_fn(data.dev_dataset.pairs[i]), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
+train_prompts = [{'text': prompt_format_fn(data.train_dataset.pairs[i], True, data.train_dataset.definitions), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
+val_prompts = [{'text': prompt_format_fn(data.dev_dataset.pairs[i], True, data.dev_dataset.definitions), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
 
 # tolkenize the dataset
 print("Tokenizing dataset")
