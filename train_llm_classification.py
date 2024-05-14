@@ -16,6 +16,9 @@ import re
 from datasets import Dataset, load_dataset
 import evaluate
 import numpy as np
+from huggingface_hub import login
+from accelerate import Accelerator
+
 
 def compute_metrics(eval_pred):
     # All metrics are already predefined in the HF `evaluate` package
@@ -78,7 +81,7 @@ use_nested_quant = False
 # TrainingArguments parameters
 ################################################################################
 # Output directory where the model predictions and checkpoints will be stored
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/phi3_classification/with_def/model'
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/no_def/model'
 # Number of training epochs
 num_train_epochs = 1
 # Enable fp16/bf16 training (set bf16 to True with an A100)
@@ -95,8 +98,8 @@ gradient_checkpointing = True
 # Maximum gradient normal (gradient clipping)
 max_grad_norm = 0.3
 # Initial learning rate (AdamW optimizer)
-learning_rate = 2e-4
-# learning_rate = 2e-5
+# learning_rate = 2e-4
+learning_rate = 2e-5
 # Weight decay to apply to all layers except bias/LayerNorm weights
 weight_decay = 0.001
 # Learning rate schedule (constant a bit better than cosine)
@@ -123,7 +126,9 @@ packing = True  # False
 # Load the entire model on the GPU 0
 # device_map = {"": 0}
 # device_map = "auto"
-device_map = "cuda"
+# device_map = "cuda"
+device_index = Accelerator().process_index
+device_map = {"": device_index}
 
 ################################################################################
 # methods
@@ -288,7 +293,7 @@ def get_model_and_tokenizer(base_model, bnb_config):
         # for now orca model
         model = AutoModelForSequenceClassification.from_pretrained(
             base_model,
-            # quantization_config=bnb_config,
+            quantization_config=bnb_config,
             cache_dir='/cs/labs/tomhope/forer11/cache',
             device_map=device_map,
             attn_implementation="flash_attention_2",
@@ -321,11 +326,12 @@ def get_prompt_formatter(base_model):
 # start of training
 ################################################################################
 
-# wandb.login(key='8b5bf778b37dfdd547cbb6f4c1340c3b08ddab75')
+wandb.login(key='8b5bf778b37dfdd547cbb6f4c1340c3b08ddab75')
+
 
 # base_model = "microsoft/Phi-3-mini-4k-instruct"
-
-base_model = "Open-Orca/Mistral-7B-OpenOrca"
+base_model = "mistralai/Mistral-7B-v0.1"
+# base_model = "Open-Orca/Mistral-7B-OpenOrca"
 
 data = DatasetsHandler(test=False, train=True, dev=True, full_doc=True, should_load_definition=False)
 
