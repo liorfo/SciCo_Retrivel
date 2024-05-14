@@ -20,10 +20,10 @@ from models.datasets import CrossEncoderDataset
 from models.muticlass import MulticlassBiEncoder, MulticlassCrossEncoder, BinaryCorefCrossEncoder, HypernymCrossEncoder, \
     MulticlassModel
 from utils.model_utils import get_greedy_relations, get_hypernym_relations
-from LLaMA_2_7B_32K.LLaMA_model import LlamaMulticlassCrossEncoder
-from models.baselines import EntailmentModel
-from MistralLite.MistralLite_model import MistarlLightCrossEncoder
-from MistralInstructV2Model.MistralInstruct2_model import MistralInstruct2CrossEncoder
+# from LLaMA_2_7B_32K.LLaMA_model import LlamaMulticlassCrossEncoder
+# from models.baselines import EntailmentModel
+# from MistralLite.MistralLite_model import MistarlLightCrossEncoder
+# from MistralInstructV2Model.MistralInstruct2_model import MistralInstruct2CrossEncoder
 
 
 class MulticlassInference:
@@ -385,6 +385,7 @@ if __name__ == '__main__':
     formatter = logging.Formatter(fmt="%(asctime)s %(name)s.%(lineno)d %(levelname)s : %(message)s", datefmt="%H:%M:%S")
     handler.setFormatter(formatter)
     root_logger.addHandler(handler)
+    root_logger.setLevel(logging.INFO)
     root_logger.setLevel(logging.INFO)
     file_handler = logging.FileHandler(filename=os.path.join(
         config['log'], '{}.txt'.format(datetime.now().strftime("%Y_%m_%d_%H_%M_%S"))))
