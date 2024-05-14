@@ -223,7 +223,7 @@ def get_prompt_formatter(base_model):
         return get_orca_format_prompt
 
 
-data = DatasetsHandler(test=True, train=False, dev=False, full_doc=True, should_load_definition=True)
+data = DatasetsHandler(test=True, train=False, dev=False, full_doc=True, should_load_definition=False)
 
 accelerator = Accelerator()
 device_map = {"": accelerator.process_index}
@@ -245,15 +245,15 @@ model = model.merge_and_unload()
 
 prompt_format_fn = get_prompt_formatter(base_model)
 
-test_prompts = [{'text': prompt_format_fn(data.test_dataset.pairs[i], True, data.test_dataset.definitions),
+test_prompts = [{'text': prompt_format_fn(data.test_dataset.pairs[i]),
                  'label': data.test_dataset.labels[i], "pair": data.test_dataset.pairs[i]} for i in range(len(data.test_dataset.pairs))]
-results, test_prompts = combine_results_and_get_remaining_data(test_prompts)
+# results, test_prompts = combine_results_and_get_remaining_data(test_prompts)
 # sync GPUs and start the timer
 accelerator.wait_for_everyone()
 
 # divide the prompt list onto the available GPUs
 with accelerator.split_between_processes(test_prompts) as prompts:
-    # results = {}
+    results = {}
     with torch.no_grad():
         for i, example in enumerate(tqdm(prompts, disable=not accelerator.is_local_main_process)):
             input = tokenizer(example['text'], return_tensors="pt", truncation=True, padding=True,
