@@ -11,10 +11,11 @@ from accelerate.utils import gather_object
 # base_model = "microsoft/Phi-3-mini-4k-instruct"
 base_model = "mistralai/Mistral-7B-v0.1"
 
-adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/no_def/model"
+adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_def/model"
 # device_map = 'auto'
-max_seq_length = 1536  # None
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/no_def/results'
+# max_seq_length = 1536  # None
+max_seq_length = 1664
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_def/results'
 
 ################################################################################
 # bitsandbytes parameters
@@ -92,8 +93,8 @@ please select the correct relationship between the two terms from the options ab
 """
 
 orca_template_with_def = """<|im_start|>system
-You are MistralOrca, a large language model trained by Alignment Lab AI. 
-You will get two scientific texts that has a term surrounded by a relevant context and a definition of those terms that was generated in regard for the context. Read the terms with their context and definitions and define the correct relationship between the two terms as follows:
+You are MistralScico, a large language model trained by Tom Hope AI Lab. 
+You will get two scientific texts that has a term surrounded by a relevant context and a definition of those terms that was generated with the context in mind. Read the terms with their context and definitions and define the correct relationship between the two terms as follows:
 1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
 2 - Parent concept: Term1 represents a broader category or concept that encompasses term2, such that mentioning term1 implicitly invokes term2.
 3 - Child concept: The inverse of a parent concept relation. Term1 is a specific instance or subset of the broader concept represented by term2, such that mentioning term2 implicitly invokes term1.
@@ -122,10 +123,10 @@ def get_orca_format_prompt(pair, with_def=False, def_dict = None):
                                                                                                      '').replace(
         ' </m>', '')
 
-    # if with_def:
-    #     term1_def, term2_def = def_dict[pair.split('</s>')[0] + '</s>'], def_dict[pair.split('</s>')[1] + '</s>']
-    #     return phi3_instruct_prompt_with_def.format(term1=term1, term1_text=term1_text, term2=term2,
-    #                                                 term2_text=term2_text, term1_def=term1_def, term2_def=term2_def)
+    if with_def:
+        term1_def, term2_def = def_dict[pair.split('</s>')[0] + '</s>'], def_dict[pair.split('</s>')[1] + '</s>']
+        return orca_template_with_def.format(term1=term1, term1_text=term1_text, term2=term2,
+                                             term2_text=term2_text, term1_def=term1_def, term2_def=term2_def)
 
     return orca_template.format(term1=term1, term1_text=term1_text, term2=term2, term2_text=term2_text)
 
@@ -223,7 +224,7 @@ def get_prompt_formatter(base_model):
         return get_orca_format_prompt
 
 
-data = DatasetsHandler(test=True, train=False, dev=False, full_doc=True, should_load_definition=False)
+data = DatasetsHandler(test=True, train=False, dev=False, full_doc=True, should_load_definition=True)
 
 accelerator = Accelerator()
 device_map = {"": accelerator.process_index}
@@ -245,7 +246,7 @@ model = model.merge_and_unload()
 
 prompt_format_fn = get_prompt_formatter(base_model)
 
-test_prompts = [{'text': prompt_format_fn(data.test_dataset.pairs[i]),
+test_prompts = [{'text': prompt_format_fn(data.test_dataset.pairs[i], True, data.test_dataset.definitions),
                  'label': data.test_dataset.labels[i], "pair": data.test_dataset.pairs[i]} for i in range(len(data.test_dataset.pairs))]
 # results, test_prompts = combine_results_and_get_remaining_data(test_prompts)
 # sync GPUs and start the timer
