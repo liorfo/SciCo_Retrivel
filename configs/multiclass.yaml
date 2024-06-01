@@ -33,7 +33,7 @@ should_load_definition: False
 from_gpt: True
 
 
-# inference
+# inference test comment
 checkpoint_multiclass: /cs/labs/tomhope/forer11/SciCo_Retrivel/Longformer_new_def/without_def/multiclass/version_0/checkpoints/epoch=0-step=11850.ckpt
 checkpoint_coref: path-to-binary-coref-ckpt
 checkpoint_hypernym: path-hierarchy-model-ckpt
