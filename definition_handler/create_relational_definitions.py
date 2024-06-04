@@ -20,15 +20,17 @@ mxbai_persist_directory = '/cs/labs/tomhope/forer11/unarxive_chroma_gpu_mxbai'
 mxbai_full_persist_directory = '/cs/labs/tomhope/forer11/unarxive_full_mxbai_chroma'
 mxbai_name = 'mixedbread-ai/mxbai-embed-large-v1'
 
-definitions_save_directory = '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full'
+definitions_save_directory = '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full_mixtral'
 
 sfr_persist_directory = '/cs/labs/tomhope/forer11/unarxive_sfr_chroma'
 sfr_name = 'Salesforce/SFR-Embedding-Mistral'
 
 # model_id = "mistralai/Mistral-7B-Instruct-v0.3"
-# model_id = "mistralai/Mixtral-8x7B-Instruct-v0.1"
-model_id = "microsoft/Phi-3-medium-128k-instruct"
+model_id = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+# model_id = "microsoft/Phi-3-medium-128k-instruct"
 # model_id = 'MaziyarPanahi/Llama-3-70B-Instruct-DPO-v0.4'
+
+process = 0
 
 sys_msg = """You are a helpful AI assistant, you are an agent capable of reading and understanding scientific papers. 
 
@@ -37,7 +39,7 @@ you are capable of defining a scientific term with with respect to its relations
 - Read the terms CONTEXT: under CONTEXT: for each term you will have the term's original context, meaning the context where the term was originally in. the context is important to understand the term better but sometimes it can be irrelevant to the term so keep it in mind.
 - Read the PAPER SNIPPETS: given scientific papers snippets, please read them carefully with the user's query terms and contexts in mind but do not mention them in the definition itself.
 - Understand the PAPER SNIPPETS: after reading the snippets, please understand them and try to extract the most important information from them regarding the user's query terms, not all the information is relevant to the definition and remember they were retrieved using the term and context.
-- Generate definition: after reading the contexts and snippets, please generate a short definition ONLY for the term we want to define with respect to its relationship with the other term.
+- Generate definition: after reading the terms contexts and snippets, understand all the information fully and only then please generate a short definition ONLY for the term we want to define with respect to its relationship with the other term.
 
 here is an EXAMPLE for a query and a required generated definition:
 
@@ -171,7 +173,7 @@ def phi3_format(sys_message: str, query: str):
 
 def get_missing_terms(terms_prompt_dict):
     with open(
-            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/train_terms_definitions_until_10800.pickle',
+            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full/test_missing_terms_definitions_until_27200.pickle',
             'rb') as file:
         terms_definitions = pickle.load(file)
 
@@ -212,8 +214,9 @@ def create_relational_definitions(dataset, sorted_first_sentence_map, sentence_t
                                                  attn_implementation="flash_attention_2",
                                                  trust_remote_code=True,
                                                  device_map="auto",
+                                                 load_in_8bit=True
                                                  # quantization_config=bnb_config,
-                                                 torch_dtype=torch.float16,
+                                                 # torch_dtype=torch.float16,
                                                  )
     generate_text = transformers.pipeline(
         model=model, tokenizer=tokenizer,
@@ -229,13 +232,24 @@ def create_relational_definitions(dataset, sorted_first_sentence_map, sentence_t
     )
     generate_text.tokenizer.pad_token_id = model.config.eos_token_id
 
-    # TODO create prompts to each term, generate the definition and
-
     terms_prompt_dict = create_terms_prompts_dict(sorted_first_sentence_map, sentence_to_snippets, dataset.test_dataset.pairs)
 
+    sorted_terms_prompt_dict = sorted(terms_prompt_dict.items())
+    split_index = len(sorted_terms_prompt_dict) // 2
+    process1 = sorted_terms_prompt_dict[:split_index]
+    process2 = sorted_terms_prompt_dict[split_index:]
+
+    if process == 0:
+        print('process 0')
+        splitted_terms = process1
+    elif process == 1:
+        print('process 1')
+        splitted_terms = process2
+    else:
+        raise Exception("process must be 0 or 1")
     # terms_prompt_dict, terms_definitions = get_missing_terms(terms_prompt_dict)
 
-    data = pd.DataFrame(list(terms_prompt_dict.items()), columns=['Term', 'Prompt'])
+    data = pd.DataFrame(splitted_terms, columns=['Term', 'Prompt'])
     dataset = Dataset.from_pandas(data)
 
     print('Generating definitions...')
@@ -249,14 +263,14 @@ def create_relational_definitions(dataset, sorted_first_sentence_map, sentence_t
         if i % 100 == 0:
             print(f'Processed {i} terms')
             with open(
-                    f'{definitions_save_directory}/{data_type}_missing_terms_definitions_until_{i}.pickle',
+                    f'{definitions_save_directory}/{data_type}_missing_terms_definitions_until_{i}_process{process}.pickle',
                     'wb') as file:
                 # Dump the dictionary into the file using pickle.dump()
                 pickle.dump(terms_definitions, file)
 
     print('Saving terms_definitions to pickle file...')
     with open(
-            f'{definitions_save_directory}/{data_type}_terms_definitions_final.pickle',
+            f'{definitions_save_directory}/{data_type}_terms_definitions_final_process{process}.pickle',
             'wb') as file:
         # Dump the dictionary into the file using pickle.dump()
         pickle.dump(terms_definitions, file)
