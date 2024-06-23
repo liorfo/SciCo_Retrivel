@@ -171,14 +171,22 @@ def phi3_format(sys_message: str, query: str):
     return f'<|user|>\n{sys_message}\n\n{query}\n<|end|><|assistant|>\ndefinition: '
 
 
-def get_missing_terms(terms_prompt_dict):
-    with open(
-            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full/test_missing_terms_definitions_until_27200.pickle',
-            'rb') as file:
-        terms_definitions = pickle.load(file)
+def get_missing_terms(splitted_terms, process):
+    if process == 0:
+        with open(
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full_mixtral/test_missing_terms_definitions_until_13800_process0.pickle',
+                'rb') as file:
+            terms_definitions = pickle.load(file)
+    elif process == 1:
+        with open(
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full_mixtral/test_missing_terms_definitions_until_13500_process1.pickle',
+                'rb') as file:
+            terms_definitions = pickle.load(file)
+    else:
+        raise Exception("process must be 0 or 1")
 
-    return {term: prompt for term, prompt in terms_prompt_dict.items() if
-            term not in terms_definitions}, terms_definitions
+    return [(term, prompt) for term, prompt in splitted_terms if
+            term not in terms_definitions], terms_definitions
 
 
 def create_terms_prompts_dict(sorted_first_sentence_map, sentence_to_snippets, pairs):
@@ -200,37 +208,36 @@ def create_terms_prompts_dict(sorted_first_sentence_map, sentence_to_snippets, p
 
 def create_relational_definitions(dataset, sorted_first_sentence_map, sentence_to_snippets, data_type):
     print(f'creating terms_definitions with mistral_instruct for {data_type}...')
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
-
-    bnb_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_use_double_quant=False,
-        bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.bfloat16
-    )
-
-    model = AutoModelForCausalLM.from_pretrained(model_id,
-                                                 cache_dir='/cs/labs/tomhope/forer11/cache',
-                                                 attn_implementation="flash_attention_2",
-                                                 trust_remote_code=True,
-                                                 device_map="auto",
-                                                 load_in_8bit=True
-                                                 # quantization_config=bnb_config,
-                                                 # torch_dtype=torch.float16,
-                                                 )
-    generate_text = transformers.pipeline(
-        model=model, tokenizer=tokenizer,
-        device_map="auto",
-        return_full_text=False,  # if using langchain set True
-        task="text-generation",
-        # we pass model parameters here too
-        # temperature=0.1,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
-        # top_p=0.15,  # select from top tokens whose probability add up to 15%
-        # top_k=0,  # select from top 0 tokens (because zero, relies on top_p)
-        max_new_tokens=200,  # max number of tokens to generate in the output
-        repetition_penalty=1.1  # if output begins repeating increase
-    )
-    generate_text.tokenizer.pad_token_id = model.config.eos_token_id
+    # tokenizer = AutoTokenizer.from_pretrained(model_id)
+    #
+    # bnb_config = BitsAndBytesConfig(
+    #     load_in_4bit=True,
+    #     bnb_4bit_use_double_quant=False,
+    #     bnb_4bit_quant_type="nf4",
+    #     bnb_4bit_compute_dtype=torch.bfloat16
+    # )
+    #
+    # model = AutoModelForCausalLM.from_pretrained(model_id,
+    #                                              cache_dir='/cs/labs/tomhope/forer11/cache',
+    #                                              attn_implementation="flash_attention_2",
+    #                                              trust_remote_code=True,
+    #                                              device_map="auto",
+    #                                              quantization_config=bnb_config,
+    #                                              torch_dtype=torch.bfloat16,
+    #                                              )
+    # generate_text = transformers.pipeline(
+    #     model=model, tokenizer=tokenizer,
+    #     device_map="auto",
+    #     return_full_text=False,  # if using langchain set True
+    #     task="text-generation",
+    #     # we pass model parameters here too
+    #     # temperature=0.2,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
+    #     # top_p=0.3,  # select from top tokens whose probability add up to 15%
+    #     # top_k=0,  # select from top 0 tokens (because zero, relies on top_p)
+    #     max_new_tokens=200,  # max number of tokens to generate in the output
+    #     repetition_penalty=1.1  # if output begins repeating increase
+    # )
+    # generate_text.tokenizer.pad_token_id = model.config.eos_token_id
 
     terms_prompt_dict = create_terms_prompts_dict(sorted_first_sentence_map, sentence_to_snippets, dataset.test_dataset.pairs)
 
@@ -242,19 +249,23 @@ def create_relational_definitions(dataset, sorted_first_sentence_map, sentence_t
     if process == 0:
         print('process 0')
         splitted_terms = process1
+        start_from = 13800
     elif process == 1:
         print('process 1')
         splitted_terms = process2
+        start_from = 13500
     else:
         raise Exception("process must be 0 or 1")
-    # terms_prompt_dict, terms_definitions = get_missing_terms(terms_prompt_dict)
+
+
+    splitted_terms, terms_definitions = get_missing_terms(splitted_terms, process)
 
     data = pd.DataFrame(splitted_terms, columns=['Term', 'Prompt'])
     dataset = Dataset.from_pandas(data)
 
     print('Generating definitions...')
 
-    terms_definitions = {}
+    # terms_definitions = {}
 
     for i, out in tqdm(enumerate(generate_text(KeyDataset(dataset, 'Prompt'), batch_size=8)), total=len(dataset)):
         term = dataset[i]['Term']
@@ -263,7 +274,7 @@ def create_relational_definitions(dataset, sorted_first_sentence_map, sentence_t
         if i % 100 == 0:
             print(f'Processed {i} terms')
             with open(
-                    f'{definitions_save_directory}/{data_type}_missing_terms_definitions_until_{i}_process{process}.pickle',
+                    f'{definitions_save_directory}/{data_type}_missing_terms_definitions_until_{start_from + i}_process{process}.pickle',
                     'wb') as file:
                 # Dump the dictionary into the file using pickle.dump()
                 pickle.dump(terms_definitions, file)
