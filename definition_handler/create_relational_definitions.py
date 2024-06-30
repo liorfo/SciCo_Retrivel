@@ -174,12 +174,12 @@ def phi3_format(sys_message: str, query: str):
 def get_missing_terms(splitted_terms, process):
     if process == 0:
         with open(
-                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full_mixtral/test_missing_terms_definitions_until_13800_process0.pickle',
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full_mixtral/test_missing_terms_definitions_until_63100_process0.pickle',
                 'rb') as file:
             terms_definitions = pickle.load(file)
     elif process == 1:
         with open(
-                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full_mixtral/test_missing_terms_definitions_until_13500_process1.pickle',
+                f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full_mixtral/test_missing_terms_definitions_until_47200_process1.pickle',
                 'rb') as file:
             terms_definitions = pickle.load(file)
     else:
@@ -208,36 +208,36 @@ def create_terms_prompts_dict(sorted_first_sentence_map, sentence_to_snippets, p
 
 def create_relational_definitions(dataset, sorted_first_sentence_map, sentence_to_snippets, data_type):
     print(f'creating terms_definitions with mistral_instruct for {data_type}...')
-    # tokenizer = AutoTokenizer.from_pretrained(model_id)
-    #
-    # bnb_config = BitsAndBytesConfig(
-    #     load_in_4bit=True,
-    #     bnb_4bit_use_double_quant=False,
-    #     bnb_4bit_quant_type="nf4",
-    #     bnb_4bit_compute_dtype=torch.bfloat16
-    # )
-    #
-    # model = AutoModelForCausalLM.from_pretrained(model_id,
-    #                                              cache_dir='/cs/labs/tomhope/forer11/cache',
-    #                                              attn_implementation="flash_attention_2",
-    #                                              trust_remote_code=True,
-    #                                              device_map="auto",
-    #                                              quantization_config=bnb_config,
-    #                                              torch_dtype=torch.bfloat16,
-    #                                              )
-    # generate_text = transformers.pipeline(
-    #     model=model, tokenizer=tokenizer,
-    #     device_map="auto",
-    #     return_full_text=False,  # if using langchain set True
-    #     task="text-generation",
-    #     # we pass model parameters here too
-    #     # temperature=0.2,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
-    #     # top_p=0.3,  # select from top tokens whose probability add up to 15%
-    #     # top_k=0,  # select from top 0 tokens (because zero, relies on top_p)
-    #     max_new_tokens=200,  # max number of tokens to generate in the output
-    #     repetition_penalty=1.1  # if output begins repeating increase
-    # )
-    # generate_text.tokenizer.pad_token_id = model.config.eos_token_id
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+    bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_use_double_quant=False,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.bfloat16
+    )
+
+    model = AutoModelForCausalLM.from_pretrained(model_id,
+                                                 cache_dir='/cs/labs/tomhope/forer11/cache',
+                                                 attn_implementation="flash_attention_2",
+                                                 trust_remote_code=True,
+                                                 device_map="auto",
+                                                 quantization_config=bnb_config,
+                                                 torch_dtype=torch.bfloat16,
+                                                 )
+    generate_text = transformers.pipeline(
+        model=model, tokenizer=tokenizer,
+        device_map="auto",
+        return_full_text=False,  # if using langchain set True
+        task="text-generation",
+        # we pass model parameters here too
+        # temperature=0.2,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
+        # top_p=0.3,  # select from top tokens whose probability add up to 15%
+        # top_k=0,  # select from top 0 tokens (because zero, relies on top_p)
+        max_new_tokens=200,  # max number of tokens to generate in the output
+        repetition_penalty=1.1  # if output begins repeating increase
+    )
+    generate_text.tokenizer.pad_token_id = model.config.eos_token_id
 
     terms_prompt_dict = create_terms_prompts_dict(sorted_first_sentence_map, sentence_to_snippets, dataset.test_dataset.pairs)
 
@@ -249,11 +249,11 @@ def create_relational_definitions(dataset, sorted_first_sentence_map, sentence_t
     if process == 0:
         print('process 0')
         splitted_terms = process1
-        start_from = 13800
+        start_from = 63100
     elif process == 1:
         print('process 1')
         splitted_terms = process2
-        start_from = 13500
+        start_from = 47200
     else:
         raise Exception("process must be 0 or 1")
 
