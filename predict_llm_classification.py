@@ -11,11 +11,13 @@ from accelerate.utils import gather_object
 # base_model = "microsoft/Phi-3-mini-4k-instruct"
 base_model = "mistralai/Mistral-7B-v0.1"
 
+use_relational_def = True
+
 adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_def/model"
 # device_map = 'auto'
 # max_seq_length = 1536  # None
 max_seq_length = 1664
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_def/results'
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_def/results/with_relational_def'
 
 ################################################################################
 # bitsandbytes parameters
@@ -114,8 +116,7 @@ second term context: {term2_text}
 please select the correct relationship between the two terms from the options above.<|im_end|>
 <|im_start|>assistant
 """
-
-def get_orca_format_prompt(pair, with_def=False, def_dict = None):
+def get_orca_format_prompt(pair, with_def=False, def_dict = None, relational_def = {}):
     term1_text, term2_text, _ = pair.split('</s>')
     term1 = re.search(r'<m>(.*?)</m>', term1_text).group(1).strip()
     term2 = re.search(r'<m>(.*?)</m>', term2_text).group(1).strip()
@@ -124,7 +125,13 @@ def get_orca_format_prompt(pair, with_def=False, def_dict = None):
         ' </m>', '')
 
     if with_def:
-        term1_def, term2_def = def_dict[pair.split('</s>')[0] + '</s>'], def_dict[pair.split('</s>')[1] + '</s>']
+        text1, text2 = pair.split('</s>')[0] + '</s>', pair.split('</s>')[1] + '</s>'
+        reversed_pair = text2 + text1
+        term1_def, term2_def = def_dict[text1], def_dict[text2]
+        if pair in relational_def:
+            term1_def = relational_def[pair]
+        if reversed_pair in relational_def:
+            term2_def = relational_def[reversed_pair]
         return orca_template_with_def.format(term1=term1, term1_text=term1_text, term2=term2,
                                              term2_text=term2_text, term1_def=term1_def, term2_def=term2_def)
 
@@ -246,7 +253,11 @@ model = model.merge_and_unload()
 
 prompt_format_fn = get_prompt_formatter(base_model)
 
-test_prompts = [{'text': prompt_format_fn(data.test_dataset.pairs[i], True, data.test_dataset.definitions),
+if use_relational_def:
+    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full_mixtral/test_terms_definitions_combined_final.pickle', 'rb') as file:
+        relational_def = pickle.load(file)
+
+test_prompts = [{'text': prompt_format_fn(data.test_dataset.pairs[i], True, data.test_dataset.definitions, relational_def),
                  'label': data.test_dataset.labels[i], "pair": data.test_dataset.pairs[i]} for i in range(len(data.test_dataset.pairs))]
 # results, test_prompts = combine_results_and_get_remaining_data(test_prompts)
 # sync GPUs and start the timer
