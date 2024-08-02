@@ -81,7 +81,7 @@ use_nested_quant = False
 # TrainingArguments parameters
 ################################################################################
 # Output directory where the model predictions and checkpoints will be stored
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_def/model'
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_gpt_def/model'
 # Number of training epochs
 num_train_epochs = 1
 # Enable fp16/bf16 training (set bf16 to True with an A100)
@@ -120,8 +120,8 @@ logging_steps = 10
 # SFT parameters
 ################################################################################
 # Maximum sequence length to use
-# max_seq_length = 1536  # None
-max_seq_length = 1664
+max_seq_length = 1536  # None
+# max_seq_length = 1664
 # Pack multiple short examples in the same input sequence to increase efficiency
 packing = True  # False
 # Load the entire model on the GPU 0
@@ -327,7 +327,7 @@ def get_prompt_formatter(base_model):
 # start of training
 ################################################################################
 
-wandb.login(key='8b5bf778b37dfdd547cbb6f4c1340c3b08ddab75')
+# wandb.login(key='8b5bf778b37dfdd547cbb6f4c1340c3b08ddab75')
 
 
 # base_model = "microsoft/Phi-3-mini-4k-instruct"
