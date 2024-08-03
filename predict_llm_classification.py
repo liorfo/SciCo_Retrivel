@@ -11,13 +11,13 @@ from accelerate.utils import gather_object
 # base_model = "microsoft/Phi-3-mini-4k-instruct"
 base_model = "mistralai/Mistral-7B-v0.1"
 
-use_relational_def = True
+use_relational_def = False
 
-adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_def/model"
+adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_gpt_def/model"
 # device_map = 'auto'
-# max_seq_length = 1536  # None
-max_seq_length = 1664
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_def/results/with_relational_def'
+max_seq_length = 1536  # None
+# max_seq_length = 1664
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_gpt_def/results'
 
 ################################################################################
 # bitsandbytes parameters
@@ -253,6 +253,7 @@ model = model.merge_and_unload()
 
 prompt_format_fn = get_prompt_formatter(base_model)
 
+relational_def = {}
 if use_relational_def:
     with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full_mixtral/test_terms_definitions_combined_final.pickle', 'rb') as file:
         relational_def = pickle.load(file)
