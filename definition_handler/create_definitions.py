@@ -291,7 +291,7 @@ def get_def_dict_from_json(json_path):
 
 
 if __name__ == '__main__':
-    datasets = DatasetsHandler(test=False, train=True, dev=True, full_doc=True)
+    datasets = DatasetsHandler(test=True, train=True, dev=True, full_doc=True)
 
     # print('creating docs...')
     # texts = process_arxive_to_docs()

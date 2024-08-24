@@ -2,6 +2,7 @@ import jsonlines
 import sys
 from itertools import combinations
 import pickle
+import textwrap
 
 def_comparison_line_format = """Correct class: {gold_class} 
 Mistral no def class: {mistral_no_def_class}
@@ -54,6 +55,25 @@ def generate_mention_couples(mentions):
 
 def only_no_def_right(gold_tag, no_def_tag, singleton_def_tag, relational_def_tag, gpt_def_tag):
     if gold_tag == no_def_tag and gold_tag != singleton_def_tag and gold_tag != relational_def_tag and gold_tag != gpt_def_tag:
+        return True
+    return False
+
+def only_no_def_wrong(gold_tag, no_def_tag, singleton_def_tag, relational_def_tag, gpt_def_tag):
+    if gold_tag != no_def_tag and gold_tag == singleton_def_tag and gold_tag == relational_def_tag and gold_tag == gpt_def_tag:
+        return True
+    return False
+def no_def_wrong_someone_right(gold_tag, no_def_tag, singleton_def_tag, relational_def_tag, gpt_def_tag):
+    if gold_tag != no_def_tag and (gold_tag == singleton_def_tag or gold_tag == relational_def_tag or gold_tag == gpt_def_tag):
+        return True
+    return False
+
+def singleton_wrong_else_whatever(gold_tag, no_def_tag, singleton_def_tag, relational_def_tag, gpt_def_tag):
+    if gold_tag != singleton_def_tag:
+        return True
+    return False
+
+def relational_wrong_else_whatever(gold_tag, no_def_tag, singleton_def_tag, relational_def_tag, gpt_def_tag):
+    if gold_tag != relational_def_tag:
         return True
     return False
 
@@ -111,7 +131,7 @@ if __name__ == '__main__':
         mistral_gpt_def = [line for line in f]
 
     if hard:
-        gold = [topic for topic in gold if topic[hard] == True]
+        gold = [topic for topic in gold if topic['hard_20'] == True]
         mistral_no_def = [topic for topic in mistral_no_def if topic['id'] in [x['id'] for x in gold]]
         mistral_singleton_def = [topic for topic in mistral_singleton_def if topic['id'] in [x['id'] for x in gold]]
         mistral_relational_def = [topic for topic in mistral_relational_def if topic['id'] in [x['id'] for x in gold]]
@@ -155,7 +175,7 @@ if __name__ == '__main__':
 
             first_sent, second_sent = get_sentences(gold, gold_couple)
 
-            if first_sent + second_sent in relational_def and only_no_def_right(gold_couple_class, mistral_no_def_couple_class, mistral_singleton_def_class, mistral_relational_def_class, mistral_gpt_def_class):
+            if first_sent + second_sent in relational_def and relational_wrong_else_whatever(gold_couple_class, mistral_no_def_couple_class, mistral_singleton_def_class, mistral_relational_def_class, mistral_gpt_def_class):
                 first_singleton_def = singleton_def[first_sent]
                 second_singleton_def = singleton_def[second_sent]
                 first_gpt_def = gpt_def[first_sent]
@@ -178,5 +198,6 @@ if __name__ == '__main__':
                 file_concatenation += comparison_line
                 file_concatenation += '\n\n======================================================================================================================\n\n'
 
-    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/definition_comparison/only_no_def_right.txt', 'w') as f:
+    # split_text = "\n".join(textwrap.wrap(file_concatenation, width=100))
+    with open('/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/definition_comparison/relational_wrong_else_whatever.txt', 'w') as f:
         f.write(file_concatenation)

@@ -14,12 +14,13 @@ class DataType(Enum):
 
 
 ############ PARAMS ############
-BATCH_SIZE = 200
+BATCH_SIZE = 1000
 client = OpenAI()
 MAX_TOKENS = 200
-MODEL = "gpt-3.5-turbo-0125"
+# MODEL = "gpt-3.5-turbo-0125"
+MODEL = "gpt-4o"
 TERMS_PATH = '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/full_texts/'
-SAVE_PATH = '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/gpt_3.5_definitions/batches_files/'
+SAVE_PATH = '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/gpt_4_definitions/batches_files/'
 
 
 ################################
@@ -30,7 +31,7 @@ def extract_term(text):
 
 def create_prompt(term_context):
     term = extract_term(term_context)
-    return f'Define the term {term}'
+    return f'Provide a short definition for the term: {term} inside the following context: {term_context}'
 
 
 def create_batch_line(line_number, term_context):
@@ -98,6 +99,7 @@ def send_batch_to_openai(batch_file, type, batch_index):
 def send_batches_to_openai(batch_files, type):
     for i, batch_file in enumerate(batch_files):
         send_batch_to_openai(batch_file, type, i)
+        print(f'Sent {type} batch {i}')
 
 
 def filter_files_by_type(file_list, type):
@@ -140,7 +142,7 @@ def get_batches_results(batches_results_path, terms_path, type, output_path):
     sorted_defs = sorted(custom_id_to_definition.items(), key=lambda item: int(item[0]))
     for i, (custom_id, definition) in enumerate(sorted_defs):
         gpt_def_dict[terms_context[i]] = definition
-    with open (output_path + f'{type}_terms_definitions_gpt_3.5_final.pickle', 'wb') as file:
+    with open (output_path + f'{type}_terms_definitions_{MODEL}_final.pickle', 'wb') as file:
         pickle.dump(gpt_def_dict, file)
     print(f'Done {type} definitions')
 
@@ -153,7 +155,7 @@ if __name__ == '__main__':
     # send_batches_to_openai(batch_files, data_type)
 
 
-    batch_output_path = f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/gpt_3.5_definitions/{data_type}_batch_outputs/'
-    def_files_path = '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/gpt_3.5_definitions/def_files/'
+    batch_output_path = f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/gpt_4_definitions/{data_type}_batch_outputs/'
+    def_files_path = '/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/gpt_4_definitions/def_files/'
     get_batches_results(batch_output_path, TERMS_PATH, data_type, def_files_path)
     print('Done')
