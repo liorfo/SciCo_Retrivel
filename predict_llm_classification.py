@@ -13,11 +13,11 @@ base_model = "mistralai/Mistral-7B-v0.1"
 
 use_relational_def = False
 
-adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_gpt_def/model"
+adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_gpt_4_def/model"
 # device_map = 'auto'
 max_seq_length = 1536  # None
 # max_seq_length = 1664
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_gpt_def/results'
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_gpt_4_def/results'
 
 ################################################################################
 # bitsandbytes parameters
