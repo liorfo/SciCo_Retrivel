@@ -158,17 +158,17 @@ fewshot_optimizer = BootstrapFewShotWithRandomSearch(
 
 cot_fewshot = CoTScicoWithDefModule()
 # # cot_fewshot = CoTSCICOModule()
-# cot_fewshot = fewshot_optimizer.compile(cot_fewshot, trainset=train, valset=dev)
-# cot_fewshot.save("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_gpt_4_def.json")
+cot_fewshot = fewshot_optimizer.compile(cot_fewshot, trainset=train, valset=dev)
+cot_fewshot.save("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_singleton_def.json")
 
-cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_gpt_4_def.json")
+# cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_singleton_def.json")
 
 
-
+print("Starting evaluation for gp4 mini singleton def")
 chunk_size = 1000
 # with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/sorted_results/score_results_until_29000.pkl", "rb") as file:
 #     loaded_data = pickle.load(file)
-# all_answers = loaded_data['answers']
+all_answers = loaded_data['answers']
 all_answers = []
 all_results = []
 for i in range(0, len(test), chunk_size):
@@ -187,7 +187,7 @@ for i in range(0, len(test), chunk_size):
         except Exception as e:
             print(e)
             print("Retrying...")
-    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4-mini/gpt4_def_results/score_results_until_{i + chunk_size}.pkl', "wb") as file:
+    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4-mini/singleton_def_results/score_results_until_{i + chunk_size}.pkl', "wb") as file:
         pickle.dump({'score': score, 'answers': all_answers, 'rationals': rationals}, file)
     print("Processed chunk", i//chunk_size)
 
