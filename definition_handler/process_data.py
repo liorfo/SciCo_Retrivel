@@ -18,7 +18,7 @@ class DatasetsHandler:
                                                      multiclass='multiclass',
                                                      should_save_term_context=True,
                                                      should_load_definition=should_load_definition,
-                                                     only_hard_10=only_hard_10)
+                                                     only_hard_10=False)
         if dev:
             self.dev_dataset = CrossEncoderDataset('/cs/labs/tomhope/forer11/SciCo_Retrivel/data/dev.jsonl',
                                                    full_doc=full_doc,
@@ -27,7 +27,7 @@ class DatasetsHandler:
                                                    is_training=False,
                                                    should_save_term_context=True,
                                                    should_load_definition=should_load_definition,
-                                                   only_hard_10=only_hard_10)
+                                                   only_hard_10=False)
 
 
 # with open('configs/multiclass.yaml', 'r') as f:

@@ -15,32 +15,32 @@ class SCICO(dspy.Signature):
     (
         """You are given 2 texts, each one is a context for a scientific concept"""
         """ You must decide the correct relationship between the two concepts from the next options
-        0 - No relation, none of the following relations are appropriate
-        1 - Same level, co-referring concepts
-        2 - Term A is a parent concept of concept B
-        3 - Term A is a child concept of concept B """)
+        1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
+        2 - Parent concept: Term1 represents a broader category or concept that encompasses term2, such that mentioning term1 implicitly invokes term2.
+        3 - Child concept: The inverse of a parent concept relation. Term1 is a specific instance or subset of the broader concept represented by term2, such that mentioning term2 implicitly invokes term1.
+        0 - None of the above: Term1 and term2 are not co-referring, and do not have a parent-child or child-parent relation.""")
 
     text_1 = dspy.InputField()
     text_2 = dspy.InputField()
     answer = dspy.OutputField(
-        desc="The correct relationship between the two concepts from the next options: 0, 1, 2, 3.")
+        desc="{0, 1, 2, 3}")
 
 
 class ScicoWithDef(dspy.Signature):
     (
         """You are given 2 texts, each one is a context for a scientific concept, and a definition for each concept"""
         """You must decide the correct relationship between the two concepts from the next options
-        0 - No relation, none of the following relations are appropriate
-        1 - Same level, co-referring concepts
-        2 - Term A is a parent concept of concept B
-        3 - Term A is a child concept of concept B """)
+        1 - Co-referring terms: Both term1 and term2 refer to the same underlying concept or entity.
+        2 - Parent concept: Term1 represents a broader category or concept that encompasses term2, such that mentioning term1 implicitly invokes term2.
+        3 - Child concept: The inverse of a parent concept relation. Term1 is a specific instance or subset of the broader concept represented by term2, such that mentioning term2 implicitly invokes term1.
+        0 - None of the above: Term1 and term2 are not co-referring, and do not have a parent-child or child-parent relation.""")
 
     text_1 = dspy.InputField(desc="The first text with a scientific concept")
     definition_1 = dspy.InputField(desc="The definition of the first concept")
     text_2 = dspy.InputField(desc="The second text with a scientific concept")
     definition_2 = dspy.InputField(desc="The definition of the second concept")
     answer = dspy.OutputField(
-        desc="The correct hierarchical relation between the two concepts from the next options: 0, 1, 2, 3.")
+        desc="{0, 1, 2, 3.}")
 
 
 class BaseSCICOModule(dspy.Module):
@@ -106,7 +106,7 @@ def get_dspy_example(data_set, num_of_data, shuffle=True, all_data=False, with_d
     labels = [data_set.natural_labels[i] for i in indexes]
 
     if with_def:
-        definitions = [get_definitions(sentences, data_set.combined_def_dict) for sentences in texts]
+        definitions = [get_definitions(sentences, data_set.definitions) for sentences in texts]
         ## TODO remove later
         return [
             dspy.Example(
@@ -116,12 +116,6 @@ def get_dspy_example(data_set, num_of_data, shuffle=True, all_data=False, with_d
                 definition_2=definitions[i][1],
                 answer=labels[i])
             .with_inputs('text_1', 'text_2', 'definition_1', 'definition_2') for i in range(len(texts))
-        ], [
-            dspy.Example(
-                text_1=texts[i][0],
-                text_2=texts[i][1],
-                answer=labels[i])
-            .with_inputs('text_1', 'text_2') for i in range(len(texts))
         ]
 
     return [
@@ -133,33 +127,82 @@ def get_dspy_example(data_set, num_of_data, shuffle=True, all_data=False, with_d
     ]
 
 
-data = DatasetsHandler(test=True, train=True, dev=True, only_hard_10=True)
+data = DatasetsHandler(test=True, train=True, dev=True, only_hard_10=True, full_doc=True, should_load_definition=True)
 
-train = get_dspy_example(data.train_dataset, NUM_OF_TRAIN_DATA, with_def=False)
-dev = get_dspy_example(data.dev_dataset, NUM_OF_DEV_DATA, with_def=False)
-test = get_dspy_example(data.test_dataset, len(data.test_dataset), shuffle=False, all_data=True, with_def=False)
-test_for_print_def, test_for_print = get_dspy_example(data.test_dataset, 20, shuffle=True, all_data=False,
-                                                      with_def=True)
+train = get_dspy_example(data.train_dataset, NUM_OF_TRAIN_DATA, with_def=True)
+dev = get_dspy_example(data.dev_dataset, NUM_OF_DEV_DATA, with_def=True)
+test = get_dspy_example(data.test_dataset, len(data.test_dataset), shuffle=False, all_data=True, with_def=True)
+# test_for_print_def, test_for_print = get_dspy_example(data.test_dataset, 20, shuffle=True, all_data=False,
+#                                                       with_def=False)
 
 print(
     f"For this dataset, training examples have input keys {train[0].inputs().keys()} and label keys {train[0].labels().keys()}")
 
-turbo = dspy.OpenAI(model='gpt-3.5-turbo-0125', model_type='chat', max_tokens=250, api_key=OPENAI_API_KEY)
+# turbo = dspy.OpenAI(model='gpt-4o-mini', model_type='chat', max_tokens=1600, api_key=OPENAI_API_KEY)
+turbo = dspy.OpenAI(model='gpt-4o-mini', max_tokens=4000, api_key=OPENAI_API_KEY)
 
-# GPT-4 will be used only to bootstrap CoT demos:
-gpt4T = dspy.OpenAI(model='gpt-4-0125-preview', max_tokens=350, model_type='chat', api_key=OPENAI_API_KEY)
+# # GPT-4 will be used only to bootstrap CoT demos:
+# gpt4T = dspy.OpenAI(model='gpt-4-0125-preview', max_tokens=350, model_type='chat', api_key=OPENAI_API_KEY)
 
 accuracy = dspy.evaluate.metrics.answer_exact_match
 
 dspy.settings.configure(lm=turbo)
 
-bootstrap_optimizer = BootstrapFewShotWithRandomSearch(
-    max_bootstrapped_demos=4,
-    max_labeled_demos=4,
-    num_candidate_programs=4,
+fewshot_optimizer = BootstrapFewShotWithRandomSearch(
+    max_bootstrapped_demos=5,
+    max_labeled_demos=5,
+    num_candidate_programs=5,
     num_threads=12,
     # teacher_settings=dict(lm=gpt4T),
     metric=accuracy)
+
+cot_fewshot = CoTScicoWithDefModule()
+# # cot_fewshot = CoTSCICOModule()
+# cot_fewshot = fewshot_optimizer.compile(cot_fewshot, trainset=train, valset=dev)
+# cot_fewshot.save("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_gpt_4_def.json")
+
+cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_gpt_4_def.json")
+
+
+
+chunk_size = 1000
+# with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/sorted_results/score_results_until_29000.pkl", "rb") as file:
+#     loaded_data = pickle.load(file)
+# all_answers = loaded_data['answers']
+all_answers = []
+all_results = []
+for i in range(0, len(test), chunk_size):
+    chunk = test[i:i+chunk_size]
+    print("Evaluating until: ", i + chunk_size)
+    is_success = False
+    while not is_success:
+        try:
+            evaluator = Evaluate(devset=chunk, num_threads=4, display_progress=True, display_table=0, return_outputs=True)
+            score, results = evaluator(cot_fewshot, metric=accuracy)
+            answers = [prediction.answer for example, prediction, temp_score in results]
+            rationals = [prediction.completions._completions['rationale'][0] for example, prediction, temp_score in results]
+            all_answers.extend(answers)
+            all_results.extend(results)
+            is_success = True
+        except Exception as e:
+            print(e)
+            print("Retrying...")
+    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4-mini/gpt4_def_results/score_results_until_{i + chunk_size}.pkl', "wb") as file:
+        pickle.dump({'score': score, 'answers': all_answers, 'rationals': rationals}, file)
+    print("Processed chunk", i//chunk_size)
+
+
+
+# cot_fewshot(**test[0].inputs())
+# print(turbo.inspect_history(n=1))
+
+
+
+
+
+
+
+
 
 # cot_zeroshot = CoTSCICOModule()
 # kwargs = dict(num_threads=8, display_progress=True, display_table=0)
@@ -196,30 +239,13 @@ bootstrap_optimizer = BootstrapFewShotWithRandomSearch(
 # print(turbo.inspect_history(n=1))
 
 
-# chunk_size = 1000
-# # with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/sorted_results/score_results_until_29000.pkl", "rb") as file:
-# #     loaded_data = pickle.load(file)
-# # all_answers = loaded_data['answers']
-# all_answers = []
-# all_results = []
-# for i in range(0, len(test), chunk_size):
-#     chunk = test[i:i+chunk_size]
-#     print("Evaluating until: ", i + chunk_size)
-#     is_success = False
-#     while not is_success:
-#         try:
-#             evaluator = Evaluate(devset=chunk, num_threads=4, display_progress=True, display_table=0, return_outputs=True)
-#             score, results = evaluator(cot_fewshot, metric=accuracy)
-#             anwsers = [prediction.answer for _, example, prediction, temp_score in results]
-#             all_answers.extend(anwsers)
-#             all_results.extend(results)
-#             is_success = True
-#         except Exception as e:
-#             print(e)
-#             print("Retrying...")
-#     with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/no_def_second_try/score_results_until_{i + chunk_size}.pkl', "wb") as file:
-#         pickle.dump({'score': score, 'answers': all_answers, 'results': results}, file)
-#     print("Processed chunk", i//chunk_size)
+
+
+
+
+
+
+
 
 # sentences_to_score_dict = {}
 # #
@@ -234,19 +260,19 @@ bootstrap_optimizer = BootstrapFewShotWithRandomSearch(
 
 
 ## examples for prompts:
-cot_fewshot = CoTSCICOModule()
-cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/BayesianSignatureOptimizer_program_2.json")
-
-cot_fewshot_with_def = CoTScicoWithDefModule()
-cot_fewshot_with_def.load(
-    "/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/BayesianSignatureOptimizer_program_with_def_2.json")
-
-for i in range(20):
-    cot_fewshot(**test_for_print[i].inputs())
-    print('without def')
-    print(turbo.inspect_history(n=1))
-    cot_fewshot_with_def(**test_for_print_def[i].inputs())
-    print('with def')
-    print(turbo.inspect_history(n=1))
-    print('real prediction: ', test_for_print_def[i].labels()['answer'])
-    print('-------------------')
+# cot_fewshot = CoTSCICOModule()
+# cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/BayesianSignatureOptimizer_program_2.json")
+#
+# cot_fewshot_with_def = CoTScicoWithDefModule()
+# cot_fewshot_with_def.load(
+#     "/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/BayesianSignatureOptimizer_program_with_def_2.json")
+#
+# for i in range(20):
+#     cot_fewshot(**test_for_print[i].inputs())
+#     print('without def')
+#     print(turbo.inspect_history(n=1))
+#     cot_fewshot_with_def(**test_for_print_def[i].inputs())
+#     print('with def')
+#     print(turbo.inspect_history(n=1))
+#     print('real prediction: ', test_for_print_def[i].labels()['answer'])
+#     print('-------------------')
