@@ -9,6 +9,7 @@ NUM_OF_TRAIN_DATA = 200
 NUM_OF_DEV_DATA = 60
 OPENAI_API_KEY = ''
 
+
 # TODO remove tags!!!! and add the terms as data
 
 class SCICO(dspy.Signature):
@@ -35,10 +36,10 @@ class ScicoWithDef(dspy.Signature):
         3 - Child concept: The inverse of a parent concept relation. Term1 is a specific instance or subset of the broader concept represented by term2, such that mentioning term2 implicitly invokes term1.
         0 - None of the above: Term1 and term2 are not co-referring, and do not have a parent-child or child-parent relation.""")
 
-    text_1 = dspy.InputField(desc="The first text with a scientific concept")
-    definition_1 = dspy.InputField(desc="The definition of the first concept")
-    text_2 = dspy.InputField(desc="The second text with a scientific concept")
-    definition_2 = dspy.InputField(desc="The definition of the second concept")
+    text_1 = dspy.InputField()
+    definition_1 = dspy.InputField(desc='a contextual definition for the first concept')
+    text_2 = dspy.InputField()
+    definition_2 = dspy.InputField(desc='a contextual definition for the second concept')
     answer = dspy.OutputField(
         desc="{0, 1, 2, 3.}")
 
@@ -127,11 +128,33 @@ def get_dspy_example(data_set, num_of_data, shuffle=True, all_data=False, with_d
     ]
 
 
-data = DatasetsHandler(test=True, train=True, dev=True, only_hard_10=True, full_doc=True, should_load_definition=True)
+def save_scores(results_path, output_path, data):
+    sentences_to_score_dict = {}
+    #
+    with open(results_path, "rb") as file:
+        loaded_data3 = pickle.load(file)
 
-train = get_dspy_example(data.train_dataset, NUM_OF_TRAIN_DATA, with_def=True)
-dev = get_dspy_example(data.dev_dataset, NUM_OF_DEV_DATA, with_def=True)
-test = get_dspy_example(data.test_dataset, len(data.test_dataset), shuffle=False, all_data=True, with_def=True)
+    for i, sentences in enumerate(data.test_dataset.pairs):
+        sentences_to_score_dict[sentences] = loaded_data3['answers'][i]
+
+    with open(output_path, "wb") as file:
+        pickle.dump(sentences_to_score_dict, file)
+
+    print("Saved scores to ", output_path)
+
+
+
+data = DatasetsHandler(test=True, train=True, dev=True, only_hard_10=True, full_doc=True, should_load_definition=True)
+# save_scores("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4-mini/singleton_def_results/score_results_until_70000.pkl",
+#             "/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4-mini/singleton_def_results/sentences_to_score_dict.pkl",
+#             data
+#             )
+
+
+train = get_dspy_example(data.train_dataset, NUM_OF_TRAIN_DATA, with_def=False)
+dev = get_dspy_example(data.dev_dataset, NUM_OF_DEV_DATA, with_def=False)
+test = get_dspy_example(data.test_dataset, len(data.test_dataset), shuffle=False, all_data=True, with_def=False)
+test_1000 = get_dspy_example(data.test_dataset, 1000, shuffle=True, all_data=True, with_def=False)
 # test_for_print_def, test_for_print = get_dspy_example(data.test_dataset, 20, shuffle=True, all_data=False,
 #                                                       with_def=False)
 
@@ -139,7 +162,7 @@ print(
     f"For this dataset, training examples have input keys {train[0].inputs().keys()} and label keys {train[0].labels().keys()}")
 
 # turbo = dspy.OpenAI(model='gpt-4o-mini', model_type='chat', max_tokens=1600, api_key=OPENAI_API_KEY)
-turbo = dspy.OpenAI(model='gpt-4o-mini', max_tokens=4000, api_key=OPENAI_API_KEY)
+turbo = dspy.OpenAI(model='gpt-4o-mini', max_tokens=16000, api_key=OPENAI_API_KEY, temperature=0)
 
 # # GPT-4 will be used only to bootstrap CoT demos:
 # gpt4T = dspy.OpenAI(model='gpt-4-0125-preview', max_tokens=350, model_type='chat', api_key=OPENAI_API_KEY)
@@ -149,19 +172,29 @@ accuracy = dspy.evaluate.metrics.answer_exact_match
 dspy.settings.configure(lm=turbo)
 
 fewshot_optimizer = BootstrapFewShotWithRandomSearch(
-    max_bootstrapped_demos=5,
+    max_bootstrapped_demos=8,
     max_labeled_demos=5,
-    num_candidate_programs=5,
+    num_candidate_programs=6,
     num_threads=12,
     # teacher_settings=dict(lm=gpt4T),
     metric=accuracy)
 
-cot_fewshot = CoTScicoWithDefModule()
-# # cot_fewshot = CoTSCICOModule()
-cot_fewshot = fewshot_optimizer.compile(cot_fewshot, trainset=train, valset=dev)
-cot_fewshot.save("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_singleton_def.json")
+# cot_fewshot = CoTScicoWithDefModule()
+cot_fewshot = CoTSCICOModule()
+# cot_fewshot = fewshot_optimizer.compile(cot_fewshot, trainset=train, valset=dev)
+# cot_fewshot.save("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_no_def_no_opt.json")
 
-# cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_singleton_def.json")
+cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_no_def_no_opt.json")
+
+# cot_fewshot(**test[32000].inputs())
+# print(turbo.inspect_history(n=1))
+#
+#
+#
+# evaluator = Evaluate(devset=test_1000, num_threads=4, display_progress=True, display_table=0, return_outputs=True)
+# score, results = evaluator(cot_fewshot, metric=accuracy)
+# print('yay')
+
 
 
 print("Starting evaluation for gp4 mini singleton def")
@@ -172,36 +205,31 @@ all_answers = loaded_data['answers']
 all_answers = []
 all_results = []
 for i in range(0, len(test), chunk_size):
-    chunk = test[i:i+chunk_size]
+    chunk = test[i:i + chunk_size]
     print("Evaluating until: ", i + chunk_size)
     is_success = False
     while not is_success:
         try:
-            evaluator = Evaluate(devset=chunk, num_threads=4, display_progress=True, display_table=0, return_outputs=True)
+            evaluator = Evaluate(devset=chunk, num_threads=4, display_progress=True, display_table=0,
+                                 return_outputs=True)
             score, results = evaluator(cot_fewshot, metric=accuracy)
             answers = [prediction.answer for example, prediction, temp_score in results]
-            rationals = [prediction.completions._completions['rationale'][0] for example, prediction, temp_score in results]
+            rationals = [prediction.completions._completions['rationale'][0] for example, prediction, temp_score in
+                         results]
             all_answers.extend(answers)
             all_results.extend(results)
             is_success = True
         except Exception as e:
             print(e)
             print("Retrying...")
-    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4-mini/singleton_def_results/score_results_until_{i + chunk_size}.pkl', "wb") as file:
+    with open(
+            f'/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4-mini/no_def_no_opt/v1/score_results_until_{i + chunk_size}.pkl',
+            "wb") as file:
         pickle.dump({'score': score, 'answers': all_answers, 'rationals': rationals}, file)
-    print("Processed chunk", i//chunk_size)
-
-
+    print("Processed chunk", i // chunk_size)
 
 # cot_fewshot(**test[0].inputs())
 # print(turbo.inspect_history(n=1))
-
-
-
-
-
-
-
 
 
 # cot_zeroshot = CoTSCICOModule()
@@ -237,26 +265,6 @@ for i in range(0, len(test), chunk_size):
 # cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/BayesianSignatureOptimizer_program_2.json")
 # cot_fewshot(**test[0].inputs())
 # print(turbo.inspect_history(n=1))
-
-
-
-
-
-
-
-
-
-
-# sentences_to_score_dict = {}
-# #
-# with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/no_def_second_try/score_results_until_70000.pkl", "rb") as file:
-#     loaded_data3 = pickle.load(file)
-#
-# for i, sentences in enumerate(data.test_dataset.pairs):
-#     sentences_to_score_dict[sentences] = loaded_data3['answers'][i]
-#
-# with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/no_def_second_try/sentences_to_score_dict.pkl", "wb") as file:
-#     pickle.dump(sentences_to_score_dict, file)
 
 
 ## examples for prompts:
