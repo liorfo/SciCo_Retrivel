@@ -151,10 +151,10 @@ data = DatasetsHandler(test=True, train=True, dev=True, only_hard_10=True, full_
 #             )
 
 
-train = get_dspy_example(data.train_dataset, NUM_OF_TRAIN_DATA, with_def=False)
-dev = get_dspy_example(data.dev_dataset, NUM_OF_DEV_DATA, with_def=False)
-test = get_dspy_example(data.test_dataset, len(data.test_dataset), shuffle=False, all_data=True, with_def=False)
-test_1000 = get_dspy_example(data.test_dataset, 1000, shuffle=True, all_data=True, with_def=False)
+train = get_dspy_example(data.train_dataset, NUM_OF_TRAIN_DATA, with_def=True)
+dev = get_dspy_example(data.dev_dataset, NUM_OF_DEV_DATA, with_def=True)
+test = get_dspy_example(data.test_dataset, len(data.test_dataset), shuffle=False, all_data=True, with_def=True)
+test_1000 = get_dspy_example(data.test_dataset, 1000, shuffle=True, all_data=True, with_def=True)
 # test_for_print_def, test_for_print = get_dspy_example(data.test_dataset, 20, shuffle=True, all_data=False,
 #                                                       with_def=False)
 
@@ -172,19 +172,19 @@ accuracy = dspy.evaluate.metrics.answer_exact_match
 dspy.settings.configure(lm=turbo)
 
 fewshot_optimizer = BootstrapFewShotWithRandomSearch(
-    max_bootstrapped_demos=8,
-    max_labeled_demos=5,
+    max_bootstrapped_demos=6,
+    max_labeled_demos=4,
     num_candidate_programs=6,
-    num_threads=12,
+    num_threads=8,
     # teacher_settings=dict(lm=gpt4T),
     metric=accuracy)
 
-# cot_fewshot = CoTScicoWithDefModule()
-cot_fewshot = CoTSCICOModule()
+cot_fewshot = CoTScicoWithDefModule()
+# cot_fewshot = CoTSCICOModule()
 # cot_fewshot = fewshot_optimizer.compile(cot_fewshot, trainset=train, valset=dev)
-# cot_fewshot.save("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_no_def_no_opt.json")
+# cot_fewshot.save("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_gpt4_def_v6.json")
 
-cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_no_def_no_opt.json")
+cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY//gpt4_mini_gpt4_def_v5.json")
 
 # cot_fewshot(**test[32000].inputs())
 # print(turbo.inspect_history(n=1))
@@ -197,11 +197,11 @@ cot_fewshot.load("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/gpt4_mini_no_def_
 
 
 
-print("Starting evaluation for gp4 mini singleton def")
+print("Starting evaluation for gpt4_mini_no_def_no_opt")
 chunk_size = 1000
 # with open("/cs/labs/tomhope/forer11/SciCo_Retrivel/DSPY/sorted_results/score_results_until_29000.pkl", "rb") as file:
 #     loaded_data = pickle.load(file)
-all_answers = loaded_data['answers']
+# all_answers = loaded_data['answers']
 all_answers = []
 all_results = []
 for i in range(0, len(test), chunk_size):
