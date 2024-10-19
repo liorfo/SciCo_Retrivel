@@ -81,7 +81,7 @@ use_nested_quant = False
 # TrainingArguments parameters
 ################################################################################
 # Output directory where the model predictions and checkpoints will be stored
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_gpt_4_def/model'
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/LLAMA_3b_classification/no_def'
 # Number of training epochs
 num_train_epochs = 1
 # Enable fp16/bf16 training (set bf16 to True with an A100)
@@ -331,7 +331,8 @@ def get_prompt_formatter(base_model):
 
 
 # base_model = "microsoft/Phi-3-mini-4k-instruct"
-base_model = "mistralai/Mistral-7B-v0.1"
+# base_model = "mistralai/Mistral-7B-v0.1"
+base_model = "meta-llama/Llama-3.2-3B"
 # base_model = "Open-Orca/Mistral-7B-OpenOrca"
 
 data = DatasetsHandler(test=False, train=True, dev=True, full_doc=True, should_load_definition=True)
@@ -370,11 +371,11 @@ print("Loading dataset")
 
 prompt_format_fn = get_prompt_formatter(base_model)
 
+train_prompts = [{'text': prompt_format_fn(data.train_dataset.pairs[i], False), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
+val_prompts = [{'text': prompt_format_fn(data.dev_dataset.pairs[i], False), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
+
 # train_prompts = [{'text': prompt_format_fn(data.train_dataset.pairs[i], True, data.train_dataset.definitions), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
 # val_prompts = [{'text': prompt_format_fn(data.dev_dataset.pairs[i], True, data.dev_dataset.definitions), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
-
-train_prompts = [{'text': prompt_format_fn(data.train_dataset.pairs[i], True, data.train_dataset.definitions), 'label': data.train_dataset.labels[i]} for i in range(len(data.train_dataset))]
-val_prompts = [{'text': prompt_format_fn(data.dev_dataset.pairs[i], True, data.dev_dataset.definitions), 'label': data.dev_dataset.labels[i]} for i in range(len(data.dev_dataset))]
 
 # tolkenize the dataset
 print("Tokenizing dataset")
