@@ -11,13 +11,13 @@ from accelerate.utils import gather_object
 # base_model = "microsoft/Phi-3-mini-4k-instruct"
 base_model = "mistralai/Mistral-7B-v0.1"
 
-use_relational_def = False
+use_relational_def = True
 
-adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_gpt_4_def/model"
+adapter = "/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/no_def/model_without_cot"
 # device_map = 'auto'
-max_seq_length = 1536  # None
-# max_seq_length = 1664
-output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with_gpt_4_def/results'
+# max_seq_length = 1536  # None
+max_seq_length = 1664
+output_dir = '/cs/labs/tomhope/forer11/SciCo_Retrivel/mistral_1_classification/with-full-relational-def/results'
 
 ################################################################################
 # bitsandbytes parameters
@@ -255,7 +255,7 @@ prompt_format_fn = get_prompt_formatter(base_model)
 
 relational_def = {}
 if use_relational_def:
-    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/relational_defibitions_full_mixtral/test_terms_definitions_combined_final.pickle', 'rb') as file:
+    with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/final_relational_full_def/test_terms_definitions_final.pickle', 'rb') as file:
         relational_def = pickle.load(file)
 
 test_prompts = [{'text': prompt_format_fn(data.test_dataset.pairs[i], True, data.test_dataset.definitions, relational_def),
@@ -263,6 +263,8 @@ test_prompts = [{'text': prompt_format_fn(data.test_dataset.pairs[i], True, data
 # results, test_prompts = combine_results_and_get_remaining_data(test_prompts)
 # sync GPUs and start the timer
 accelerator.wait_for_everyone()
+
+print('with full relational def!')
 
 # divide the prompt list onto the available GPUs
 with accelerator.split_between_processes(test_prompts) as prompts:

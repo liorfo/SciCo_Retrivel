@@ -60,7 +60,7 @@ class CrossEncoderDataset(data.Dataset):
         if should_load_definition:
             print(f'Loading definitions from {data_label}')
             if self.full_doc:
-                with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/gpt_4_definitions/def_files/{data_label}_terms_definitions_final.pickle', "rb") as fp:
+                with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/full_texts/{data_label}_terms_definitions_final.pickle', "rb") as fp:
                     self.definitions = pickle.load(fp)
             else:
                 with open(f'/cs/labs/tomhope/forer11/SciCo_Retrivel/definition_handler/data/{data_label}_terms_definitions_final.pickle', "rb") as fp:
